@@ -1,19 +1,40 @@
 # Graphics-Draw
 
+![어어어어엇!!](https://github.com/BOLTB0X/Graphics-Draw/blob/main/Img/%EB%98%A5%EA%BC%AC%EC%87%BC.gif?raw=true)
+
 그려그려
 
+## - ing
 
-## 참고
+```
+DX11_Lab/
+├─ CMakeLists.txt
+├─ src/
+│  ├─ Renderer/
+│  │  ├─ VertexTypes.h
+│  │  ├─ Mesh.cpp / Mesh.h
+│  │  ├─ Model.cpp / Model.h
+│  │  ├─ AssimpLoader.cpp / AssimpLoader.h
+│  │  ├─ DX11Renderer.cpp / DX11Renderer.h
+│  ├─ Window/
+│  │  ├─ Win32Window.cpp / Win32Window.h
+│  ├─ App.cpp / App.h
+│  └─ main.cpp
+```
 
-- [Learn microsoft - Direct3D 11](https://learn.microsoft.com/ko-kr/windows/win32/direct3d11/dx-graphics-overviews)
-
-- [모델 출처 - Free3D](https://free3d.com/3d-model/rock-base-lp-26252.html)
+## used 라이브러리 및 툴
 
 - [Github - vcpkg](https://github.com/microsoft/vcpkg?tab=readme-ov-file)
 
 - [Github - imgui](https://github.com/ocornut/imgui)
 
 - [Github - assimp](https://github.com/assimp/assimp)
+
+## 참고
+
+- [Learn microsoft - Direct3D 11](https://learn.microsoft.com/ko-kr/windows/win32/direct3d11/dx-graphics-overviews)
+
+- [모델 출처 - Free3D](https://free3d.com/3d-model/rock-base-lp-26252.html)
 
 - [rastertek - DirectX 11 on Windows 10 Tutorials](https://www.rastertek.com/tutdx11win10.html)
 

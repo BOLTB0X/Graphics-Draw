@@ -1,66 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\App.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Core\DX11Renderer.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\AssimpLoader.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Mesh.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Model.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\TextureShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Window\Win32Window.cpp">
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Application\Model\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\App.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Core\DX11Renderer.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\AssimpLoader.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Mesh.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Model.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Texture.h">
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\VertexTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\TextureShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Window\Win32Window.h">
+    <ClInclude Include="..\src\Application\Model\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

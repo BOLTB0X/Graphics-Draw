@@ -1,4 +1,7 @@
-#include "App.h"
+////////////////////////////////////////////////////////////////////////////////
+// Filename: main.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "FrameworkSystem.h"
 
 int WINAPI wWinMain(
     _In_ HINSTANCE hInstance,
@@ -7,7 +10,20 @@ int WINAPI wWinMain(
     _In_ int nCmdShow
 )
 {
-    App app(hInstance);
-    app.Run();
+    FrameworkSystem* System;
+    bool result;
+
+	System = new FrameworkSystem;
+	result = System->Init();
+
+    if (result)
+    {
+        System->Run();
+    }
+
+	System->Shutdown();
+	delete System;
+	System = 0;
+
     return 0;
 } // wWinMain

@@ -44,7 +44,7 @@ target_link_libraries(DX11_Lab
 
 add_custom_command(TARGET DX11_Lab POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_CURRENT_SOURCE_DIR}/shaders" "$<TARGET_FILE_DIR:DX11_Lab>/shaders")
+   "${CMAKE_CURRENT_SOURCE_DIR}/hlsl" "$<TARGET_FILE_DIR:DX11_Lab>/hlsl")
 
 # DLL 파일 복사 (파일명 자동 구성)
 add_custom_command(TARGET DX11_Lab POST_BUILD

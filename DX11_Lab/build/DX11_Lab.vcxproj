@@ -33,22 +33,22 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -96,11 +96,13 @@
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -119,7 +121,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>		</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/debug/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -130,7 +133,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/shaders C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug/shaders
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/hlsl C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug/hlsl
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -172,11 +175,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -197,7 +202,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>		</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -208,7 +214,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/shaders C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release/shaders
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/hlsl C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release/hlsl
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -250,11 +256,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -275,7 +283,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>		</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -286,7 +295,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/shaders C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel/shaders
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/hlsl C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel/hlsl
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -329,11 +338,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -352,7 +363,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>		</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -363,7 +375,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/shaders C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo/shaders
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/hlsl C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo/hlsl
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -453,25 +465,20 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\App.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\App.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Core\DX11Renderer.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Core\DX11Renderer.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\AssimpLoader.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\AssimpLoader.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Mesh.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Mesh.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Model.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Model.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Texture.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\Texture.h" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Resources\VertexTypes.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\Shader.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\Shader.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\TextureShader.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Renderer\Shaders\TextureShader.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Window\Win32Window.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Window\Win32Window.h" />
+    <ClCompile Include="..\src\Application\Model\Model.cpp" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.cpp" />
+    <ClInclude Include="..\src\Application\Model\Model.h" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\main.cpp" />
   </ItemGroup>
   <ItemGroup />

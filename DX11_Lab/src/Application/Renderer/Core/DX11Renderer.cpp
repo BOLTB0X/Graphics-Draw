@@ -46,7 +46,7 @@ void DX11Renderer::BeginFrame()
 
     // 2. 뷰포트 설정 (화면 어디에 그릴지 지정)
     D3D11_VIEWPORT vp;
-    vp.Width = 1280.0f;  // App에서 설정한 해상도와 일치해야 함
+    vp.Width = 1280.0f;
     vp.Height = 720.0f;
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;

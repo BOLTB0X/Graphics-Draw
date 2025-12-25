@@ -466,15 +466,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application\Model\Model.cpp" />
+    <ClCompile Include="..\src\Application\Model\Texture.cpp" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.cpp" />
     <ClInclude Include="..\src\Application\Model\Model.h" />
+    <ClInclude Include="..\src\Application\Model\Texture.h" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.cpp" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.cpp" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Shaders\ColorShader.h" />
+    <ClCompile Include="..\src\Application\Shaders\Shader.cpp" />
+    <ClInclude Include="..\src\Application\Shaders\Shader.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.cpp" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.cpp" />

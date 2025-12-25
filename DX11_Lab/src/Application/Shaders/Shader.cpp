@@ -1,53 +1,55 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ColorShader.cpp
+// Filename: Shader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "ColorShader.h"
+#include "Shader.h"
 #include <direct.h>
 
-ColorShader::ColorShader()
+Shader::Shader()
 {
 	m_vertexShader = 0;
 	m_pixelShader = 0;
 	m_layout = 0;
 	m_matrixBuffer = 0;
-} // ColorShader
+	m_sampleState = 0;
+} // Shader
 
 
-ColorShader::ColorShader(const ColorShader& other)
+Shader::Shader(const Shader& other)
 {
 	m_vertexShader = 0;
 	m_pixelShader = 0;
 	m_layout = 0;
 	m_matrixBuffer = 0;
-} // ColorShader
+	m_sampleState = 0;
+} // Shader
 
 
-ColorShader::~ColorShader()
+Shader::~Shader()
 {
-} // ColorShader
+} // Shader
 
 
-bool ColorShader::Init(ID3D11Device* device, HWND hwnd)
+bool Shader::Init(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 	wchar_t vsFilename[128];
 	wchar_t psFilename[128];
 	int error;
 
-	wchar_t currentPath[MAX_PATH];
-	if (_wgetcwd(currentPath, MAX_PATH) != NULL)
-	{
-		MessageBoxW(hwnd, currentPath, L"현재 작업 디렉터리 확인", MB_OK);
-	}
+	//wchar_t currentPath[MAX_PATH];
+	//if (_wgetcwd(currentPath, MAX_PATH) != NULL)
+	//{
+	//	MessageBoxW(hwnd, currentPath, L"현재 작업 디렉터리 확인", MB_OK);
+	//}
 
 
-	error = wcscpy_s(vsFilename, 128, L"./hlsl/Color.vs");
+	error = wcscpy_s(vsFilename, 128, L"./hlsl/Texture.vs");
 	if (error != 0)
 	{
 		return false;
 	}
 
-	error = wcscpy_s(psFilename, 128, L"./hlsl/Color.ps");
+	error = wcscpy_s(psFilename, 128, L"./hlsl/Texture.ps");
 	if (error != 0)
 	{
 		return false;
@@ -59,27 +61,28 @@ bool ColorShader::Init(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
+
 	return true;
 } // Init
 
 
-void ColorShader::Shutdown()
+void Shader::Shutdown()
 {
 	ShutdownShader();
 	return;
 } // Shutdown
 
 
-bool ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, 
+bool Shader::Render(ID3D11DeviceContext* deviceContext, int indexCount, 
 	XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix)
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	bool result;
 
 
 	// 렌더링에 사용할 셰이더 매개변수를 설정
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
-	if (!result)
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
+	if (result == false)
 	{
 		return false;
 	}
@@ -90,7 +93,7 @@ bool ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount,
 } // Render
 
 
-bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool Shader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -99,7 +102,7 @@ bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename,
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
-
+	D3D11_SAMPLER_DESC samplerDesc;
 
 	// 사용할 포인터를 null로 초기화
 	errorMessage = 0;
@@ -107,7 +110,7 @@ bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename,
 	pixelShaderBuffer = 0;
 
 	// 컴파일할 버텍스 셰이더 코드
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "TextureVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -124,7 +127,7 @@ bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename,
 	}
 
 	// 컴파일할 픽셀 셰이더 코드
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "TexturePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -164,7 +167,7 @@ bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename,
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
 
-	polygonLayout[1].SemanticName = "COLOR";
+	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
 	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
@@ -201,12 +204,42 @@ bool ColorShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename,
 		return false;
 	}
 
+	// Create a texture sampler state description.
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// texture sampler state 생성
+	result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+
 	return true;
 } // InitShader
 
 
-void ColorShader::ShutdownShader()
+void Shader::ShutdownShader()
 {
+	if (m_sampleState)
+	{
+		m_sampleState->Release();
+		m_sampleState = 0;
+	}
+
 	if (m_matrixBuffer)
 	{
 		m_matrixBuffer->Release();
@@ -235,7 +268,7 @@ void ColorShader::ShutdownShader()
 } // ShutdownShader
 
 
-void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -264,8 +297,8 @@ void ColorShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 } // OutputShaderErrorMessage
 
 
-bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix)
+bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -298,16 +331,20 @@ bool ColorShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATR
 
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 
+	deviceContext->PSSetShaderResources(0, 1, &texture);
+
 	return true;
 } // SetShaderParameters
 
 
-void ColorShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void Shader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	deviceContext->IASetInputLayout(m_layout);
 
 	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
 	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
 
 	deviceContext->DrawIndexed(indexCount, 0, 0);
 

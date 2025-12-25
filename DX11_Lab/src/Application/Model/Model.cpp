@@ -8,11 +8,19 @@ Model::Model()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
+	m_Texture = 0;
+	m_vertexCount = 0; 
+	m_indexCount = 0;
 } // Model
 
 
 Model::Model(const Model& other)
 {
+	m_vertexBuffer = 0;
+	m_indexBuffer = 0;
+	m_Texture = 0;
+	m_vertexCount = 0;
+	m_indexCount = 0;
 } // Model
 
 
@@ -21,11 +29,17 @@ Model::~Model()
 } // ~Model
 
 
-bool Model::Init(ID3D11Device* device)
+bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
 {
 	bool result;
 
 	result = InitBuffers(device);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = LoadTexture(device, deviceContext, textureFilename);
 	if (!result)
 	{
 		return false;
@@ -37,6 +51,7 @@ bool Model::Init(ID3D11Device* device)
 
 void Model::Shutdown()
 {
+	ReleaseTexture();
 	ShutdownBuffers();
 
 	return;
@@ -56,6 +71,11 @@ int Model::GetIndexCount()
 {
 	return m_indexCount;
 } // GetIndexCount
+
+ID3D11ShaderResourceView* Model::GetTexture()
+{
+	return m_Texture->GetTexture();
+} // GetTexture
 
 
 bool Model::InitBuffers(ID3D11Device* device)
@@ -84,13 +104,13 @@ bool Model::InitBuffers(ID3D11Device* device)
 	}
 
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
 
 	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
 
 	indices[0] = 0;  // Bottom left.
 	indices[1] = 1;  // Top middle.
@@ -185,3 +205,32 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	return;
 } // RenderBuffers
+
+
+bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+{
+	bool result;
+
+	m_Texture = new Texture;
+
+	result = m_Texture->Init(device, deviceContext, filename);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+} // LoadTexture
+
+
+void Model::ReleaseTexture()
+{
+	if (m_Texture)
+	{
+		m_Texture->Shutdown();
+		delete m_Texture;
+		m_Texture = 0;
+	}
+
+	return;
+} // ReleaseTexture

@@ -14,7 +14,7 @@
 #include "Application/D3DRenderer/D3DRenderer.h"
 #include "Application/Camera/Camera.h"
 #include "Application/Model/Model.h"
-#include "Application/Shaders/ColorShader.h"
+#include "Application/Shaders/Shader.h"
 
 /////////////
 // GLOBALS //
@@ -50,7 +50,7 @@ private:
     D3DRenderer* m_Direct3D;
     Camera* m_Camera;
     Model* m_Model;
-    ColorShader* m_ColorShader;
+    Shader* m_TextureShader;
 private:
     //HINSTANCE m_hInstance;
 

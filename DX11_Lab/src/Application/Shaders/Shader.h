@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ColorShader.h
+// Filename: Shader.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _COLORSHADER_H_
 #define _COLORSHADER_H_
@@ -17,9 +17,9 @@ using namespace std;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: ColorShader
+// Class name: Shader
 ////////////////////////////////////////////////////////////////////////////////
-class ColorShader
+class Shader
 {
 private:
 	struct MatrixBufferType
@@ -30,20 +30,20 @@ private:
 	};
 
 public:
-	ColorShader();
-	ColorShader(const ColorShader&);
-	~ColorShader();
+	Shader();
+	Shader(const Shader&);
+	~Shader();
 
 	bool Init(ID3D11Device*, HWND);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX);
+	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
 
 private:
 	bool InitShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX);
+	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
 	void RenderShader(ID3D11DeviceContext*, int);
 
 private:
@@ -51,6 +51,8 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_matrixBuffer;
-}; // ColorShader
+
+	ID3D11SamplerState* m_sampleState;
+}; // Shader
 
 #endif

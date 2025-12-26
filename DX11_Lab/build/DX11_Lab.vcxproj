@@ -465,25 +465,21 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Application\Model\Model.cpp" />
-    <ClCompile Include="..\src\Application\Model\Texture.cpp" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.cpp" />
-    <ClInclude Include="..\src\Application\Model\Model.h" />
-    <ClInclude Include="..\src\Application\Model\Texture.h" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\App.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Camera\Camera.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\D3DRenderer\D3DRenderer.h" />
-    <ClCompile Include="..\src\Application\Shaders\Shader.cpp" />
-    <ClInclude Include="..\src\Application\Shaders\Shader.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\FrameworkSystem.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Input\Input.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\main.cpp" />
+    <ClInclude Include="..\src\Actors\Stone.h" />
+    <ClInclude Include="..\src\Application\App.h" />
+    <ClInclude Include="..\src\Framework\Camera\Camera.h" />
+    <ClInclude Include="..\src\Framework\FrameworkSystem.h" />
+    <ClInclude Include="..\src\Framework\Input\Input.h" />
+    <ClInclude Include="..\src\Framework\Renderer\D3DRenderer.h" />
+    <ClInclude Include="..\src\Resources\Light\Light.h" />
+    <ClInclude Include="..\src\Resources\Model\Model.h" />
+    <ClInclude Include="..\src\Resources\Shaders\ColorShader.h" />
+    <ClInclude Include="..\src\Resources\Shaders\LightShader.h" />
+    <ClInclude Include="..\src\Resources\Shaders\NormalMapShader.h" />
+    <ClInclude Include="..\src\Resources\Shaders\ShaderManager.h" />
+    <ClInclude Include="..\src\Resources\Shaders\TextureShader.h" />
+    <ClInclude Include="..\src\Resources\Texture\Texture.h" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\build\ZERO_CHECK.vcxproj">
       <Project>{41EED0BB-9A5A-3728-A094-DB54EF25CB74}</Project>
@@ -491,6 +487,23 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Actors\Stone.cpp" />
+    <ClCompile Include="..\src\Application\App.cpp" />
+    <ClCompile Include="..\src\Framework\Camera\Camera.cpp" />
+    <ClCompile Include="..\src\Framework\FrameworkSystem.cpp" />
+    <ClCompile Include="..\src\Framework\Input\Input.cpp" />
+    <ClCompile Include="..\src\Framework\Renderer\D3DRenderer.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Resources\Light\Light.cpp" />
+    <ClCompile Include="..\src\Resources\Model\Model.cpp" />
+    <ClCompile Include="..\src\Resources\Shaders\ColorShader.cpp" />
+    <ClCompile Include="..\src\Resources\Shaders\LightShader.cpp" />
+    <ClCompile Include="..\src\Resources\Shaders\NormalMapShader.cpp" />
+    <ClCompile Include="..\src\Resources\Shaders\ShaderManager.cpp" />
+    <ClCompile Include="..\src\Resources\Shaders\TextureShader.cpp" />
+    <ClCompile Include="..\src\Resources\Texture\Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

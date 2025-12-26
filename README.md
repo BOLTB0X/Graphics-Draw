@@ -9,23 +9,30 @@
 ```
 DX11_Lab/
 ├─ CMakeLists.txt
-├─ build/
 ├─ assets/
+│  ├─ Stone
 ├─ hlsl/
 ├─ src/
-│  ├─ Application/
-│  │  ├─ App.h/cpp
+│  ├─ Framework/
 │  │  ├─ Camera/
 │  │  │  └─ Camera.h/cpp
-│  │  ├─ D3DRenderer
+│  │  ├─ Renderer
 │  │  │  └─ D3DRenderer.h/cpp
-│  │  ├─ Shaders/
-│  │  │  ├─ Shader.h/cpp
+│  │  ├─ Input/
+│  │  └─ Input.h/cpp
+│  ├─ Application/
+│  │  ├─ App.h/cpp
+│  ├─ Actors/
+│  │  ├─ Stone.h/cpp
+│  ├─ Resources/
 │  │  ├─ Model/
 │  │  │  ├─ Model.h/cpp
+│  │  ├─ Texture/
 │  │  │  ├─ Texture.h/cpp
-│  ├─ Input/
-│  │  └─ Input.h/cpp
+│  │  ├─ Light/
+│  │  │  ├─ Light.h/cpp
+│  │  ├─ Shaders/
+│  │  │  ├─ ShaderManager.h/cpp
 │  └─ main.cpp
 ```
 
@@ -56,3 +63,7 @@ DX11_Lab/
 - [티스토리 참고 - [DirectX11] 모델 가져오기(Model Import)(유니얼)](https://unialgames.tistory.com/entry/DirectX11ModelImport)
 
 - [티스토리 참고 - FBX SDK, FBX Importer, FBX 파일 불러오기, 3ds Max 등(최디디)](https://dlemrcnd.tistory.com/85)
+
+- [티스토리 참고 - 070 OBB(Oriented Bounding Box) collision(designerd)](https://designerd.tistory.com/entry/DirectX11-070-OBBOriented-Bounding-Box-collision#obb-%EC%B6%A9%EB%8F%8C---%EB%B6%84%EB%A6%AC%EC%B6%95-%EC%9D%B4%EB%A1%A0)
+
+- [티스토리 참고 - Collision과 SphereCollider(유니얼)](https://unialgames.tistory.com/entry/DirectX11CollisionAndSphereCollider)

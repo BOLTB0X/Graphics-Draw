@@ -215,15 +215,17 @@ void FrameworkSystem::InitWindows(int& screenWidth, int& screenHeight)
 	}
 
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		WS_OVERLAPPEDWINDOW, // 표준 스타일로 변경
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+	//m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+	//	WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+	//	posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	ShowWindow(m_hwnd, SW_SHOW);
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
 
-	// 커서 가리기
-	ShowCursor(false);
+	ShowCursor(true);
 
 	return;
 } // InitWindows

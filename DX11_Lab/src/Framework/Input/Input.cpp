@@ -270,3 +270,9 @@ bool Input::IsRightArrowPressed() {
 	if (m_keyboardState[DIK_RIGHT] & 0x80) return true;
 	return false;
 } // IsRightArrowPressed
+
+
+int Input::GetMouseWheelDelta()
+{
+	return m_mouseState.lZ;
+} // GetMouseWheelDelta

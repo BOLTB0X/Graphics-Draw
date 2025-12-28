@@ -138,7 +138,7 @@ bool BaseShader::CreateVertexInputLayout(
 	delete[] polygonLayout;
 
 	return SUCCEEDED(result);
-} // CreateInputLayout
+} // CreateVertexInputLayout
 
 void BaseShader::ShutdownShader() {
 	if (m_matrixBuffer) {

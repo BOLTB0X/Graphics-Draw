@@ -169,6 +169,15 @@ bool App::Frame(Input* input)
 		m_PlayerStone->Update(0.0f, rotateSpeed);
 	}
 
+	int wheelDelta = m_Input->GetMouseWheelDelta();
+	if (wheelDelta != 0)
+	{
+		// wheelDelta는 위로 굴리면 양수(+120 등), 아래로 굴리면 음수(-120 등)
+		m_Camera->Zoom((float)wheelDelta);
+	}
+
+	m_Camera->Render();
+
 	if (m_PlayerStone->CheckCollision(m_WallStone)) {
 		if (m_Input->IsLeftArrowPressed())
 		{

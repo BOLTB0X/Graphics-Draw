@@ -14,6 +14,7 @@ Camera::Camera()
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
 
+	m_distance = 10.0f;
 	m_viewMatrix = XMMatrixIdentity();
 } // Camera
 
@@ -28,6 +29,7 @@ Camera::Camera(const Camera& other)
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
 
+	m_distance = 10.0f;
 	m_viewMatrix = XMMatrixIdentity();
 } // Camera
 
@@ -118,3 +120,32 @@ void Camera::GetViewMatrix(XMMATRIX& viewMatrix)
 	viewMatrix = m_viewMatrix;
 	return;
 } // GetViewMatrix
+
+
+void Camera::Zoom(float delta)
+{
+	// 1. 이동할 양 계산 (delta가 양수면 줌인, 음수면 줌아웃)
+	float zoomAmount = delta * 0.1f;
+
+	// 2. 현재 방향(Forward) 계산
+	XMVECTOR lookAt = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	float pitch = m_rotationX * 0.0174532925f;
+	float yaw = m_rotationY * 0.0174532925f;
+	float roll = m_rotationZ * 0.0174532925f;
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	XMVECTOR forward = XMVector3TransformCoord(lookAt, rotationMatrix);
+
+	// 3. 예상되는 새로운 위치 계산
+	XMVECTOR currentPos = XMLoadFloat3(&XMFLOAT3(m_positionX, m_positionY, m_positionZ));
+	XMVECTOR nextPos = XMVectorMultiplyAdd(forward, XMVectorReplicate(zoomAmount), currentPos);
+
+	// 4.원점으로부터의 거리 체크
+	// XMVector3Length는 벡터의 길이를 반환합니다.
+	float distance = XMVectorGetX(XMVector3Length(nextPos));
+
+	// 최소 2.0f에서 최대 50.0f 사이로 제한
+	if (distance >= 2.0f && distance <= 50.0f)
+	{
+		XMStoreFloat3((XMFLOAT3*)&m_positionX, nextPos);
+	}
+} // Zoom

@@ -5,22 +5,14 @@
 
 
 NormalMapShader::NormalMapShader()
-	: m_vertexShader(nullptr),
-	m_pixelShader(nullptr),
-	m_layout(nullptr),
-	m_matrixBuffer(nullptr),
-	m_sampleState(nullptr),
+	: m_sampleState(nullptr),
 	m_lightBuffer(nullptr)
 {
 } // NormalMapShader
 
 
 NormalMapShader::NormalMapShader(const NormalMapShader& other)
-	: m_vertexShader(nullptr),
-	m_pixelShader(nullptr),
-	m_layout(nullptr),
-	m_matrixBuffer(nullptr),
-	m_sampleState(nullptr),
+	: m_sampleState(nullptr),
 	m_lightBuffer(nullptr)
 {
 } // NormalMapShader
@@ -33,36 +25,12 @@ NormalMapShader::~NormalMapShader()
 
 bool NormalMapShader::Init(ID3D11Device* device, HWND hwnd)
 {
-	bool result;
-	wchar_t vsFilename[128];
-	wchar_t psFilename[128];
-	int error;
-
-	//wchar_t currentPath[MAX_PATH];
-	//if (_wgetcwd(currentPath, MAX_PATH) != NULL)
-	//{
-	//	MessageBoxW(hwnd, currentPath, L"현재 작업 디렉터리 확인", MB_OK);
-	//}
-
-	error = wcscpy_s(vsFilename, 128, L"./hlsl/Normalmap.vs");
-	if (error != 0)
-	{
-		return false;
-	}
-
-	error = wcscpy_s(psFilename, 128, L"./hlsl/Normalmap.ps");
-	if (error != 0)
-	{
-		return false;
-	}
-
-	result = InitShader(device, hwnd, vsFilename, psFilename);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
+	return BaseShader::Init(
+		device,
+		hwnd,
+		L"./hlsl/Normalmap.vs",
+		L"./hlsl/Normalmap.ps"
+	);
 } // Init
 
 
@@ -73,8 +41,10 @@ void NormalMapShader::Shutdown()
 } // Shutdown
 
 
-bool NormalMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-	ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
+bool NormalMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, 
+	XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+	ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2, 
+	XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
 	bool result;
 
@@ -94,55 +64,20 @@ bool NormalMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount,
 bool NormalMapShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
-	ID3D10Blob* errorMessage;
-	ID3D10Blob* vertexShaderBuffer;
-	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[5];
-	unsigned int numElements;
-	D3D11_BUFFER_DESC matrixBufferDesc;
+	ID3D10Blob* vertexShaderBuffer = 0;
+	ID3D10Blob* pixelShaderBuffer = 0;
+	unsigned int numElements = 0;
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC lightBufferDesc;
 
-
-	// 사용할 포인터를 null로 초기화
-	errorMessage = 0;
-	vertexShaderBuffer = 0;
-	pixelShaderBuffer = 0;
-
 	// 컴파일할 버텍스 셰이더 코드
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "NormalMapVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&vertexShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		if (errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
-		}
-		else
-		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-		}
-
+	if (CompileShaderFromFile(device, hwnd, vsFilename, 
+		"NormalMapVertexShader", "vs_5_0", &vertexShaderBuffer) == false)
 		return false;
-	}
-
-	// 컴파일할 픽셀 셰이더 코드
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "NormalMapPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&pixelShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		if (errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
-		}
-		else
-		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
-		}
-
+	if (CompileShaderFromFile(device, hwnd, psFilename, 
+		"NormalMapPixelShader", "ps_5_0", &pixelShaderBuffer) == false)
 		return false;
-	}
-
+	
 	// 버퍼로부터 정점 셰이더를 생성
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
 	if (FAILED(result))
@@ -158,57 +93,19 @@ bool NormalMapShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilen
 	}
 
 	// vertex input layout description 생성
-	// ModelClass와 셰이더의 VertexType 구조와 일치해야 함
-	polygonLayout[0].SemanticName = "POSITION";
-	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[0].InputSlot = 0;
-	polygonLayout[0].AlignedByteOffset = 0;
-	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[0].InstanceDataStepRate = 0;
+	const char* names[] = { "POSITION", "TEXCOORD", "NORMAL", "TANGENT", "BINORMAL" };
+	DXGI_FORMAT formats[] = {
+		DXGI_FORMAT_R32G32B32_FLOAT,
+		DXGI_FORMAT_R32G32_FLOAT,
+		DXGI_FORMAT_R32G32B32_FLOAT,
+		DXGI_FORMAT_R32G32B32_FLOAT,
+		DXGI_FORMAT_R32G32B32_FLOAT
+	};
 
-	polygonLayout[1].SemanticName = "TEXCOORD";
-	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	polygonLayout[1].InputSlot = 0;
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[2].SemanticName = "NORMAL";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
-
-	polygonLayout[3].SemanticName = "TANGENT";
-	polygonLayout[3].SemanticIndex = 0;
-	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[3].InputSlot = 0;
-	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[3].InstanceDataStepRate = 0;
-
-	polygonLayout[4].SemanticName = "BINORMAL";
-	polygonLayout[4].SemanticIndex = 0;
-	polygonLayout[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[4].InputSlot = 0;
-	polygonLayout[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[4].InstanceDataStepRate = 0;
-
-	// 레이아웃에 있는 요소의 개수를 셈
-	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
-
-	// 버텍스 입력 레이아웃을 생성
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
-		vertexShaderBuffer->GetBufferSize(), &m_layout);
-	if (FAILED(result))
-	{
+	numElements = sizeof(names) / sizeof(names[0]);
+	if (BaseShader::CreateVertexInputLayout(device, vertexShaderBuffer, names, formats, numElements)
+		== false)
 		return false;
-	}
 
 	vertexShaderBuffer->Release();
 	vertexShaderBuffer = 0;
@@ -217,19 +114,8 @@ bool NormalMapShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilen
 	pixelShaderBuffer = 0;
 
 	// 정점 셰이더에 있는 동적 행렬 상수 버퍼에 대한 descr을 설정
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBufferDesc.MiscFlags = 0;
-	matrixBufferDesc.StructureByteStride = 0;
-
-	// 이 클래스 내부에서 정점 셰이더 상수 버퍼에 접근할 수 있도록 상수 버퍼 포인터를 생성
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-	if (FAILED(result))
-	{
+	if (CreateMatrixBuffer(device) == false)
 		return false;
-	}
 
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -252,8 +138,6 @@ bool NormalMapShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilen
 	}
 
 	// 픽셀 셰이더에 있는 광원 동적 상수 버퍼의 설명을 설정
-	// D3D11_BIND_CONSTANT_BUFFER를 사용하는 경우 ByteWidth는 항상 16의 배수여야 함
-	// 그렇지 않으면 CreateBuffer가 실패
 	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
 	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -286,59 +170,9 @@ void NormalMapShader::ShutdownShader()
 		m_sampleState = 0;
 	}
 
-	if (m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
-
+	BaseShader::ShutdownShader();
 	return;
 } // ShutdownShader
-
-
-void NormalMapShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
-{
-	char* compileErrors;
-	unsigned long long bufferSize, i;
-	ofstream fout;
-
-
-	compileErrors = (char*)(errorMessage->GetBufferPointer());
-	bufferSize = errorMessage->GetBufferSize();
-	fout.open("shader-error.txt");
-
-	for (i = 0; i < bufferSize; i++)
-	{
-		fout << compileErrors[i];
-	}
-
-	fout.close();
-
-	errorMessage->Release();
-	errorMessage = 0;
-
-	MessageBoxW(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
-
-	return;
-} // OutputShaderErrorMessage
 
 
 bool NormalMapShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,

@@ -73,15 +73,6 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	ID3D11ShaderResourceView* GetTexture(int);
 
-	//void SetPosition(float x, float y, float z);
-	//void SetRotation(float x, float y, float z);
-
-	//VectorType GetPosition();
-	//VectorType GetRotation();
-
-	//void Update(float rotX, float rotY);
-	//XMMATRIX GetWorldMatrix();
-
 private:
 	bool InitBuffers(ID3D11Device*);
 	void ShutdownBuffers();
@@ -105,7 +96,6 @@ private:
 	Texture* m_Texture, * m_Textures;
 	ModelType* m_model;
 
-	//VectorType m_position, m_rotation;
 }; // Model
 
 #endif

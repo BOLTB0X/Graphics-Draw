@@ -42,6 +42,7 @@ public:
 
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
+	int GetMouseWheelDelta();
 
 private:
 	bool ReadKeyboard();

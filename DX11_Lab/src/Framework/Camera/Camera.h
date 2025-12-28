@@ -30,10 +30,13 @@ public:
 
 	void Render();
 	void GetViewMatrix(XMMATRIX&);
+	void Zoom(float);
 
 private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
+	float m_distance;   // 카메라와 타겟 간 거리
+
 	XMMATRIX m_viewMatrix;
 }; // Camera
 

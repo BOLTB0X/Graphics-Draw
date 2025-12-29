@@ -36,13 +36,38 @@ public:
 	void Shutdown();
 	bool Frame();
 
+	/// <summary>
+	/// 카메라,포지션 관련
+	/// </summary>
 	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
 	bool IsMousePressed();
+	bool IsLeftPressed();
+	bool IsRightPressed();
+	bool IsUpPressed();
+	bool IsDownPressed();
 
+	bool IsAPressed();
+	bool IsZPressed();
+	bool IsWPressed();
+	bool IsSPressed();
+	bool IsDPressed();
+	bool IsXPressed();
+
+	bool IsPgUpPressed();
+	bool IsPgDownPressed();
+
+	bool IsF1Toggled();
+	bool IsF2Toggled();
+
+	int GetMouseWheelDelta();
+
+	/// <summary>
+	/// Actors 관련
+	/// </summary>
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
-	int GetMouseWheelDelta();
+
 
 private:
 	bool ReadKeyboard();
@@ -53,9 +78,13 @@ private:
 	IDirectInput8* m_directInput;
 	IDirectInputDevice8* m_keyboard;
 	IDirectInputDevice8* m_mouse;
+
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;
+
 	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
+
+	bool m_F1_released, m_F2_released;
 }; // Input
 
 #endif

@@ -11,8 +11,9 @@ Input::Input()
 	m_screenWidth(0),
 	m_screenHeight(0),
 	m_mouseX(0),
-	m_mouseY(0)
-
+	m_mouseY(0),
+	m_F1_released(true),
+	m_F2_released(true)
 {
 	m_mouseState = {};
 	memset(m_keyboardState, 0, sizeof(m_keyboardState));
@@ -26,7 +27,9 @@ Input::Input(const Input& other)
 	m_screenWidth(0),
 	m_screenHeight(0),
 	m_mouseX(0),
-	m_mouseY(0)
+	m_mouseY(0),
+	m_F1_released(true),
+	m_F2_released(true)
 {
 	m_mouseState = {};
 	memset(m_keyboardState, 0, sizeof(m_keyboardState));
@@ -112,6 +115,9 @@ bool Input::Init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeig
 	{
 		return false;
 	}
+
+	m_F1_released = true;
+	m_F2_released = true;
 
 	return true;
 } // Init
@@ -250,7 +256,7 @@ void Input::GetMouseLocation(int& mouseX, int& mouseY)
 
 bool Input::IsMousePressed()
 {
-	// Check the left mouse button state.
+	// 왼쪽 마우스 버튼의 상태를 확인
 	if (m_mouseState.rgbButtons[0] & 0x80)
 	{
 		return true;
@@ -258,6 +264,169 @@ bool Input::IsMousePressed()
 
 	return false;
 } // IsMousePressed
+
+
+bool Input::IsLeftPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_LEFT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsLeftPressed
+
+
+bool Input::IsRightPressed()
+{
+	// 키보드 상태를 비트 단위로 AND 연산하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_RIGHT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsRightPressed
+
+
+bool Input::IsUpPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_UP] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsUpPressed
+
+
+bool Input::IsDownPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_DOWN] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsDownPressed
+
+
+bool Input::IsAPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_A] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsAPressed
+
+
+bool Input::IsZPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_Z] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsZPressed
+
+
+bool Input::IsWPressed() { 
+	return (m_keyboardState[DIK_W] & 0x80); 
+} //  IsWPressed
+
+
+bool Input::IsSPressed() {
+	return (m_keyboardState[DIK_S] & 0x80);
+} // IsSPressed
+
+
+bool Input::IsDPressed() {
+	return (m_keyboardState[DIK_D] & 0x80);
+} // IsDPressed
+
+
+bool Input::IsXPressed() {
+	return (m_keyboardState[DIK_X] & 0x80);
+} // IsXPressed
+
+
+
+bool Input::IsPgUpPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_PGUP] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsPgUpPressed
+
+
+bool Input::IsPgDownPressed()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_PGDN] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+} // IsPgDownPressed
+
+
+bool Input::IsF1Toggled()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_F1] & 0x80)
+	{
+		if (m_F1_released)
+		{
+			m_F1_released = false;
+			return true;
+		}
+	}
+	else
+	{
+		m_F1_released = true;
+	}
+
+	return false;
+} // IsF1Toggled
+
+
+bool Input::IsF2Toggled()
+{
+	// 키보드 상태에 대해 비트 단위 AND 연산을 수행하여 해당 키가 현재 눌려 있는지 확인
+	if (m_keyboardState[DIK_F2] & 0x80)
+	{
+		if (m_F2_released)
+		{
+			m_F2_released = false;
+			return true;
+		}
+	}
+	else
+	{
+		m_F2_released = true;
+	}
+
+	return false;
+} // IsF2Toggled
+
+
+int Input::GetMouseWheelDelta()
+{
+	return m_mouseState.lZ;
+} // GetMouseWheelDelta
 
 
 bool Input::IsLeftArrowPressed() {
@@ -270,9 +439,3 @@ bool Input::IsRightArrowPressed() {
 	if (m_keyboardState[DIK_RIGHT] & 0x80) return true;
 	return false;
 } // IsRightArrowPressed
-
-
-int Input::GetMouseWheelDelta()
-{
-	return m_mouseState.lZ;
-} // GetMouseWheelDelta

@@ -7,12 +7,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 1. Assimp 경로 설정
 set(ASSIMP_ROOT "C:/dev/External/assimp-6.0.2-build")
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
+file(GLOB_RECURSE SOURCES 
+    "src/*.cpp" 
+    "src/*.h"
+    "hlsl/*.hlsl"
+)
 add_executable(DX11_Lab WIN32 ${SOURCES})
 
 # 2. 헤더 포함 경로
 target_include_directories(DX11_Lab PRIVATE 
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/System"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Base"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Graphics"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/World"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Application"
     "${ASSIMP_ROOT}/include"
     "C:/dev"
 )
@@ -37,6 +46,8 @@ target_link_libraries(DX11_Lab
     d3d11
     dxgi
     d3dcompiler
+    dinput8
+    dxguid
     imgui::imgui
     ${ASSIMP_LIB_NAME}   # 변수명 일치 확인
     ${ZLIB_LIB_NAME}     # 변수명 일치 확인
@@ -44,7 +55,11 @@ target_link_libraries(DX11_Lab
 
 add_custom_command(TARGET DX11_Lab POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-   "${CMAKE_CURRENT_SOURCE_DIR}/hlsl" "$<TARGET_FILE_DIR:DX11_Lab>/hlsl")
+    "${CMAKE_CURRENT_SOURCE_DIR}/hlsl" "$<TARGET_FILE_DIR:DX11_Lab>/hlsl")
+
+add_custom_command(TARGET DX11_Lab POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_CURRENT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:DX11_Lab>/assets")
 
 # DLL 파일 복사 (파일명 자동 구성)
 add_custom_command(TARGET DX11_Lab POST_BUILD

@@ -20,6 +20,8 @@ D3DRenderer::D3DRenderer()
 	m_depthStencilState = 0;
 	m_depthStencilView = 0;
 	m_rasterState = 0;
+	m_rasterStateNoCulling = 0;
+	m_rasterStateWireframe = 0;
 
 	m_projectionMatrix = XMMatrixIdentity();
 	m_worldMatrix = XMMatrixIdentity();
@@ -30,6 +32,8 @@ D3DRenderer::D3DRenderer()
 	m_depthDisabledStencilState = 0;
 	m_alphaEnableBlendingState = 0;
 	m_alphaDisableBlendingState = 0;
+	m_alphaEnableBlendingState2 = 0;
+
 } // D3DRenderer
 
 
@@ -47,6 +51,8 @@ D3DRenderer::D3DRenderer(const D3DRenderer& other)
 	m_depthStencilState = 0;
 	m_depthStencilView = 0;
 	m_rasterState = 0;
+	m_rasterStateNoCulling = 0;
+	m_rasterStateWireframe = 0;
 
 	m_projectionMatrix = XMMatrixIdentity();
 	m_worldMatrix = XMMatrixIdentity();
@@ -57,6 +63,8 @@ D3DRenderer::D3DRenderer(const D3DRenderer& other)
 	m_depthDisabledStencilState = 0;
 	m_alphaEnableBlendingState = 0;
 	m_alphaDisableBlendingState = 0;
+	m_alphaEnableBlendingState2 = 0;
+
 } // D3DRenderer
 
 
@@ -354,6 +362,35 @@ bool D3DRenderer::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd,
 	// 래스터라이저 상태를 설정
 	m_deviceContext->RSSetState(m_rasterState);
 
+	// 뒷면 컬링을 비활성화하는 래스터 설명을 설정
+	rasterDesc.CullMode = D3D11_CULL_NONE;
+
+	// 컬링이 없는 래스터라이저 상태를 생성
+	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterStateNoCulling);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// 와이어프레임 렌더링이 가능한 래스터 description을 설정
+	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	// 와이어프레임 래스터라이저 상태를 생성
+	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterStateWireframe);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	// 렌더링을 위한 뷰포트를 설정
 	m_viewport.Width = (float)screenWidth;
 	m_viewport.Height = (float)screenHeight;
@@ -379,9 +416,6 @@ bool D3DRenderer::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd,
 
 	// 2D 렌더링을 위한 직교 투영 행렬을 생성
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
-	// 매개변수를 설정하기 전에 두 번째 depth 스텐실 상태 Clear
-	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
 
 	// 이제 2D 렌더링 시 Z 버퍼를 끄는 두 번째 depth 스텐실 상태를 생성
 	// 유일한 차이점은 DepthEnable이 false로 설정된다는 점이며, 다른 모든 매개변수는 다른 깊이 스텐실 상태와 동일
@@ -410,7 +444,9 @@ bool D3DRenderer::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd,
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
 
 	// blend state description 설정
-	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDescription.AlphaToCoverageEnable = FALSE;
+	blendStateDescription.IndependentBlendEnable = false;
+	blendStateDescription.RenderTarget[0].BlendEnable = true;
 	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
@@ -427,9 +463,29 @@ bool D3DRenderer::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd,
 
 	// 설명을 수정하여 알파 채널이 비활성화된 블렌드 상태 설명을 생성
 	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+	blendStateDescription.AlphaToCoverageEnable = false;
 
 	// description 사용하여 블렌드 상태를 생성
 	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// 알파-커버리지 블렌딩 모드에 대한 블렌딩 상태 description을 생성
+	blendStateDescription.AlphaToCoverageEnable = true;
+	blendStateDescription.IndependentBlendEnable = false;
+	blendStateDescription.RenderTarget[0].BlendEnable = true;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+	// description을 사용하여 블렌드 상태를 생성
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState2);
 	if (FAILED(result))
 	{
 		return false;
@@ -444,6 +500,12 @@ void D3DRenderer::Shutdown()
 	if (m_swapChain)
 	{
 		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (m_alphaEnableBlendingState2)
+	{
+		m_alphaEnableBlendingState2->Release();
+		m_alphaEnableBlendingState2 = 0;
 	}
 
 	if (m_alphaEnableBlendingState)
@@ -625,6 +687,23 @@ void D3DRenderer::TurnZBufferOff()
 	return;
 } // TurnZBufferOff
 
+void D3DRenderer::TurnOnCulling()
+{
+	// 컬링 래스터라이저 상태를 설정
+	m_deviceContext->RSSetState(m_rasterState);
+
+	return;
+} // TurnOnCulling
+
+
+void D3DRenderer::TurnOffCulling()
+{
+	// back face 컬링을 비활성화하는 래스터라이저 상태를 설정
+	m_deviceContext->RSSetState(m_rasterStateNoCulling);
+
+	return;
+} // TurnOffCulling
+
 void D3DRenderer::EnableAlphaBlending()
 {
 	float blendFactor[4];
@@ -649,9 +728,39 @@ void D3DRenderer::DisableAlphaBlending()
 	blendFactor[1] = 0.0f;
 	blendFactor[2] = 0.0f;
 	blendFactor[3] = 0.0f;
-
-	// Turn off the alpha blending.
 	m_deviceContext->OMSetBlendState(m_alphaDisableBlendingState, blendFactor, 0xffffffff);
 
 	return;
 } // DisableAlphaBlending
+
+void D3DRenderer::EnableAlphaToCoverageBlending()
+{
+	float blendFactor[4];
+
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	m_deviceContext->OMSetBlendState(m_alphaEnableBlendingState2, blendFactor, 0xffffffff);
+
+	return;
+} // EnableAlphaToCoverageBlending
+
+
+void D3DRenderer::EnableWireframe()
+{
+	// 와이어프레임 래스터라이저 상태를 설정
+	m_deviceContext->RSSetState(m_rasterStateWireframe);
+
+	return;
+} // EnableWireframe
+
+
+void D3DRenderer::DisableWireframe()
+{
+	// 솔리드 fill 래스터라이저 상태를 설정
+	m_deviceContext->RSSetState(m_rasterState);
+
+	return;
+} // DisableWireframe

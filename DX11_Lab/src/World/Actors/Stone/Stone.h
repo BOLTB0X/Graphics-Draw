@@ -11,9 +11,10 @@
 // INCLUDES //
 //////////////
 #include <DirectXMath.h>
-#include "../Resources/Model/Model.h"
-#include "../Resources/Shaders/ShaderManager.h"
-#include "../Resources/Light/Light.h"
+
+#include "Resources/Model/Model.h"
+#include "Shaders/ShaderManager.h"
+#include "Resources/Light/Light.h"
 
 
 using namespace DirectX;

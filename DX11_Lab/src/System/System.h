@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: FrameworkSystem.h
+// Filename: System.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _SYSTEMCLASS_H_
-#define _SYSTEMCLASS_H_
+#ifndef _SYSTEM_H_
+#define _SYSTEM_H_
 
 ///////////////////////////////
 // PRE-PROCESSING DIRECTIVES //
@@ -19,19 +19,19 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "Input/Input.h"
-#include "./Application/App.h"
+#include "Base/Input/Input.h"
+#include "Application/Application.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: FrameworkSystem
+// Class name: System
 ////////////////////////////////////////////////////////////////////////////////
-class FrameworkSystem
+class System
 {
 public:
-	FrameworkSystem();
-	FrameworkSystem(const FrameworkSystem&);
-	~FrameworkSystem();
+	System();
+	System(const System&);
+	~System();
 
 	bool Init();
 	void Shutdown();
@@ -49,9 +49,9 @@ private:
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
 
-	Input* m_Input;
-	App* m_App;
-}; // FrameworkSystem
+	Input* m_InputPtr;
+	Application* m_App;
+}; // System
 
 
 /////////////////////////
@@ -63,7 +63,7 @@ static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 /////////////
 // GLOBALS //
 /////////////
-static FrameworkSystem* ApplicationHandle = 0;
+static System* ApplicationHandle = 0;
 
 
 #endif

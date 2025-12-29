@@ -1,0 +1,52 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: Zone.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _ZONE_H_
+#define _ZONE_H_
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "Base/Input/Input.h"
+#include "Base/Position/Position.h"
+
+#include "Graphics/Renderer/D3DRenderer.h"
+#include "Graphics/Camera/Camera.h"
+#include "Graphics/Resources/Model/Model.h"
+#include "Graphics/Shaders/ShaderManager.h"
+
+#include "World/Actors/Terrain/Terrain.h"
+#include "World/Actors/Stone/Stone.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: Zone
+////////////////////////////////////////////////////////////////////////////////
+class Zone
+{
+public:
+	Zone();
+	Zone(const Zone&);
+	~Zone();
+
+	bool Init(D3DRenderer*, HWND, int, int, float, Model*);
+	void Shutdown();
+	bool Frame(D3DRenderer*, Input*, ShaderManager*, float, int);
+	bool Render(D3DRenderer*, ShaderManager*);
+
+private:
+	void HandleMovementInput(Input*, float);
+
+private:
+	Camera* m_Camera;
+	Position* m_Position;
+	Terrain* m_Terrain;
+	Light* m_Light;
+
+	Stone* m_PlayerStone;
+	Stone* m_WallStone;
+	//bool m_displayUI;
+	bool m_wireFrame;
+};
+
+
+#endif

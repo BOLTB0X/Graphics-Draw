@@ -4,7 +4,6 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-
 //////////////
 // INCLUDES //
 //////////////
@@ -17,16 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 class Texture
 {
-private:
-	struct TargatHeader
-	{
-		unsigned char data1[12];
-		unsigned short width;
-		unsigned short height;
-		unsigned char bpp;
-		unsigned char data2;
-	};
-
 public:
 	Texture();
 	Texture(const Texture&);
@@ -41,13 +30,11 @@ public:
 	int GetHeight();
 
 private:
-	bool LoadTarga32Bit(char*);
-
-private:
-	unsigned char* m_targatData;
+	unsigned char* imageData;
 	ID3D11Texture2D* m_texture;
 	ID3D11ShaderResourceView* m_textureView;
 	int m_width, m_height;
+
 }; // Texture
 
 #endif

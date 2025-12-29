@@ -12,8 +12,6 @@ Model::Model()
 	m_Texture(nullptr),
 	m_Textures(nullptr),
 	m_model(nullptr)
-	//m_position{ 0,0,0 }, 
-	//m_rotation{ 0,0,0 }
 {
 } // Model
 
@@ -26,8 +24,6 @@ Model::Model(const Model& other)
 	m_Texture(nullptr),
 	m_Textures(nullptr),
 	m_model(nullptr)
-	//m_position{ 0,0,0 }, 
-	//m_rotation{ 0,0,0 }
 {
 } // Model
 
@@ -242,17 +238,14 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
-	bool result;
+	if (m_Texture) { 
+		m_Texture->Shutdown(); 
+		delete m_Texture; 
+	}
 
 	m_Texture = new Texture;
 
-	result = m_Texture->Init(device, deviceContext, filename);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
+	return m_Texture->Init(device, deviceContext, filename);
 } // LoadTexture
 
 

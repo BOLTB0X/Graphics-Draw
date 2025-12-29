@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: main.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "Framework/FrameworkSystem.h"
+#include "System/System.h"
 
 int WINAPI wWinMain(
     _In_ HINSTANCE hInstance,
@@ -10,20 +10,20 @@ int WINAPI wWinMain(
     _In_ int nCmdShow
 )
 {
-    FrameworkSystem* System;
+    System* system;
     bool result;
 
-	System = new FrameworkSystem;
-	result = System->Init();
+	system = new System;
+	result = system->Init();
 
     if (result)
     {
-        System->Run();
+        system->Run();
     }
 
-	System->Shutdown();
-	delete System;
-	System = 0;
+	system->Shutdown();
+	delete system;
+	system = 0;
 
     return 0;
 } // wWinMain

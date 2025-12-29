@@ -33,22 +33,22 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -87,7 +87,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/dev/vcpkg/installed/x64-windows/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -96,13 +96,11 @@
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild>
-      </MinimalRebuild>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <SupportJustMyCode>
-      </SupportJustMyCode>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -110,10 +108,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -121,8 +119,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message>			</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/debug/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -142,6 +139,15 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/assets C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug/assets
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/dev/External/assimp-6.0.2-build/bin/Debug/assimp-vc143-mtd.dll C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -152,7 +158,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;C:\dev\vcpkg\installed\x64-windows\debug\lib\imguid.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;C:\dev\vcpkg\installed\x64-windows\debug\lib\imguid.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/dev/External/assimp-6.0.2-build/lib/Debug;C:/dev/External/assimp-6.0.2-build/lib/Debug/$(Configuration);C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug;C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -167,7 +173,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/dev/vcpkg/installed/x64-windows/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -175,13 +181,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild>
-      </MinimalRebuild>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode>
-      </SupportJustMyCode>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -191,10 +195,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -202,8 +206,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message>			</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -223,6 +226,15 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/assets C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release/assets
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/dev/External/assimp-6.0.2-build/bin/Debug/assimp-vc143-mtd.dll C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -233,7 +245,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/dev/External/assimp-6.0.2-build/lib/Debug;C:/dev/External/assimp-6.0.2-build/lib/Debug/$(Configuration);C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug;C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -248,7 +260,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/dev/vcpkg/installed/x64-windows/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -256,13 +268,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild>
-      </MinimalRebuild>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode>
-      </SupportJustMyCode>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -272,10 +282,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -283,8 +293,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message>			</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -304,6 +313,15 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/assets C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel/assets
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/dev/External/assimp-6.0.2-build/bin/Debug/assimp-vc143-mtd.dll C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -314,7 +332,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/dev/External/assimp-6.0.2-build/lib/Debug;C:/dev/External/assimp-6.0.2-build/lib/Debug/$(Configuration);C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug;C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -329,7 +347,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "C:/dev/vcpkg/installed/x64-windows/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -338,13 +356,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <MinimalRebuild>
-      </MinimalRebuild>
+      <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode>
-      </SupportJustMyCode>
+      <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -352,10 +368,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World;C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application;C:\dev\External\assimp-6.0.2-build\include;C:\dev;C:\dev\vcpkg\installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -363,8 +379,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>
-      </Message>
+      <Message>			</Message>
       <Command>setlocal
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/dev/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo/DX11_Lab.exe -installedDir C:/dev/vcpkg/installed/x64-windows/bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
@@ -384,6 +399,15 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/assets C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo/assets
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/dev/External/assimp-6.0.2-build/bin/Debug/assimp-vc143-mtd.dll C:/Users/User/Documents/GitHub/Graphics-Draw/DX11_Lab/build/RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
@@ -394,7 +418,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;C:\dev\vcpkg\installed\x64-windows\lib\imgui.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:/dev/External/assimp-6.0.2-build/lib/Debug;C:/dev/External/assimp-6.0.2-build/lib/Debug/$(Configuration);C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug;C:/dev/External/assimp-6.0.2-build/contrib/zlib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -465,22 +489,49 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Actors\Stone.h" />
-    <ClInclude Include="..\src\Application\App.h" />
-    <ClInclude Include="..\src\Framework\Camera\Camera.h" />
-    <ClInclude Include="..\src\Framework\FrameworkSystem.h" />
-    <ClInclude Include="..\src\Framework\Input\Input.h" />
-    <ClInclude Include="..\src\Framework\Renderer\D3DRenderer.h" />
-    <ClInclude Include="..\src\Resources\Light\Light.h" />
-    <ClInclude Include="..\src\Resources\Model\Model.h" />
-    <ClInclude Include="..\src\Resources\Shaders\BaseShader.h" />
-    <ClInclude Include="..\src\Resources\Shaders\ColorShader.h" />
-    <ClInclude Include="..\src\Resources\Shaders\LightShader.h" />
-    <ClInclude Include="..\src\Resources\Shaders\NormalMapShader.h" />
-    <ClInclude Include="..\src\Resources\Shaders\ShaderManager.h" />
-    <ClInclude Include="..\src\Resources\Shaders\TextureShader.h" />
-    <ClInclude Include="..\src\Resources\Texture\Texture.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Fps\Fps.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Fps\Fps.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Input\Input.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Input\Input.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Position\Position.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Position\Position.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Timer\Timer.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Timer\Timer.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Camera\Camera.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Camera\Camera.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Renderer\D3DRenderer.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Renderer\D3DRenderer.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Light\Light.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Light\Light.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Model\Model.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Model\Model.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Texture\Texture.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Texture\Texture.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\BaseShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\BaseShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\ColorShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\ColorShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\LightShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\LightShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\NormalMapShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\NormalMapShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\ShaderManager.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\ShaderManager.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\TextureShader.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\TextureShader.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System\System.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System\System.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Stone\Stone.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Stone\Stone.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Terrain\Terrain.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Terrain\Terrain.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Zone\Zone.cpp" />
+    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Zone\Zone.h" />
+    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\main.cpp" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\build\ZERO_CHECK.vcxproj">
       <Project>{41EED0BB-9A5A-3728-A094-DB54EF25CB74}</Project>
@@ -488,24 +539,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\Actors\Stone.cpp" />
-    <ClCompile Include="..\src\Application\App.cpp" />
-    <ClCompile Include="..\src\Framework\Camera\Camera.cpp" />
-    <ClCompile Include="..\src\Framework\FrameworkSystem.cpp" />
-    <ClCompile Include="..\src\Framework\Input\Input.cpp" />
-    <ClCompile Include="..\src\Framework\Renderer\D3DRenderer.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\Resources\Light\Light.cpp" />
-    <ClCompile Include="..\src\Resources\Model\Model.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\BaseShader.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\ColorShader.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\LightShader.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\NormalMapShader.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\ShaderManager.cpp" />
-    <ClCompile Include="..\src\Resources\Shaders\TextureShader.cpp" />
-    <ClCompile Include="..\src\Resources\Texture\Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,37 +1,37 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: FrameworkSystem.cpp
+// Filename: System.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "FrameworkSystem.h"
+#include "System.h"
 
 
-FrameworkSystem::FrameworkSystem()
+System::System()
 {
 	m_applicationName = L"Sisyphus Engine";
 	m_hinstance = NULL;
 	m_hwnd = NULL;
 
-	m_Input = 0;
+	m_InputPtr = 0;
 	m_App = 0;
-} // FrameworkSystem
+} // System
 
 
-FrameworkSystem::FrameworkSystem(const FrameworkSystem& other)
+System::System(const System& other)
 {
 	m_applicationName = L"Sisyphus Engine";
 	m_hinstance = NULL;
 	m_hwnd = NULL;
 
-	m_Input = 0;
+	m_InputPtr = 0;
 	m_App = 0;
-} // FrameworkSystem
+} // System
 
 
-FrameworkSystem::~FrameworkSystem()
+System::~System()
 {
-} // ~FrameworkSystem
+} // ~System
 
 
-bool FrameworkSystem::Init()
+bool System::Init()
 {
 	int screenWidth, screenHeight;
 	bool result;
@@ -43,18 +43,9 @@ bool FrameworkSystem::Init()
 	// windows api 초기화
 	InitWindows(screenWidth, screenHeight);
 
-	// user keyboard input 처리를 위한 input 객체 생성 및 초기화
-	m_Input = new Input;
-
-	result = m_Input->Init(m_hinstance, m_hwnd, screenWidth, screenHeight);
-	if (!result)
-	{
-		return false;
-	}
-
-	// App 객체 생성 및 초기화
+	// Application 객체 생성 및 초기화
 	// 이 객체 는 이 애플리케이션의 모든 그래픽 렌더링을 처리
-	m_App = new App;
+	m_App = new Application;
 
 	result = m_App->Init(screenWidth, screenHeight, m_hwnd);
 	if (!result)
@@ -62,25 +53,20 @@ bool FrameworkSystem::Init()
 		return false;
 	}
 
+	m_InputPtr = m_InputPtr = m_App->GetInput();
+
 	return true;
 } // Init
 
 
-void FrameworkSystem::Shutdown()
+void System::Shutdown()
 {
-	// App 객체 종료
+	// Application 객체 종료
 	if (m_App)
 	{
 		m_App->Shutdown();
 		delete m_App;
 		m_App = 0;
-	}
-
-	// Input 객체 릴리즈.
-	if (m_Input)
-	{
-		delete m_Input;
-		m_Input = 0;
 	}
 
 	ShutdownWindows();
@@ -89,7 +75,7 @@ void FrameworkSystem::Shutdown()
 } // Shutdown
 
 
-void FrameworkSystem::Run()
+void System::Run()
 {
 	MSG msg;
 	bool done, result;
@@ -129,17 +115,11 @@ void FrameworkSystem::Run()
 } // Run
 
 
-bool FrameworkSystem::Frame()
+bool System::Frame()
 {
 	bool result;
 
-	result = m_Input->Frame();
-	if (!result)
-	{
-		return false;
-	}
-
-	result = m_App->Frame(m_Input);
+	result = m_App->Frame();
 	if (!result)
 	{
 		return false;
@@ -149,15 +129,15 @@ bool FrameworkSystem::Frame()
 } // Frame
 
 
-LRESULT CALLBACK FrameworkSystem::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 } // MessageHandler
 
 
-void FrameworkSystem::InitWindows(int& screenWidth, int& screenHeight)
+void System::InitWindows(int& screenWidth, int& screenHeight)
 {
-	WNDCLASSEX wc;
+	WNDCLASSEXW wc;
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
@@ -183,7 +163,7 @@ void FrameworkSystem::InitWindows(int& screenWidth, int& screenHeight)
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	// Register window class.
-	RegisterClassEx(&wc);
+	RegisterClassExW(&wc);
 
 	//  GetSystemMetrics 함수는 지정된 시스템 매개변수 또는 시스템 구성 요소의 크기 및 위치를 반환
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
@@ -214,9 +194,11 @@ void FrameworkSystem::InitWindows(int& screenWidth, int& screenHeight)
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
 
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_OVERLAPPEDWINDOW, // 표준 스타일로 변경
+	//m_applicationName = L"Sisyphus Engine";
+	m_hwnd = CreateWindowExW(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		WS_OVERLAPPEDWINDOW,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+
 	//m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 	//	WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 	//	posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
@@ -231,7 +213,7 @@ void FrameworkSystem::InitWindows(int& screenWidth, int& screenHeight)
 } // InitWindows
 
 
-void FrameworkSystem::ShutdownWindows()
+void System::ShutdownWindows()
 {
 	ShowCursor(true);
 
@@ -243,7 +225,7 @@ void FrameworkSystem::ShutdownWindows()
 	DestroyWindow(m_hwnd);
 	m_hwnd = NULL;
 
-	UnregisterClass(m_applicationName, m_hinstance);
+	UnregisterClassW(m_applicationName, m_hinstance);
 	m_hinstance = NULL;
 
 	ApplicationHandle = NULL;

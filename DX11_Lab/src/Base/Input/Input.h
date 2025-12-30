@@ -59,6 +59,7 @@ public:
 
 	bool IsF1Toggled();
 	bool IsF2Toggled();
+	bool IsF3Toggled();
 
 	int GetMouseWheelDelta();
 
@@ -84,7 +85,7 @@ private:
 
 	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
 
-	bool m_F1_released, m_F2_released;
+	bool m_F1_released, m_F2_released, m_F3_released;
 }; // Input
 
 #endif

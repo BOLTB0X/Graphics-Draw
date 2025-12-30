@@ -1,0 +1,36 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: TextureManager.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _TEXTUREMANAGERCLASS_H_
+#define _TEXTUREMANAGERCLASS_H_
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "Texture.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: TextureManager
+////////////////////////////////////////////////////////////////////////////////
+class TextureManager
+{
+public:
+	TextureManager();
+	TextureManager(const TextureManager&);
+	~TextureManager();
+
+	bool Init(int);
+	void Shutdown();
+
+	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, int);
+
+	ID3D11ShaderResourceView* GetTexture(int);
+
+private:
+	Texture* m_TextureArray;
+	int m_textureCount;
+}; // TextureManager
+
+#endif

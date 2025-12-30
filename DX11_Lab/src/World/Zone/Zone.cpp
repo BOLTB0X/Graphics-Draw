@@ -11,8 +11,8 @@ Zone::Zone()
 	m_Light(nullptr),
 	m_PlayerStone(nullptr), 
 	m_WallStone(nullptr),
-	m_wireFrame(false)
-
+	m_wireFrame(false),
+	m_cellLines(false)
 {
 } // Zone
 
@@ -24,7 +24,8 @@ Zone::Zone(const Zone& other)
 	m_Light(nullptr), 
 	m_PlayerStone(nullptr), 
 	m_WallStone(nullptr),
-	m_wireFrame(false)
+	m_wireFrame(false),
+	m_cellLines(false)
 {
 } // Zone
 
@@ -49,6 +50,14 @@ bool Zone::Init(D3DRenderer* Direct3D, HWND hwnd,
 	m_Camera->Render();
 	m_Camera->RenderBaseViewMatrix();
 
+	m_Light = new Light;
+	if (!m_Light)
+	{
+		return false;
+	}
+	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetDirection(-0.5f, -1.0f, -0.5f);
+
 	m_Position = new Position;
 	if (!m_Position)
 	{
@@ -56,6 +65,9 @@ bool Zone::Init(D3DRenderer* Direct3D, HWND hwnd,
 	}
 	m_Position->SetPosition(128.0f, 10.0f, -10.0f);
 	m_Position->SetRotation(0.0f, 0.0f, 0.0f);
+
+	//m_Position->SetPosition(128.0f, 10.0f, -10.0f);
+	//m_Position->SetRotation(20.0f, 0.0f, 0.0f);
 
 	m_Terrain = new Terrain;
 	if (!m_Terrain)
@@ -65,25 +77,21 @@ bool Zone::Init(D3DRenderer* Direct3D, HWND hwnd,
 	result = m_Terrain->Init(Direct3D->GetDevice(), "assets/Terrain/setup.txt");
 	if (!result)
 	{
-		MessageBoxW(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
+		MessageBoxW(hwnd, L"terrain 초기화 실패", L"Error", MB_OK);
 		return false;
 	}
 	
-	// 조명
-	m_Light = new Light;
-
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-
 	// 조종할 돌
 	m_PlayerStone = new Stone;
-	m_PlayerStone->Init(sharedModel, 130.0f, 2.0f, 0.0f, 1.0f);
+	m_PlayerStone->Init(sharedModel, 128.0f, 5.0f, 128.0f, 1.0f);
 
 	// 벽이 될 돌
 	m_WallStone = new Stone;
-	m_WallStone->Init(sharedModel, 126.0f, 2.0f, 0.0f, 1.0f);
+	m_WallStone->Init(sharedModel, 132.0f, 5.0f, 128.0f, 1.0f);
 
-	m_wireFrame = true;
+	m_wireFrame = false;
+
+	m_cellLines = true;
 
 	return true;
 } // init
@@ -100,11 +108,6 @@ void Zone::Shutdown()
 		m_PlayerStone = 0;
 	}
 
-	if (m_Light) {
-		delete m_Light;
-		m_Light = 0;
-	}
-
 	if (m_Terrain)
 	{
 		m_Terrain->Shutdown();
@@ -118,6 +121,11 @@ void Zone::Shutdown()
 		m_Position = 0;
 	}
 
+	if (m_Light) {
+		delete m_Light;
+		m_Light = 0;
+	}
+
 	if (m_Camera)
 	{
 		delete m_Camera;
@@ -128,11 +136,12 @@ void Zone::Shutdown()
 } // Shutdown
 
 
-bool Zone::Frame(D3DRenderer* Direct3D, Input* input, ShaderManager* shaderManager, float frameTime, int fps)
+bool Zone::Frame(D3DRenderer* Direct3D, Input* input, 
+	ShaderManager* shaderManager, TextureManager* textureManager, 
+	float frameTime, int fps)
 {
 	bool result;
 	float posX, posY, posZ, rotX, rotY, rotZ;
-
 
 	// 프레임 입력 처리를 수행
 	HandleMovementInput(input, frameTime);
@@ -140,11 +149,18 @@ bool Zone::Frame(D3DRenderer* Direct3D, Input* input, ShaderManager* shaderManag
 	m_Position->GetPosition(posX, posY, posZ);
 	m_Position->GetRotation(rotX, rotY, rotZ);
 
+	result = Render(Direct3D, shaderManager, textureManager);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 } // Frame
 
 
-bool Zone::Render(D3DRenderer* renderer, ShaderManager* shaderManager)
+bool Zone::Render(D3DRenderer* renderer, 
+	ShaderManager* shaderManager, TextureManager* textureManager)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, baseViewMatrix, orthoMatrix;
 	bool result;
@@ -165,25 +181,63 @@ bool Zone::Render(D3DRenderer* renderer, ShaderManager* shaderManager)
 		renderer->EnableWireframe();
 	}
 
-	// 컬러 셰이더를 사용하여 지형 격자를 렌더링
-	m_Terrain->Render(renderer->GetDeviceContext());
-	result = shaderManager->RenderColorShader(renderer->GetDeviceContext(), m_Terrain->GetIndexCount(), worldMatrix, viewMatrix,
-		projectionMatrix);
+	for (unsigned int i = 0; i < m_Terrain->GetCellCount(); i++)
+	{
+		// Put the terrain cell buffers on the pipeline.
+		result = m_Terrain->RenderCell(renderer->GetDeviceContext(), i);
+		if (!result)
+		{
+			return false;
+
+		}
+
+		// Render the cell buffers using the terrain shader.
+		result = shaderManager->RenderTerrainShader(renderer->GetDeviceContext(), m_Terrain->GetCellIndexCount(i), worldMatrix, viewMatrix,
+			projectionMatrix, textureManager->GetTexture(0), textureManager->GetTexture(1),
+			m_Light->GetDirection(), m_Light->GetDiffuseColor());
+		if (!result)
+		{
+			return false;
+		}
+
+		// If needed then render the bounding box around this terrain cell using the color shader. 
+		if (m_cellLines)
+		{
+			m_Terrain->RenderCellLines(renderer->GetDeviceContext(), i);
+			shaderManager->RenderColorShader(renderer->GetDeviceContext(), m_Terrain->GetCellLinesIndexCount(i), worldMatrix, viewMatrix, projectionMatrix);
+			if (!result)
+			{
+				return false;
+			}
+		}
+	}
+
+
+	/*m_Terrain->Render(renderer->GetDeviceContext());
+	result = shaderManager->RenderTerrainShader(
+		renderer->GetDeviceContext(), 
+		m_Terrain->GetIndexCount(),
+		worldMatrix,
+		viewMatrix,
+		projectionMatrix,
+		textureManager->GetTexture(0),
+		textureManager->GetTexture(1),
+		m_Light->GetDirection(),
+		m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
-	}
+	}*/
 
-	result = m_PlayerStone->Render(renderer->GetDeviceContext(), shaderManager,
-		viewMatrix, projectionMatrix, m_Light);
-	if (!result)
-		return false;
+	//result = m_PlayerStone->Render(renderer->GetDeviceContext(), shaderManager,
+	//	viewMatrix, projectionMatrix, m_Light);
+	//if (!result)
+	//	return false;
 
-	result = m_WallStone->Render(renderer->GetDeviceContext(), shaderManager,
-		viewMatrix, projectionMatrix, m_Light);
-	if (!result)
-		return false;
-
+	//result = m_WallStone->Render(renderer->GetDeviceContext(), shaderManager,
+	//	viewMatrix, projectionMatrix, m_Light);
+	//if (!result)
+	//	return false;
 
 	if (m_wireFrame)
 	{
@@ -269,7 +323,6 @@ void Zone::HandleMovementInput(Input* input, float frameTime)
 	m_Camera->SetPosition(posX, posY, posZ);
 	m_Camera->SetRotation(rotX, rotY, rotZ);
 
-	// Determine if the user interface should be displayed or not.
 	if (input->IsF1Toggled())
 	{
 		//m_displayUI = !m_displayUI;
@@ -284,6 +337,11 @@ void Zone::HandleMovementInput(Input* input, float frameTime)
 	if (input->IsF2Toggled())
 	{
 		m_wireFrame = !m_wireFrame;
+	}
+
+	if (input->IsF3Toggled())
+	{
+		m_cellLines = !m_cellLines;
 	}
 
 	return;

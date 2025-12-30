@@ -28,8 +28,8 @@ bool LightShader::Init(ID3D11Device* device, HWND hwnd)
 	return BaseShader::Init(
 		device,
 		hwnd,
-		L"./hlsl/Light.vs",
-		L"./hlsl/Light.ps"
+		L"hlsl/Light.vs",
+		L"hlsl/Light.ps"
 	);
 } // Init
 

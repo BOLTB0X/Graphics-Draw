@@ -13,7 +13,7 @@
 #include <fstream>
 #include <stdio.h>
 
-#include "stb_image.h"
+#include "TerrainCell.h"
 
 using namespace DirectX;
 using namespace std;
@@ -28,17 +28,40 @@ private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
-		XMFLOAT4 color;
+		XMFLOAT2 texture;
+		XMFLOAT3 normal;
+		XMFLOAT3 tangent;
+		XMFLOAT3 binormal;
+		XMFLOAT3 color;
 	};
 
 	struct HeightMapType
 	{
 		float x, y, z;
+		float nx, ny, nz;
+		float r, g, b;
 	};
 
 	struct ModelType
 	{
 		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
+		float tx, ty, tz;
+		float bx, by, bz;
+		float r, g, b;
+	};
+
+	struct VectorType
+	{
+		float x, y, z;
+	};
+
+	struct TempVertexType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
 	};
 
 public:
@@ -52,26 +75,47 @@ public:
 
 	int GetIndexCount();
 
+	bool RenderCell(ID3D11DeviceContext*, int);
+	void RenderCellLines(ID3D11DeviceContext*, int);
+
+	int GetCellIndexCount(int);
+	int GetCellLinesIndexCount(int);
+	int GetCellCount();
+
 private:
 	bool LoadSetupFile(char*);
 	bool LoadBitmapHeightMap();
+	bool LoadRawHeightMap();
+
 	void ShutdownHeightMap();
 	void SetTerrainCoordinates();
+
+	bool CalculateNormals();
+	bool LoadColorMap();
 	bool BuildTerrainModel();
 	void ShutdownTerrainModel();
+
+	void CalculateTerrainVectors();
+	void CalculateTangentBinormal(TempVertexType, TempVertexType, TempVertexType, VectorType&, VectorType&);
 
 	bool InitBuffers(ID3D11Device*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
+	bool LoadTerrainCells(ID3D11Device*);
+	void ShutdownTerrainCells();
+
 
 private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	int m_terrainHeight, m_terrainWidth;
 	float m_heightScale;
-	char* m_terrainFilename;
+	char* m_terrainFilename, *m_colorMapFilename;
 	HeightMapType* m_heightMap;
 	ModelType* m_terrainModel;
+
+	TerrainCell* m_TerrainCells;
+	int m_cellCount;
 }; // Terrain
 
 #endif

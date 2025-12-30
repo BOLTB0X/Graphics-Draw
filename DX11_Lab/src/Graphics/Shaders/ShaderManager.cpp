@@ -8,7 +8,8 @@ ShaderManager::ShaderManager()
 	: m_ColorShader(nullptr),
 	m_TextureShader(nullptr),
 	m_LightShader(nullptr),
-	m_NormalMapShader(nullptr)
+	m_NormalMapShader(nullptr),
+	m_TerrainShader(nullptr)
 {
 } // ShaderManager
 
@@ -17,7 +18,8 @@ ShaderManager::ShaderManager(const ShaderManager& other)
 	: m_ColorShader(nullptr),
 	m_TextureShader(nullptr),
 	m_LightShader(nullptr),
-	m_NormalMapShader(nullptr)
+	m_NormalMapShader(nullptr),
+	m_TerrainShader(nullptr)
 {
 } // ShaderManager
 
@@ -60,6 +62,13 @@ bool ShaderManager::Init(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
+	m_TerrainShader = new TerrainShader;
+	result = m_TerrainShader->Init(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
 
 	return true;
 } // Init
@@ -67,6 +76,13 @@ bool ShaderManager::Init(ID3D11Device* device, HWND hwnd)
 
 void ShaderManager::Shutdown()
 {
+	if (m_TerrainShader)
+	{
+		m_TerrainShader->Shutdown();
+		delete m_TerrainShader;
+		m_TerrainShader = 0;
+	}
+
 	if (m_NormalMapShader)
 	{
 		m_NormalMapShader->Shutdown();
@@ -136,7 +152,9 @@ bool ShaderManager::RenderLightShader(ID3D11DeviceContext* deviceContext, int in
 	bool result;
 
 
-	result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+	result = m_LightShader->Render(deviceContext, indexCount, 
+		worldMatrix, viewMatrix, projectionMatrix, 
+		texture, lightDirection, diffuseColor);
 	if (!result)
 	{
 		return false;
@@ -161,3 +179,10 @@ bool ShaderManager::RenderNormalMapShader(ID3D11DeviceContext* deviceContext, in
 
 	return true;
 } // RenderNormalMapShader
+
+bool ShaderManager::RenderTerrainShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalMap,
+	XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
+{
+	return m_TerrainShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, normalMap, lightDirection, diffuseColor);
+}

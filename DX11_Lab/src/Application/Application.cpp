@@ -7,6 +7,7 @@
 Application::Application()
 	: m_Direct3D(nullptr),
 	m_Model(nullptr),
+	m_TextureManager(nullptr),
 	m_ShaderManager(nullptr),
 	m_Input(nullptr),
 	m_Timer(nullptr),
@@ -19,6 +20,7 @@ Application::Application()
 Application::Application(const Application& other)
 	: m_Direct3D(nullptr),
 	m_Model(nullptr),
+	m_TextureManager(nullptr),
 	m_ShaderManager(nullptr),
 	m_Input(nullptr),
 	m_Timer(nullptr),
@@ -58,9 +60,9 @@ bool Application::Init(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	strcpy_s(modelFilename, "./assets/Stone/sphere.txt");
-	strcpy_s(textureFilename1, "./assets/Stone/stone01.tga");
-	strcpy_s(textureFilename2, "./assets/Stone/normal01.tga");
+	strcpy_s(modelFilename, "assets/Stone/sphere.txt");
+	strcpy_s(textureFilename1, "assets/Stone/stone01.tga");
+	strcpy_s(textureFilename2, "assets/Stone/normal01.tga");
 
 	m_Model = new Model;
 
@@ -75,12 +77,42 @@ bool Application::Init(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_ShaderManager = new ShaderManager;
+	if (!m_ShaderManager)
+	{
+		return false;
+	}
 	result = m_ShaderManager->Init(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBoxW(hwnd, L"Shader 클래스 초기화 실패", L"Error", MB_OK);
+		MessageBoxW(hwnd, L"ShaderManager 클래스 초기화 실패", L"Error", MB_OK);
 		return false;
 	}
+
+	m_TextureManager = new TextureManager;
+	if (!m_TextureManager)
+	{
+		return false;
+	}
+
+	result = m_TextureManager->Init(10);
+	if (!result)
+	{
+		MessageBoxW(hwnd, L"TextureManager 클래스 초기화 실패.", L"Error", MB_OK);
+		return false;
+	}
+
+	result = m_TextureManager->LoadTexture(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "assets/Terrain/textures/dirt01d.tga", 0);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_TextureManager->LoadTexture(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "assets/Terrain/textures/dirt01n.tga", 1);
+	if (!result)
+	{
+		return false;
+	}
+
 
 	m_Timer = new Timer;
 	if (!m_Timer)
@@ -90,7 +122,7 @@ bool Application::Init(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_Timer->Init();
 	if (!result)
 	{
-		MessageBoxW(hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
+		MessageBoxW(hwnd, L"Timer 객체 초기화 실패.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -109,7 +141,7 @@ bool Application::Init(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_Zone->Init(m_Direct3D, hwnd, screenWidth, screenHeight, SCREEN_DEPTH, m_Model);
 	if (!result)
 	{
-		MessageBoxW(hwnd, L"Could not initialize the zone object.", L"Error", MB_OK);
+		MessageBoxW(hwnd, L"Zone 객체 초기화 실패", L"Error", MB_OK);
 		return false;
 	}
 
@@ -138,6 +170,13 @@ void Application::Shutdown()
 		m_Timer = 0;
 	}
 
+	if (m_TextureManager)
+	{
+		m_TextureManager->Shutdown();
+		delete m_TextureManager;
+		m_TextureManager = 0;
+	}
+
 	if (m_ShaderManager)
 	{
 		m_ShaderManager->Shutdown();
@@ -151,7 +190,6 @@ void Application::Shutdown()
 		delete m_Model;
 		m_Model = 0;
 	}
-
 
 	if (m_Direct3D)
 	{
@@ -188,7 +226,7 @@ bool Application::Frame()
 	m_Timer->Frame();
 	m_Fps->Frame();
 
-	result = m_Zone->Frame(m_Direct3D, m_Input, m_ShaderManager, m_Timer->GetTime(), m_Fps->GetFps());
+	result = m_Zone->Frame(m_Direct3D, m_Input, m_ShaderManager, m_TextureManager, m_Timer->GetTime(), m_Fps->GetFps());
 	if (!result)
 	{
 		return false;
@@ -216,7 +254,7 @@ bool Application::Render()
 
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	result = m_Zone->Render(m_Direct3D, m_ShaderManager);
+	result = m_Zone->Render(m_Direct3D, m_ShaderManager, m_TextureManager);
 	if (!result)
 		return false;
 

@@ -8,16 +8,17 @@
 //////////////
 // INCLUDES //
 //////////////
-#include "../Base/Input/Input.h"
-#include "../Base/Timer/Timer.h"
-#include "../Base/Fps/Fps.h"
+#include "Base/Input/Input.h"
+#include "Base/Timer/Timer.h"
+#include "Base/Fps/Fps.h"
 
-#include "../Graphics/Renderer/D3DRenderer.h"
-#include "../Graphics/Resources/Model/Model.h"
-#include "../Graphics/Shaders/ShaderManager.h"
+#include "Graphics/Renderer/D3DRenderer.h"
+#include "Graphics/Resources/Model/Model.h"
+#include "Graphics/Resources/Texture/TextureManager.h"
+#include "Graphics/Shaders/ShaderManager.h"
 
-#include "../World/Actors/Stone/Stone.h"
-#include "../World/Zone/Zone.h"
+#include "World/Actors/Stone/Stone.h"
+#include "World/Zone/Zone.h"
 
 
 /////////////
@@ -53,6 +54,7 @@ private:
     //Light* m_Light;
     //Stone* m_PlayerStone;
     //Stone* m_WallStone;
+    TextureManager* m_TextureManager;
     ShaderManager* m_ShaderManager;
 	Input* m_Input;
 

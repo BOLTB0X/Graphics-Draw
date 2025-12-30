@@ -24,8 +24,8 @@ bool TextureShader::Init(ID3D11Device* device, HWND hwnd)
 {
 	return BaseShader::Init(device,
 		hwnd,
-		L"./hlsl/Texture.vs",
-		L"./hlsl/Texture.ps");
+		L"hlsl/Texture.vs",
+		L"hlsl/Texture.ps");
 } // Init
 
 

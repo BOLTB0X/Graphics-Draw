@@ -8,7 +8,7 @@
 
 Texture::Texture()
 {
-	imageData = 0;
+	imageData = nullptr;
 	m_texture = 0;
 	m_textureView = 0;
 	m_width = 0;
@@ -88,6 +88,7 @@ bool Texture::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, cha
 	// 텍스처에 대한 mipmaps을 생성
 	deviceContext->GenerateMips(m_textureView);
 	stbi_image_free(imageData);
+	imageData = nullptr;
 
 	return true;
 } // Init

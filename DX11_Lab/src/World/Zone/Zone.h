@@ -13,9 +13,12 @@
 #include "Graphics/Renderer/D3DRenderer.h"
 #include "Graphics/Camera/Camera.h"
 #include "Graphics/Resources/Model/Model.h"
+#include "Graphics/Resources/Light/Light.h"
+#include "Graphics/Resources/Texture/TextureManager.h"
 #include "Graphics/Shaders/ShaderManager.h"
 
 #include "World/Actors/Terrain/Terrain.h"
+#include "World/Actors/Terrain/TerrainCell.h"
 #include "World/Actors/Stone/Stone.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,8 +33,8 @@ public:
 
 	bool Init(D3DRenderer*, HWND, int, int, float, Model*);
 	void Shutdown();
-	bool Frame(D3DRenderer*, Input*, ShaderManager*, float, int);
-	bool Render(D3DRenderer*, ShaderManager*);
+	bool Frame(D3DRenderer*, Input*, ShaderManager*, TextureManager*, float, int);
+	bool Render(D3DRenderer*, ShaderManager*, TextureManager*);
 
 private:
 	void HandleMovementInput(Input*, float);
@@ -45,7 +48,7 @@ private:
 	Stone* m_PlayerStone;
 	Stone* m_WallStone;
 	//bool m_displayUI;
-	bool m_wireFrame;
+	bool m_wireFrame, m_cellLines;
 };
 
 

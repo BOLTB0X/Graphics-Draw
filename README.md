@@ -13,44 +13,60 @@ DX11_Lab/
 │  ├─ Stone
 ├─ hlsl/
 ├─ src/
-│  ├─ Framework/
-│  │  ├─ Camera/
-│  │  │  └─ Camera.h/cpp
-│  │  ├─ Renderer
-│  │  │  └─ D3DRenderer.h/cpp
-│  │  ├─ Input/
-│  │  └─ Input.h/cpp
-│  ├─ Application/
-│  │  ├─ App.h/cpp
-│  ├─ Actors/
-│  │  ├─ Stone.h/cpp
-│  ├─ Resources/
-│  │  ├─ Model/
-│  │  │  ├─ Model.h/cpp
-│  │  ├─ Texture/
-│  │  │  ├─ Texture.h/cpp
-│  │  ├─ Light/
-│  │  │  ├─ Light.h/cpp
-│  │  ├─ Shaders/
-│  │  │  ├─ ShaderManager.h/cpp
 │  └─ main.cpp
+│  ├─ Common
+│  │  ├─ CommonType.h
+│  ├─ System
+│  │  ├─ System.h/cpp
+│  ├─ Base
+│  │  ├─ Input/ Input.h/cpp
+│  │  ├─ Fps/Fps.h/cpp
+│  │  ├─ Position/ Position.h/cpp
+│  │  ├─ Timer/ Timer.h/cpp
+│  ├─ Graphics
+│  │  ├─ Renderer/ D3DRenderer.h/cpp
+│  │  ├─ Resources/
+│  │  │  ├─ Model/ Model.h/cpp
+│  │  │  ├─ Texture/ Texture.h/cpp
+│  │  │  ├─ Light/ Light.h/cpp
+│  │  ├─ Shaders/
+│  │  │  ├─ BaseShader.h/cpp
+│  │  │  ├─ Color/Texture/Light/NormalMapShader
+│  │  │  ├─ ShaderManager.h/cpp
+│  ├─ World
+│  │  ├─ Camera/
+│  │  │  ├─ Camera.h/cpp
+│  │  │  ├─ Frustum.h/cpp
+│  │  ├─ Actors/ 
+│  │  │  ├─ Terrain/ Terrain.h/cpp
+│  │  │  ├─ Stone/ Stone.h/cpp
+│  │  ├─ Zone/
+│  │  │  ├─ Zone.h/cpp
+│  ├─ Application/
+│  │  ├─ Application/ Application.h/cpp
 ```
 
 ## used 라이브러리 및 툴
 
 - [Github - vcpkg](https://github.com/microsoft/vcpkg?tab=readme-ov-file)
 
+- [Github - stb_image](https://github.com/nothings/stb/tree/master)
+
+<!--
 - [Github - imgui](https://github.com/ocornut/imgui)
 
 - [Github - assimp](https://github.com/assimp/assimp)
+-->
 
 ## 참고
+
+- [rastertek - DirectX 11 on Windows 10 Tutorials](https://www.rastertek.com/tutdx11win10.html)
+
+- [rastertek - DirectX 11 on Windows 10 Tutorials 2](https://www.rastertek.com/tutdx11s2ter.html)
 
 - [Learn microsoft - Direct3D 11](https://learn.microsoft.com/ko-kr/windows/win32/direct3d11/dx-graphics-overviews)
 
 - [모델 출처 - Free3D](https://free3d.com/3d-model/rock-base-lp-26252.html)
-
-- [rastertek - DirectX 11 on Windows 10 Tutorials](https://www.rastertek.com/tutdx11win10.html)
 
 - [유튜브 - 환경 설정 | 홍정모, 프로그래밍 기초, 입문 프로그래밍, 게임 프로그래밍, 프로그래밍 강의, 컴퓨터 그래픽스, 게임 개발, 컴퓨터 작동원리, 코딩](https://www.youtube.com/watch?v=CcFtxKg55fM&list=PLNfg4W25Tapy3qmKqftWndwrIaQRzUmEg&index=9)
 
@@ -67,3 +83,7 @@ DX11_Lab/
 - [티스토리 참고 - 070 OBB(Oriented Bounding Box) collision(designerd)](https://designerd.tistory.com/entry/DirectX11-070-OBBOriented-Bounding-Box-collision#obb-%EC%B6%A9%EB%8F%8C---%EB%B6%84%EB%A6%AC%EC%B6%95-%EC%9D%B4%EB%A1%A0)
 
 - [티스토리 참고 - Collision과 SphereCollider(유니얼)](https://unialgames.tistory.com/entry/DirectX11CollisionAndSphereCollider)
+
+- [티스토리 참고 - Terrain 21 - 지형셀(copynull)](https://copynull.tistory.com/324)
+
+- [Velog 참고 - Terrain 지형 툴 연습(hoya1215)](https://velog.io/@hoya1215/Directx11-Terrain-%EC%A7%80%ED%98%95-%ED%88%B4-%EC%97%B0%EC%8A%B5)

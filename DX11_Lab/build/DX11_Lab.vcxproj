@@ -501,7 +501,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Framework\ActorObject.cpp" />
+    <ClCompile Include="..\src\Graphics\Resources\Model\ModelLoader.cpp" />
+    <ClCompile Include="..\src\Graphics\Resources\Model\MyModel.cpp" />
+    <ClCompile Include="..\src\Graphics\Resources\Texture\TextureLoader.cpp" />
+    <ClCompile Include="..\src\World\Actors\Stone\MyStone.cpp" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.cpp" />
+    <ClInclude Include="..\src\Framework\ActorObject.h" />
+    <ClInclude Include="..\src\Graphics\Resources\Model\ModelLoader.h" />
+    <ClInclude Include="..\src\Graphics\Resources\Model\MyModel.h" />
+    <ClInclude Include="..\src\Graphics\Resources\Texture\TextureLoader.h" />
+    <ClInclude Include="..\src\Graphics\Resources\Texture\TexturesManager.h" />
+    <ClInclude Include="..\src\World\Actors\Stone\MyStone.h" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.h" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Common\CommonType.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Base\Fps\Fps.cpp" />
@@ -540,8 +551,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Shaders\TextureShader.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System\System.cpp" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\System\System.h" />
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\ActorObject.cpp" />
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\ActorObject.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Stone\Stone.cpp" />
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Stone\Stone.h" />
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\Terrain\Terrain.cpp" />

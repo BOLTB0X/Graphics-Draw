@@ -7,9 +7,6 @@
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.cpp">
       <Filter>Source Files\Application</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\ActorObject.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Camera\Camera.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
@@ -82,11 +79,23 @@
     <ClCompile Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\ResourceManager.cpp">
       <Filter>Source Files\Graphics\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\Resources\Model\ModelLoader.cpp">
+      <Filter>Source Files\Graphics\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Resources\Model\MyModel.cpp">
+      <Filter>Source Files\Graphics\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\Resources\Texture\TextureLoader.cpp">
+      <Filter>Source Files\Graphics\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Framework\ActorObject.cpp">
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\World\Actors\Stone\MyStone.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\World\Actors\ActorObject.h">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Application\Application.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
@@ -164,6 +173,24 @@
     </ClInclude>
     <ClInclude Include="C:\Users\User\Documents\GitHub\Graphics-Draw\DX11_Lab\src\Graphics\Resources\Texture\TextureManager.h">
       <Filter>Header Files\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Resources\Model\ModelLoader.h">
+      <Filter>Header Files\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Resources\Model\MyModel.h">
+      <Filter>Header Files\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Resources\Texture\TextureLoader.h">
+      <Filter>Header Files\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Graphics\Resources\Texture\TexturesManager.h">
+      <Filter>Header Files\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\World\Actors\Stone\MyStone.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Framework\ActorObject.h">
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

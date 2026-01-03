@@ -7,43 +7,6 @@
 ## - ing
 
 ```
-DX11_Lab/
-├─ CMakeLists.txt
-├─ assets/
-│  ├─ Stone
-├─ hlsl/
-├─ src/
-│  └─ main.cpp
-│  ├─ Common
-│  │  ├─ CommonType.h
-│  ├─ System
-│  │  ├─ System.h/cpp
-│  ├─ Base
-│  │  ├─ Input/ Input.h/cpp
-│  │  ├─ Fps/Fps.h/cpp
-│  │  ├─ Position/ Position.h/cpp
-│  │  ├─ Timer/ Timer.h/cpp
-│  ├─ Graphics
-│  │  ├─ Renderer/ D3DRenderer.h/cpp
-│  │  ├─ Resources/
-│  │  │  ├─ Model/ Model.h/cpp
-│  │  │  ├─ Texture/ Texture.h/cpp
-│  │  │  ├─ Light/ Light.h/cpp
-│  │  ├─ Shaders/
-│  │  │  ├─ BaseShader.h/cpp
-│  │  │  ├─ Color/Texture/Light/NormalMapShader
-│  │  │  ├─ ShaderManager.h/cpp
-│  ├─ World
-│  │  ├─ Camera/
-│  │  │  ├─ Camera.h/cpp
-│  │  │  ├─ Frustum.h/cpp
-│  │  ├─ Actors/ 
-│  │  │  ├─ Terrain/ Terrain.h/cpp
-│  │  │  ├─ Stone/ Stone.h/cpp
-│  │  ├─ Zone/
-│  │  │  ├─ Zone.h/cpp
-│  ├─ Application/
-│  │  ├─ Application/ Application.h/cpp
 ```
 
 ## used 라이브러리 및 툴
@@ -52,9 +15,10 @@ DX11_Lab/
 
 - [Github - stb_image](https://github.com/nothings/stb/tree/master)
 
-<!--
+
 - [Github - imgui](https://github.com/ocornut/imgui)
 
+<!--
 - [Github - assimp](https://github.com/assimp/assimp)
 -->
 
@@ -87,3 +51,5 @@ DX11_Lab/
 - [티스토리 참고 - Terrain 21 - 지형셀(copynull)](https://copynull.tistory.com/324)
 
 - [Velog 참고 - Terrain 지형 툴 연습(hoya1215)](https://velog.io/@hoya1215/Directx11-Terrain-%EC%A7%80%ED%98%95-%ED%88%B4-%EC%97%B0%EC%8A%B5)
+
+- [티스토리 참고 - DirectX11 3D(designerd)](https://designerd.tistory.com/category/%E2%AD%90%20DirectX/DirectX11%20%203D)

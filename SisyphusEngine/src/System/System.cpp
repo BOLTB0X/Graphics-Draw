@@ -4,6 +4,10 @@
 #include "Common/EngineSettings.h"
 #include "Common/EngineHelper.h"
 
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+
 /* default */
 /////////////////////////////////////////////////////////////////////
 
@@ -188,9 +192,14 @@ void System::ShutdownWindows()
 } // ShutdownWindows
 /////////////////////////////////////////////////////////////////////
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umessage, wparam, lparam))
+		return true;
+
 	switch (umessage)
 	{
 	case WM_DESTROY:

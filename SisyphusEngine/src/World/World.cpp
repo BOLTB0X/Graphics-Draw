@@ -27,11 +27,11 @@ bool World::Init(ID3D11Device* device, ID3D11DeviceContext* context,
     {
         auto stone1 = std::make_unique<Stone>();
         stone1->Init(stoneModel, "FirstStone");
-        stone1->GetTransform()->SetPosition(0.0f, 0.0f, 5.0f); // 앞에 배치
+        stone1->GetTransform()->SetPosition(0.0f, 0.0f, 5.0f);
 
         auto stone2 = std::make_unique<Stone>();
         stone2->Init(stoneModel, "SecondStone");
-        stone2->GetTransform()->SetPosition(-2.0f, 0.0f, 10.0f); // 좀 더 멀리 왼쪽
+        stone2->GetTransform()->SetPosition(-2.0f, 0.0f, 10.0f);
 
         m_actors.push_back(std::move(stone1));
         m_actors.push_back(std::move(stone2));
@@ -41,8 +41,13 @@ bool World::Init(ID3D11Device* device, ID3D11DeviceContext* context,
 } // Init
 
 
-void World::Frame(float frameTime)
+void World::Frame(float frameTime, bool canControlWorld)
 {
+    if (canControlWorld)
+    {
+		// TODO: 카메라 제어 코드 추가 예정
+    }
+
     for (auto& actor : m_actors)
     {
         actor->Frame(frameTime);
@@ -61,3 +66,22 @@ void World::Render(ID3D11DeviceContext* context, Shader* shader)
         actor->Render(context, shader, view, projectiom);
     }
 } // Render
+
+/////////////////////////////////////////////////////////////////
+
+
+/* get */
+/////////////////////////////////////////////////////////////////
+
+const std::vector<std::unique_ptr<ActorObject>>& World::GetActors() const
+{ 
+    return m_actors; 
+} // GetActors
+
+
+ActorObject* World::GetActor(size_t index) const
+{
+    if (index < m_actors.size()) 
+        return m_actors[index].get();
+    return nullptr;
+} // GetActor

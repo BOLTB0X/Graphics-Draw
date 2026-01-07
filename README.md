@@ -6,12 +6,21 @@
 
 ## - ing
 
+<details>
+<summary>추구하는 구조 ex</summary>
+
+<!-- 띄우기 -->
+
 | 시지프스 엔진 (Sisyphus) | 유니티 (Unity) | 언리얼 (Unreal Engine) | 역할 |
 |------------------------|---------------|-------------------------|------|
 | Model                  | Mesh + Material | Static Mesh + Material | 변하지 않는 원본 데이터 (원본 그릇) |
 | ModelManager           | Asset Bundle / Project Window | Content Browser / Manager | 리소스를 로드하고 메모리에 유지함 |
 | ActorObject            | GameObject    | Actor                   | 게임 월드에 존재하는 개별 객체 |
 | Position (Component)   | Transform     | Scene Component          | 객체의 위치, 회전, 크기를 담당 |
+
+<!-- 띄우기 -->
+
+</details>
 
 
 ```
@@ -29,21 +38,28 @@ src/
 │  ├─ TextureManager/
 │  ├─ ShaderManager/
 ├─ Framework/
+│  │  ├─ IWidget.h
 │  │  ├─ WorldObject.h (모든 객체의 부모)
 ├─ World/
 │  ├─ Actors/
 ```
 
-## used 라이브러리 및 툴
+#### used 라이브러리 및 툴
 
 - [Github - vcpkg](https://github.com/microsoft/vcpkg?tab=readme-ov-file)
 
 - [Github - stb_image](https://github.com/nothings/stb/tree/master)
 
-
-- [Github - imgui](https://github.com/ocornut/imgui)
+- [Github - Imgui](https://github.com/ocornut/imgui)
 
 - [Github - assimp](https://github.com/assimp/assimp)
+
+#### [모델 출처 -> sketchfab](https://sketchfab.com/feed)
+
+- [Stone 이용: sketchfab - Ground//Stone Sphere(Madee)](https://sketchfab.com/3d-models/groundstone-sphere-1c0f2b2e213348e6a760743a546dc7a6)
+
+- [Terrain 이용: sketchfab - Snow Mountain(JesterArts_)](https://sketchfab.com/3d-models/snow-mountain-e42d1a231cf54ff3a01dc691c050762c)
+
 
 ## 참고
 
@@ -52,8 +68,6 @@ src/
 - [rastertek - DirectX 11 on Windows 10 Tutorials 2](https://www.rastertek.com/tutdx11s2ter.html)
 
 - [Learn microsoft - Direct3D 11](https://learn.microsoft.com/ko-kr/windows/win32/direct3d11/dx-graphics-overviews)
-
-- [모델 출처 - Free3D](https://free3d.com/3d-model/rock-base-lp-26252.html)
 
 - [유튜브 - 환경 설정 | 홍정모, 프로그래밍 기초, 입문 프로그래밍, 게임 프로그래밍, 프로그래밍 강의, 컴퓨터 그래픽스, 게임 개발, 컴퓨터 작동원리, 코딩](https://www.youtube.com/watch?v=CcFtxKg55fM&list=PLNfg4W25Tapy3qmKqftWndwrIaQRzUmEg&index=9)
 
@@ -76,3 +90,7 @@ src/
 - [Velog 참고 - Terrain 지형 툴 연습(hoya1215)](https://velog.io/@hoya1215/Directx11-Terrain-%EC%A7%80%ED%98%95-%ED%88%B4-%EC%97%B0%EC%8A%B5)
 
 - [티스토리 참고 - DirectX11 3D(designerd)](https://designerd.tistory.com/category/%E2%AD%90%20DirectX/DirectX11%20%203D)
+
+- [벨로그 참고 - Imgui 사용법(charlese_note)](https://velog.io/@charlese_note/ImGUI)
+
+- [네이버 블로그 참고 - Dear ImGui를 공부해보자! 시작단계(AROMA)](https://m.blog.naver.com/sweetsmell9/221618574623)

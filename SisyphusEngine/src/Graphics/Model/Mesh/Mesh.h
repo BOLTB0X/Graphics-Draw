@@ -18,10 +18,11 @@ public:
 public:
     unsigned int GetMaterialIndex() const { return m_materialIndex; }
     unsigned int GetIndexCount() const { return indexBuffer->GetIndexCount(); }
+    const MeshData& GetMeshData() const { return m_meshData; }
 
 private:
     std::unique_ptr<VertexBuffer> vertexBuffer;
     std::unique_ptr<IndexBuffer> indexBuffer;
     unsigned int m_materialIndex;
-
+    MeshData m_meshData;
 }; // Mesh

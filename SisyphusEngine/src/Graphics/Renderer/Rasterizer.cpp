@@ -15,7 +15,7 @@ bool Rasterizer::Init(ID3D11Device* device) {
     D3D11_RASTERIZER_DESC rasterDesc = {};
     ZeroMemory(&rasterDesc, sizeof(rasterDesc));
 
-    // 기본 상태 (Solid + Back Culling)
+    // 기본 상태
     rasterDesc.AntialiasedLineEnable = false;
     rasterDesc.CullMode = D3D11_CULL_BACK;
     rasterDesc.DepthBias = 0;
@@ -39,7 +39,7 @@ bool Rasterizer::Init(ID3D11Device* device) {
         "Wireframe RasterizerState 생성 실패")
         == false) return false;
 
-    // 컬링 없는 상태 (양면 렌더링용)
+    // 컬링 없는 상태
     rasterDesc.FillMode = D3D11_FILL_SOLID;
     rasterDesc.CullMode = D3D11_CULL_NONE;
     if (EngineHelper::SuccessCheck(

@@ -49,3 +49,13 @@ void Model::AddMaterial(const Material& material)
 {
     m_materials.push_back(material);
 } // AddMaterial
+
+
+std::vector<MeshData> Model::GetFullMeshData() const
+{
+    std::vector<MeshData> allData;
+    for (const auto& mesh : m_meshes)
+        allData.push_back(mesh->GetMeshData());
+    
+    return allData;
+} // GetFullMeshData

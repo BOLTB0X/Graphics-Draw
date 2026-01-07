@@ -5,12 +5,17 @@
 /* defulat */
 ///////////////////////////////////////////////////////////////////
 
-Mesh::Mesh(): m_materialIndex(0) {}
+Mesh::Mesh()
+    : m_materialIndex(0),
+    m_meshData({{}, {}})
+{}
 
 Mesh::~Mesh() {}
 
 
-bool Mesh::Init(ID3D11Device* device, const MeshData& data, unsigned int matIndex) {
+bool Mesh::Init(ID3D11Device* device, const MeshData& data, unsigned int matIndex)
+{
+    m_meshData = data;
     m_materialIndex = matIndex;
 
     vertexBuffer = std::make_unique<VertexBuffer>();
@@ -26,7 +31,9 @@ bool Mesh::Init(ID3D11Device* device, const MeshData& data, unsigned int matInde
     return true;
 } // Init
 
-void Mesh::Bind(ID3D11DeviceContext* context) {
+
+void Mesh::Bind(ID3D11DeviceContext* context)
+{
     if (!vertexBuffer || !indexBuffer) return;
     vertexBuffer->Bind(context);
     indexBuffer->Bind(context);

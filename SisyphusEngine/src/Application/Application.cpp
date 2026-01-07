@@ -5,6 +5,11 @@
 #include "Common/EngineSettings.h"
 #include "Graphics/Shader/StoneShader.h"
 
+#include "Framework/Widget/StatsWidget.h"
+#include "Framework/Widget/InspectorWidget.h"
+#include "Framework/Widget/MainSideBarWidget.h"
+#include "Framework/Widget/ControlWidget.h"
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -17,8 +22,8 @@ Application::Application()
 	m_Timer(nullptr),
 	m_Fps(nullptr),
 	m_Renderer(nullptr),
-	//m_Camera(nullptr),
-	m_Gui(nullptr)
+	m_Gui(nullptr),
+	m_mainSideBarWidget(nullptr)
 {
 } // Application
 
@@ -26,9 +31,7 @@ Application::~Application() { } // ~Application
 
 
 bool Application::Init(HWND hwnd, int screenWidth, int screenHeight)
-{
-	char modelFilename[128], textureFilename1[128], textureFilename2[128];
-	
+{	
 	m_Input = new Input;
 	if (m_Input->Init(GetModuleHandle(NULL), hwnd, screenWidth, screenHeight) 
 		== false)
@@ -36,7 +39,6 @@ bool Application::Init(HWND hwnd, int screenWidth, int screenHeight)
 		EngineHelper::ErrorBox(hwnd, L"Input 객체 초기화 실패");
 		return false;
 	}
-
 
 	m_Timer = new Timer;	
 	if (m_Timer->Init() == false)
@@ -81,11 +83,16 @@ bool Application::Init(HWND hwnd, int screenWidth, int screenHeight)
 	}
 
 	m_Gui = new Gui();
-	if (m_Gui->Init(hwnd, m_Renderer->GetDX11Device()->GetDevice(), m_Renderer->GetDeviceContext())
-		== false) {
+	if (m_Gui->Init(hwnd, 
+		m_Renderer->GetDX11Device()->GetDevice(),
+		m_Renderer->GetDeviceContext()) 
+		== false)
+	{
+		EngineHelper::ErrorBox(hwnd, L"Gui 초기화 실패");
 		return false;
 	}
 
+	InitGui();
 	return true;
 } // Init
 
@@ -94,15 +101,19 @@ void Application::Shutdown()
 {
 	if (m_Gui)
 	{
+		m_Gui->Shutdown();
 		delete m_Gui;
 		m_Gui = 0;
 	}
 
-	if (m_ModelManager) m_ModelManager->Shutdown();
+	if (m_ModelManager)
+		m_ModelManager->Shutdown();
 
-	if (m_ShaderManager) m_ShaderManager->Shutdown();
+	if (m_ShaderManager)
+		m_ShaderManager->Shutdown();
 
-	if (m_TextureManager) m_TextureManager->Shutdown();
+	if (m_TextureManager)
+		m_TextureManager->Shutdown();
 
 	if (m_Renderer)
 	{
@@ -111,10 +122,16 @@ void Application::Shutdown()
 	}
 
 	if (m_Fps)
-		delete m_Fps; m_Fps = 0;
+	{
+		delete m_Fps;
+		m_Fps = 0;
+	}
 
 	if (m_Timer)
-		delete m_Timer; m_Timer = 0;
+	{
+		delete m_Timer;
+		m_Timer = 0;
+	}
 
 	if (m_Input)
 	{
@@ -132,7 +149,6 @@ bool Application::Frame()
 	bool result;
 
 	if (m_Input == false) return false;
-
 	result = m_Input->Frame();
 	if (result == false) return false;
 	if (m_Input->IsEscapePressed()) return false;
@@ -140,15 +156,18 @@ bool Application::Frame()
 	m_Timer->Frame();
 	m_Fps->Frame();
 
-	//m_Camera->Render();
+	HandleEditorMode();
+	ImGuiIO& io = ImGui::GetIO();
+	bool canControlWorld = !io.WantCaptureMouse;
 
-	m_World->Frame(m_Timer->GetTime());
+	m_World->Frame(m_Timer->GetTime(), canControlWorld);
 
 	result = Render();
 	if (result == false) return false;
 	
 	return true;
 } // Frame
+
 /////////////////////////////////////////////////////////////////////
 
 /* private */
@@ -159,29 +178,7 @@ bool Application::Render()
 	m_Renderer->BeginScene(0.5f, 0.0f, 0.0f, 1.0f);
 	m_Gui->Begin();
 
-	{
-		ImGui::Begin("Sisyphus Engine Control");
-
-		// Rasterizer 제어
-		static bool wireframe = false;
-		if (ImGui::Checkbox("Wireframe Mode", &wireframe)) {
-			m_Renderer->GetRasterizer()->Bind(m_Renderer->GetDeviceContext(), wireframe);
-		}
-
-		// BlendState 제어
-		static int blendMode = 0; // 0: Off, 1: Alpha, 2: AlphaToCoverage
-		ImGui::RadioButton("Blend Off", &blendMode, 0);
-		ImGui::RadioButton("Alpha Blend", &blendMode, 1);
-		ImGui::RadioButton("AlphaToCoverage (Future Ready)", &blendMode, 2);
-
-		if (ImGui::Button("Apply Blend State")) {
-			bool alpha = (blendMode == 1);
-			bool atc = (blendMode == 2);
-			m_Renderer->GetBlendState()->Bind(m_Renderer->GetDeviceContext(), alpha);
-		}
-
-		ImGui::End();
-	}
+	RenderGui();
 
 	auto stoneShader = m_ShaderManager->GetShader<StoneShader>("Stone");
 	if (stoneShader)
@@ -189,11 +186,61 @@ bool Application::Render()
 		m_World->Render(m_Renderer->GetDeviceContext(), stoneShader);
 	}
 
-
-	// 셰이더 적용
-
+	m_Gui->FrameWidgets();
 	m_Gui->End();
 	m_Renderer->EndScene();
 
 	return true;
 } // Render
+
+
+void Application::InitGui()
+{
+	auto sideBar = std::make_unique<MainSideBarWidget>("F1:Sisyphus Editor");
+	m_mainSideBarWidget = sideBar.get();
+
+	sideBar->AddComponent(std::make_unique<StatsWidget>(m_Fps, m_Timer));
+	sideBar->AddComponent(std::make_unique<ControlWidget>(m_Renderer.get()));
+
+	auto inspector = std::make_unique<InspectorWidget>();
+	inspector->SetActorList(m_World->GetActors());
+	if (m_World->GetActors().empty() == false)
+		inspector->SetTarget(m_World->GetActors()[0].get());
+
+	sideBar->AddComponent(std::move(inspector));
+
+	m_Gui->AddWidget(std::move(sideBar));
+	return;
+} // InitGui
+
+
+void Application::RenderGui()
+{
+	if (m_mainSideBarWidget && m_mainSideBarWidget->IsVisible())
+	{
+		auto control = m_mainSideBarWidget->GetComponent<ControlWidget>();
+		if (control)
+		{
+			m_Renderer->GetRasterizer()->Bind(
+				m_Renderer->GetDeviceContext(),
+				control->IsWireframe(),
+				control->IsCullNone()
+			);
+		}
+	}
+
+	return;
+} // RenderGui
+
+
+void Application::HandleEditorMode()
+{
+	if (m_Input == nullptr || m_mainSideBarWidget == nullptr)
+		return;
+
+	if (m_Input->IsF1Toggled())
+	{
+		m_mainSideBarWidget->SetVisible(m_mainSideBarWidget->IsVisible() == false);
+	}
+	return;
+} // HandleEditorMode

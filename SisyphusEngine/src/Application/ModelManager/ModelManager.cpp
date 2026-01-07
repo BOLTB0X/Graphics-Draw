@@ -23,6 +23,15 @@ bool ModelManager::Init(ID3D11Device* device,
         EngineHelper::SuccessCheck(false, "Stone 모델 로드 실패: " + EngineSettings::STONE_PATH);
         return false;
     }
+
+    if (GetModel(device, context, texManager, EngineSettings::TERRAIN_PATH))
+        EngineHelper::SuccessCheck(true, "TERRAIN 모델 로드 성공");
+    else
+    {
+        EngineHelper::SuccessCheck(false, "TERRAIN 모델 로드 실패");
+        return false;
+    }
+
 	return true;
 } // Init
 

@@ -26,7 +26,12 @@ public:
 
     virtual bool Init(ID3D11Device*, HWND, const std::wstring&, const std::wstring&) = 0;
     virtual void Bind(ID3D11DeviceContext* context = 0) = 0;
-    virtual void UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time = 0.0f) = 0;
+    virtual void UpdateMaterialTag(
+        ID3D11DeviceContext*, int,
+        float time = 0.0f,
+        XMFLOAT4 mPos = { 0,0,0,0 },
+        XMFLOAT4 sPos = { 0,0,0,0 }
+    ) = 0;
 
 public:
     bool UpdateMatrixBuffer(ID3D11DeviceContext*, const XMMATRIX&, const XMMATRIX& v, const XMMATRIX&);

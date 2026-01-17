@@ -14,7 +14,6 @@ class TexturesManager;
 class Mesh;
 class Texture;
 class AssimpLoader;
-class TerrainLoader;
 
 class ModelManager {
 public:
@@ -26,6 +25,7 @@ public:
     void Shutdown();
 
 public:
+
     MeshModel* GetMeshModel(ID3D11Device*,
         ID3D11DeviceContext*,
         TexturesManager*,
@@ -39,8 +39,6 @@ public:
    
 private:
     std::unique_ptr<AssimpLoader> m_AssimpLoader;
-    std::unique_ptr<TerrainLoader> m_TerrainLoader;
-
     std::unordered_map<std::string, std::unique_ptr<MeshModel>> m_modelLibrary;
     std::unordered_map<std::string, std::unique_ptr<TerrainModel>> m_terrainLibrary;
 }; // ModelManager

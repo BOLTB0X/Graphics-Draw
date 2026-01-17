@@ -30,7 +30,7 @@ public:
 private:
     std::string m_name;
     std::unique_ptr<Position> m_Position;
-    TerrainModel* m_modelPtr; // ModelManager로부터 받은 포인터
-    TerrainShader* m_shaderPtr; // ShaderManager로부터 받은 포인터
+    TerrainModel* m_modelPtr;
+    TerrainShader* m_shaderPtr;
     float m_totalTime;
 }; // CloudOcean

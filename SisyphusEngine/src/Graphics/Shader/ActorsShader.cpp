@@ -79,7 +79,7 @@ void ActorsShader::Bind(ID3D11DeviceContext* context)
 } // Bind
 
 
-void ActorsShader::UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time)
+void ActorsShader::UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time, XMFLOAT4 mPos, XMFLOAT4 sPos)
 {
     MaterialBuffer data;
     data.type = type;

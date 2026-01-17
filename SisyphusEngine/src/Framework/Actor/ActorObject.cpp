@@ -104,7 +104,6 @@ void ActorObject::PlaceOnTerrain(float terrainWorldHeight, float footingBias)
 {
     if (actor_Model == nullptr) return;
 
-    // 모델 자체의 로컬 minY 보정값
     float offset = actor_Model->GetBottomOffset();
 
     // 현재 월드 위치(X, Z) 유지

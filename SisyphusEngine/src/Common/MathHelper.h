@@ -129,17 +129,16 @@ namespace MathHelper {
     {
         float height = 0.0f;
         float amplitude = 0.5f;
-        float frequency = 0.1f;
+        float frequency = 0.05f;
 
-        float offsetX = time * 0.05f;
-        float offsetZ = time * 0.05f;
-
-        for (int i = 0; i < 6; i++) {
-            height += Noise({ x * frequency + offsetX, z * frequency + offsetZ }) * amplitude;
-            amplitude *= 0.5f;
+        for (int i = 0; i < 6; i++)
+        {
+            height += Noise({ x * frequency + time * 0.1f,  z * frequency + time * 0.1f }) * amplitude;
+            amplitude *= 0.45f;
             frequency *= 2.0f;
         }
 
-        return height * 20.0f;
-    } // GetFBMHeight
+        return height * 15.0f;
+        //return pow(height, 1.2f) * 15.0f;
+    } // MathHelper
 }

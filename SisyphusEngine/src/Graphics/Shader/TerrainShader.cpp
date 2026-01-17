@@ -80,11 +80,13 @@ void TerrainShader::Bind(ID3D11DeviceContext* context)
 } // Bind
 
 
-void TerrainShader::UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time)
+void TerrainShader::UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time, XMFLOAT4 mPos, XMFLOAT4 sPos)
 {
     MaterialBuffer data;
     data.type = type;
     data.gTime = time;
+    data.gMountPos = mPos;
+    data.gStonePos = sPos;
     data.padding = DirectX::XMFLOAT2(0, 0);
 
     m_materialBuffer->Update(context, data);

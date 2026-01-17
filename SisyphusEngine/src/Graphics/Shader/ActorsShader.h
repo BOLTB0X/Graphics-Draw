@@ -16,7 +16,13 @@ public:
     void Bind(ID3D11DeviceContext* context) override;
 
 public:
-    void UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time = 0.0f) override;
+    void UpdateMaterialTag(
+        ID3D11DeviceContext* context,
+        int type,
+        float time = 0.0f,
+        XMFLOAT4 mPos = { 0,0,0,0 },
+        XMFLOAT4 sPos = { 0,0,0,0 }
+    ) override;
 
 private:
     std::unique_ptr<ConstantBuffer<MaterialBuffer>> m_materialBuffer;

@@ -7,8 +7,7 @@
 
 class Shader;
 
-class ShaderManager
-{
+class ShaderManager {
 public:
     ShaderManager();
     ShaderManager(const ShaderManager&) = delete;

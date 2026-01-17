@@ -24,9 +24,6 @@ public:
     bool LoadMeshModel(ID3D11Device*, ID3D11DeviceContext*,
         TexturesManager*, const std::string& path, MeshModel*);
 
-    bool LoadTerrainModel(ID3D11Device* device, ID3D11DeviceContext*,
-        TexturesManager*, const std::string&, TerrainModel*);
-
 private:
     void ProcessNode(aiNode*, const aiScene*, ID3D11Device*, MeshModel*);
 
@@ -41,19 +38,6 @@ private:
         ID3D11DeviceContext*,
         TexturesManager*,
         const std::string&, MeshModel*);
-
-    void ProcessMaterialsForTerrain(
-        const aiScene*,
-        ID3D11Device*,
-        ID3D11DeviceContext*,
-        TexturesManager*,
-        const std::string&,
-        TerrainModel*);
-
-    void ExtractAllMeshData(
-        aiNode*,
-        const aiScene*,
-        TerrainModel*);
 
     std::shared_ptr<Texture> LoadPBRTexture(
         ID3D11Device*,

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+
 namespace EngineSettings {
     // 화면 설정
     const bool FULL_SCREEN = false;
@@ -15,6 +16,15 @@ namespace EngineSettings {
     // 클리핑 평면
     const float SCREEN_DEPTH = 1000.0f;
     const float SCREEN_NEAR = 0.1f;
+
+    const int terrainHeight = 1024;
+    const int terrainWidth = 1024;
+    const int terrainScaling = 200;
+
+    const float MOUNT_X = 400.0f;
+    const float MOUNT_Z = 400.0f;
+    const float STONE_X = 300.0f;
+    const float STONE_Z = 300.0f;
 
     // 모델
     ////////////////////////////////////////////////////////////////////////////
@@ -32,10 +42,6 @@ namespace EngineSettings {
     const std::string TERRAIN_PATH = ASSET_PATH + "Terrain/setup.txt";
     const std::string TERRAIN_HEIGHTMAP_PATH = "assets/Terrain/heightmap.r16";
     const std::string TERRAINTEX_PATH = ASSET_PATH + "Terrain/textures/";
-    const int terrainHeight = 1024;
-    const int terrainWidth = 1024;
-    const int terrainScaling = 200;
-
 
     const std::string TERRAINDEN_PATH = TERRAINTEX_PATH + "cloud001.dds";
     const std::string TERRAINPER_PATH = TERRAINTEX_PATH + "perturb001.dds";
@@ -78,5 +84,4 @@ namespace EngineSettings {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-}
+};

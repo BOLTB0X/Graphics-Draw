@@ -35,5 +35,7 @@ struct MaterialBuffer
 {
     int type;
     float gTime;
+    DirectX::XMFLOAT4 gMountPos;
+    DirectX::XMFLOAT4 gStonePos;
     DirectX::XMFLOAT2 padding;
 }; // MaterialBuffer

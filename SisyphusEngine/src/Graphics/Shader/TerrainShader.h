@@ -17,7 +17,11 @@ public:
 
     virtual bool Init(ID3D11Device* device, HWND hwnd, const std::wstring& vsPath, const std::wstring& psPath) override;
     virtual void Bind(ID3D11DeviceContext* context) override;
-    virtual void UpdateMaterialTag(ID3D11DeviceContext* context, int type, float time = 0.0f);
+    virtual void UpdateMaterialTag(ID3D11DeviceContext*, int,
+        float time = 0.0f,
+        XMFLOAT4 mPos = { 0,0,0,0 },
+        XMFLOAT4 sPos = { 0,0,0,0 }
+    );
 
 private:
     std::unique_ptr<ConstantBuffer<MaterialBuffer>> m_materialBuffer;

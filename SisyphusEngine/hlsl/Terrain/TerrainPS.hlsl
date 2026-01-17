@@ -19,6 +19,7 @@ struct PS_INPUT
     float3 worldPos : TEXCOORD1;
 };
 
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
     // 노말맵에서 미세 굴곡 가져오기
@@ -31,7 +32,7 @@ float4 main(PS_INPUT input) : SV_TARGET
 
     // 낮은 곳: 청회, 높은 곳: 흰색
     float heightFactor = saturate(input.worldPos.y / 15.0f);
-    float3 baseColor = lerp(float3(0.5f, 0.55f, 0.65f), float3(1.0f, 1.0f, 1.0f), heightFactor);
+    float3 baseColor = lerp(float3(0.4f, 0.5f, 0.6f), float3(1.0f, 1.0f, 1.0f), heightFactor);
 
     // 간단한 조명
     float3 lightDir = normalize(float3(0.5f, 1.0f, 0.5f));

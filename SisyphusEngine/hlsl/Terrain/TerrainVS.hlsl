@@ -6,11 +6,12 @@ cbuffer MatrixBuffer : register(b0)
     matrix projectionMatrix;
 };
 
-// 시간 데이터가 포함된 버퍼
 cbuffer MaterialBuffer : register(b2)
 {
     int type;
     float gTime;
+    float4 gMountPos;
+    float4 gStonePos;
     float3 padding;
 };
 
@@ -58,33 +59,35 @@ float noise(float2 p)
 
 float getFBMHeight(float x, float z, float time)
 {
+    float2 p = float2(x, z);
     float height = 0.0f;
     float amplitude = 0.5f;
-    float frequency = 0.1f;
-    float offsetX = time * 0.05f;
-    float offsetZ = time * 0.05f;
+    float frequency = 0.05f;
+    
+    float time_scroll = time * 0.2f;
 
     for (int i = 0; i < 6; i++)
     {
-        height += noise(float2(x * frequency + offsetX, z * frequency + offsetZ)) * amplitude;
-        amplitude *= 0.5f;
+        height += noise(p * frequency + time_scroll) * amplitude;
+        
+        amplitude *= 0.45f;
         frequency *= 2.0f;
     }
-    return height * 20.0f;
-} // getFBMHeight
+
+    return height * 15.0f;
+}
 
 // -----------------------------------------------
 
 PS_INPUT main(VS_INPUT input)
 {
     PS_INPUT output;
-
+    
     float displacedY = getFBMHeight(input.position.x, input.position.z, gTime);
     float3 finalPos = float3(input.position.x, displacedY, input.position.z);
-
     float4 worldPos = mul(float4(finalPos, 1.0f), worldMatrix);
+
     output.worldPos = worldPos.xyz;
-    
     output.position = mul(worldPos, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     output.texCoord = input.texCoord;
@@ -92,6 +95,5 @@ PS_INPUT main(VS_INPUT input)
     output.normal = normalize(mul(input.normal, (float3x3) worldMatrix));
     output.tangent = normalize(mul(input.tangent, (float3x3) worldMatrix));
     output.binormal = normalize(mul(input.binormal, (float3x3) worldMatrix));
-    
     return output;
 } // main

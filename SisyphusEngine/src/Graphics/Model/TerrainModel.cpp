@@ -112,18 +112,6 @@ void TerrainModel::InitHeightMap()
     m_HeightMap->InitPlane(w, h);
     m_terrainWidth = w;
     m_terrainHeight = h;
-    //// 이미 소유권 이전을 통해 m_HeightMap이 설정되어 있는지 확인
-    //if (m_HeightMap == nullptr)
-    //{
-    //    EngineHelper::DebugPrint("TerrainModel: m_HeightMap이 nullptr, InitHeightMap 실패.");
-    //    return false;
-    //}
-    //DirectX::XMFLOAT3 minB, maxB;
-    //m_HeightMap->GetBounds(minB, maxB);
-    //m_terrainWidth = static_cast<int>(maxB.x - minB.x) + 1;
-    //m_terrainHeight = static_cast<int>(maxB.z - minB.z) + 1;
-
-    //return true;
 } // InitHeightMap
 
 
@@ -133,100 +121,11 @@ void TerrainModel::InitMaterial(const Material& mat)
 } // InitMaterial
 
 
-void TerrainModel::AddTerrainData(const std::vector<ModelVertex>& vertices, const std::vector<unsigned int>& indices)
-{
-    unsigned int vertexOffset = static_cast<unsigned int>(m_fullVertices.size());
-    m_fullVertices.insert(m_fullVertices.end(), vertices.begin(), vertices.end());
-    unsigned int startIdx = (unsigned int)m_fullVertices.size();
-
-    for (auto idx : indices)
-    {
-        if (startIdx + idx >= m_fullVertices.size())
-        {
-            EngineHelper::DebugPrint("에러: 잘못된 인덱스 참조!");
-            continue;
-        }
-        m_fullIndices.push_back(idx + startIdx);
-    }
-    return;
-} // AddTerrainData
-
-
 void TerrainModel::AddMaterial(const Material& material)
 {
     m_materials.push_back(material);
     return;
 } // AddMaterial
-
-
-bool TerrainModel::BuildTerrainCells(ID3D11Device* device)
-{
-    if (m_fullVertices.empty() || m_fullIndices.empty())
-    {
-        EngineHelper::DebugPrint("TerrainModel::BuildTerrainCells 에러, m_fullVertices/m_fullIndices 비어있음 ");
-        return false;
-    }
-
-    float minX = FLT_MAX, minZ = FLT_MAX, maxX = -FLT_MAX, maxZ = -FLT_MAX;
-
-    for (const auto& v : m_fullVertices)
-    {
-        minX = (std::min)(minX, v.position.x);
-        minZ = (std::min)(minZ, v.position.z);
-        maxX = (std::max)(maxX, v.position.x);
-        maxZ = (std::max)(maxZ, v.position.z);
-    }
-
-    float width = maxX - minX;
-    float depth = maxZ - minZ;
-    if (width <= 0.0001f || depth <= 0.0001f)
-    {
-        EngineHelper::DebugPrint("TerrainModel::BuildTerrainCells 지형 크기가 너무 작거나 데이터가 비정상");
-        return false;
-    }
-
-    const int cellsPerRow = 4;
-    float cellWidth = (maxX - minX) / cellsPerRow;
-    float cellDepth = (maxZ - minZ) / cellsPerRow;
-
-    std::vector<TempCell> tempCells(cellsPerRow * cellsPerRow);
-
-    if (m_fullIndices.empty()) return false;
-
-    for (size_t i = 0; i < m_fullIndices.size(); i += 3)
-    {
-        ModelVertex v[3] = { m_fullVertices[m_fullIndices[i]], m_fullVertices[m_fullIndices[i + 1]], m_fullVertices[m_fullIndices[i + 2]] };
-
-        float cx = (v[0].position.x + v[1].position.x + v[2].position.x) / 3.0f;
-        float cz = (v[0].position.z + v[1].position.z + v[2].position.z) / 3.0f;
-
-        int ix = MathHelper::clamp(static_cast<int>((cx - minX) / cellWidth), 0, cellsPerRow - 1);
-        int iz = MathHelper::clamp(static_cast<int>((cz - minZ) / cellDepth), 0, cellsPerRow - 1);
-        int cellIdx = (iz * cellsPerRow) + ix;
-
-        unsigned int base = (unsigned int)tempCells[cellIdx].v.size();
-        for (int k = 0; k < 3; ++k)
-            tempCells[cellIdx].v.push_back(v[k]);
-
-        tempCells[cellIdx].i.push_back(base);
-        tempCells[cellIdx].i.push_back(base + 1);
-        tempCells[cellIdx].i.push_back(base + 2);
-    } // for
-
-    m_cells.clear();
-    for (auto& data : tempCells)
-    {
-        if (data.v.empty()) continue;
-
-        auto cell = std::make_unique<TerrainModelCell>();
-        if (cell->Init(device, data.v, data.i))
-            m_cells.push_back(std::move(cell));
-    }
-
-    EngineHelper::DebugPrint("TerrainModel: " + std::to_string(m_cells.size()) + " Cells Built.");
-
-    return true;
-} // BuildTerrainCells
 
 
 const Material& TerrainModel::GetMaterial(size_t index) const
@@ -334,50 +233,6 @@ bool TerrainModel::CreateCells(ID3D11Device* device, int cellDimension)
 
     return true;
 } // CreateCells
-
-
-//void TerrainModel::CalculateTangentBinormal(
-//    const ModelVertex& v1, const ModelVertex& v2, const ModelVertex& v3,
-//    DirectX::XMFLOAT3& tangent, DirectX::XMFLOAT3& binormal)
-//{
-//    float vector1[3], vector2[3];
-//    float tuVector[2], tvVector[2];
-//
-//    // 두 변의 벡터 계산
-//    vector1[0] = v2.position.x - v1.position.x;
-//    vector1[1] = v2.position.y - v1.position.y;
-//    vector1[2] = v2.position.z - v1.position.z;
-//
-//    vector2[0] = v3.position.x - v1.position.x;
-//    vector2[1] = v3.position.y - v1.position.y;
-//    vector2[2] = v3.position.z - v1.position.z;
-//
-//    // UV 좌표 차이 계산
-//    tuVector[0] = v2.texture.x - v1.texture.x;
-//    tvVector[0] = v2.texture.y - v1.texture.y;
-//
-//    tuVector[1] = v3.texture.x - v1.texture.x;
-//    tvVector[1] = v3.texture.y - v1.texture.y;
-//
-//    // 접선/종법선 공식 적용
-//    float den = 1.0f / (tuVector[0] * tvVector[1] - tuVector[1] * tvVector[0]);
-//
-//    tangent.x = (tvVector[1] * vector1[0] - tvVector[0] * vector2[0]) * den;
-//    tangent.y = (tvVector[1] * vector1[1] - tvVector[0] * vector2[1]) * den;
-//    tangent.z = (tvVector[1] * vector1[2] - tvVector[0] * vector2[2]) * den;
-//
-//    binormal.x = (tuVector[0] * vector2[0] - tuVector[1] * vector1[0]) * den;
-//    binormal.y = (tuVector[0] * vector2[1] - tuVector[1] * vector1[1]) * den;
-//    binormal.z = (tuVector[0] * vector2[2] - tuVector[1] * vector1[2]) * den;
-//
-//    // 정규화
-//    DirectX::XMVECTOR t = DirectX::XMLoadFloat3(&tangent);
-//    DirectX::XMVECTOR b = DirectX::XMLoadFloat3(&binormal);
-//    DirectX::XMStoreFloat3(&tangent, DirectX::XMVector3Normalize(t));
-//    DirectX::XMStoreFloat3(&binormal, DirectX::XMVector3Normalize(b));
-//
-//    return;
-//} // CalculateTangentBinormal
 
 
 void TerrainModel::SetHeightMap(std::unique_ptr<HeightMap> hMap)

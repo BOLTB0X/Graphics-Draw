@@ -55,44 +55,6 @@ bool AssimpLoader::LoadMeshModel(
     return true;
 } // LoadMeshModel
 
-
-bool AssimpLoader::LoadTerrainModel(
-    ID3D11Device* device, ID3D11DeviceContext* context,
-    TexturesManager* texManager, const std::string& path,
-    TerrainModel* outModel)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_ConvertToLeftHanded);
-    if (scene == nullptr)
-    {
-        EngineHelper::SuccessCheck(false, "Assimp Scene 로드 실패: " + path);
-        return false;
-    }
-
-    if (scene->mRootNode == nullptr || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
-    {
-        EngineHelper::SuccessCheck(false, "Assimp 데이터 불완전: " + path);
-        return false;
-    }
-
-
-    size_t lastSlash = path.find_last_of("\\/");
-    std::string directory = (lastSlash == std::string::npos) ? "." : path.substr(0, lastSlash);
-
-    ProcessMaterialsForTerrain(scene, device, context, texManager, directory, outModel);
-
-    ExtractAllMeshData(scene->mRootNode, scene, outModel);
-
-    // 데이터 수집후 셀 분할 작업 시작
-    if (outModel->BuildTerrainCells(device) == false)
-    {
-        EngineHelper::DebugPrint("ModelMananger: newTerrainModel->BuildTerrainCells(device)  실패");
-        return false;
-    }
-
-    return true;
-} // LoadTerrainModel
-
 //////////////////////////////////////////////////////////////////////////
 
 /* private */
@@ -182,8 +144,6 @@ void AssimpLoader::ProcessMaterials(
     size_t lastSlash = directory.find_last_of("\\/");
     std::string modelName = (lastSlash == std::string::npos) ? directory : directory.substr(lastSlash + 1);
 
-    //OutputDebugStringA(("PBR Directory: " + pbrDir + "\n").c_str());
-    //OutputDebugStringA(("Model Name: " + modelName + "\n").c_str());
 
     for (unsigned int i = 0; i < scene->mNumMaterials; i++)
     {
@@ -255,102 +215,6 @@ void AssimpLoader::ProcessMaterials(
     } // for
 
 } // ProcessMaterials
-
-
-void AssimpLoader::ProcessMaterialsForTerrain(
-    const aiScene* scene, ID3D11Device* device,
-    ID3D11DeviceContext* context, TexturesManager* texManager,
-    const std::string& directory, TerrainModel* outModel)
-{
-    std::string pbrDir = directory + "/textures/";
-    size_t lastSlash = directory.find_last_of("\\/");
-    std::string modelName = (lastSlash == std::string::npos) ? directory : directory.substr(lastSlash + 1);
-
-    for (unsigned int i = 0; i < scene->mNumMaterials; i++)
-    {
-        aiMaterial* aiMat = scene->mMaterials[i];
-        Material myMaterial;
-        myMaterial.name = aiMat->GetName().C_Str();
-        auto getPBR = [&](const std::string& suffix) -> std::shared_ptr<Texture> {
-            std::string fullPath = pbrDir + modelName + suffix;
-            auto tex = texManager->GetTexture(device, context, fullPath);
-
-            EngineHelper::SuccessCheck(tex != nullptr, "PBR 로드 실패: " + fullPath);
-            return tex;
-            };
-
-        myMaterial.albedo = LoadPBRTexture(device, context, texManager, pbrDir, modelName, "_BaseColor");
-        myMaterial.normal = LoadPBRTexture(device, context, texManager, pbrDir, modelName, "_normal");
-        myMaterial.metallic = LoadPBRTexture(device, context, texManager, pbrDir, modelName, "_Metallic");
-        myMaterial.roughness = LoadPBRTexture(device, context, texManager, pbrDir, modelName, "_Roughness");
-        myMaterial.ao = LoadPBRTexture(device, context, texManager, pbrDir, modelName, "_ao");
-
-        outModel->AddMaterial(myMaterial);
-
-    } // for
-
-} // ProcessMaterialsForTerrain
-
-
-void AssimpLoader::ExtractAllMeshData(aiNode* node, const aiScene* scene, TerrainModel* outModel)
-{
-    // 현재 노드에 포함된 메시들 처리
-    for (unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-        std::vector<ModelVertex> vertices;
-        std::vector<unsigned int> indices;
-
-        // 버텍스 데이터 추출 
-        for (unsigned int vIdx = 0; vIdx < mesh->mNumVertices; vIdx++)
-        {
-            ModelVertex vertex;
-            // 위치
-            vertex.position = { mesh->mVertices[vIdx].x, mesh->mVertices[vIdx].y, mesh->mVertices[vIdx].z };
-
-            // 텍스처 좌표
-            if (mesh->mTextureCoords[0])
-                vertex.texture = { (float)mesh->mTextureCoords[0][vIdx].x, (float)mesh->mTextureCoords[0][vIdx].y };
-            else
-                vertex.texture = { 0.0f, 0.0f };
-
-            // 노말
-            if (mesh->HasNormals())
-                vertex.normal = { mesh->mNormals[vIdx].x, mesh->mNormals[vIdx].y, mesh->mNormals[vIdx].z };
-
-            // 탄젠트 및 바이노멀 (PBR용)
-            if (mesh->HasTangentsAndBitangents())
-            {
-                vertex.tangent = { mesh->mTangents[vIdx].x, mesh->mTangents[vIdx].y, mesh->mTangents[vIdx].z };
-                vertex.binormal = { mesh->mBitangents[vIdx].x, mesh->mBitangents[vIdx].y, mesh->mBitangents[vIdx].z };
-            }
-
-            vertices.push_back(vertex);
-        }
-
-        // 인덱스 데이터
-        for (unsigned int fIdx = 0; fIdx < mesh->mNumFaces; fIdx++)
-        {
-            aiFace face = mesh->mFaces[fIdx];
-            for (unsigned int idx = 0; idx < face.mNumIndices; idx++)
-            {
-                indices.push_back(face.mIndices[idx]);
-            }
-        }
-
-        outModel->AddTerrainData(vertices, indices);
-    }
-
-    // 자식 노드들도 재귀적으로 처리
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
-    {
-        ExtractAllMeshData(node->mChildren[i], scene, outModel);
-    }
-
-    return;
-} // ExtractAllMeshData
-
 
 std::shared_ptr<Texture> AssimpLoader::LoadPBRTexture(
     ID3D11Device* device,

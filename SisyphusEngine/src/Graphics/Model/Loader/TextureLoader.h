@@ -8,17 +8,17 @@ class TextureLoader {
 public:
 
     static bool CreateTextureFromFile(
-        ID3D11Device* device,
-        ID3D11DeviceContext* context,
-        const std::string& filename,
-        ID3D11ShaderResourceView** outSRV);
+        ID3D11Device*,
+        ID3D11DeviceContext*,
+        const std::string&,
+        ID3D11ShaderResourceView**);
 
 private:
 
-    static bool LoadUsingDDSTex(ID3D11Device* device, ID3D11DeviceContext* context,
-        const std::string& filename, ID3D11ShaderResourceView** outSRV);
+    static bool LoadUsingDDSTex(ID3D11Device*, ID3D11DeviceContext*,
+        const std::string&, ID3D11ShaderResourceView**);
 
-    static bool LoadUsingStb(ID3D11Device* device, ID3D11DeviceContext* context,
-        const std::string& filename, ID3D11ShaderResourceView** outSRV);
+    static bool LoadUsingStb(ID3D11Device*, ID3D11DeviceContext*,
+        const std::string&, ID3D11ShaderResourceView**);
 
 }; // TextureLoader

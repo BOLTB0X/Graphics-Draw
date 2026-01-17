@@ -58,10 +58,6 @@ bool World::Init(const WorldInitParam& p)
     TerrainModel* cloudModel = p.modelManager->GetTerrainModel(p.device, p.context, p.textureManager, EngineSettings::TERRAIN_PATH);
     terrainShaderPtr = p.shaderManager->GetShader<TerrainShader>("Terrain");
 
-    float centerX = 400.0f;
-    float centerZ = 400.0f;
-
-
     if (cloudModel && terrainShaderPtr)
     {
         m_CloudOcean = std::make_unique<CloudOcean>();
@@ -77,8 +73,8 @@ bool World::Init(const WorldInitParam& p)
     {
         auto mount = std::make_unique<MountPick>();
         mount->Init(mountainModel, actorsShaderPtr, "MountPick");
-        mount->GetPosition()->SetPosition(centerX, 0.0, centerZ);
-        mount->SetHeightOffset(-10.0f);
+        mount->GetPosition()->SetPosition(EngineSettings::MOUNT_X, 0.0, EngineSettings::MOUNT_Z);
+        mount->SetHeightOffset(0.0f);
         m_Actors.push_back(std::move(mount));
     }
 
@@ -86,7 +82,7 @@ bool World::Init(const WorldInitParam& p)
     {
         auto stone = std::make_unique<Stone>();
         stone->Init(stoneModel, actorsShaderPtr, "Stone");
-        stone->GetPosition()->SetPosition(centerX - 100.0f, 0.0f, centerZ - 100.0f);
+        stone->GetPosition()->SetPosition(EngineSettings::STONE_X, 0.0f, EngineSettings::STONE_Z);
         stone->SetHeightOffset(0.0f);
         m_Actors.push_back(std::move(stone));
     }
@@ -97,18 +93,21 @@ bool World::Init(const WorldInitParam& p)
         {
             DirectX::XMFLOAT3 actorPos = actor->GetPosition()->GetPosition();
             float worldHeight = MathHelper::GetFBMHeight(actorPos.x, actorPos.z, 0.0f);
-            //float worldHeight = m_CloudOcean->GetHeightAtWorld(actorPos.x, actorPos.z);
 
             if (actor->GetName() == "MountPick")
             {
                 actor->SetHeightOffset(10.0f);
             }
+            else if (actor->GetName() == "Stone")
+            {
+                actor->SetHeightOffset(3.5f);
+            }
 
             actor->PlaceOnTerrain(worldHeight, actor->GetHeightOffset());
         }
 
-        m_Camera->GetPosition()->SetPosition(centerX - 100, 100.0f, centerZ - 150.0f);
-        m_Camera->GetPosition()->SetRotation(30.0f, 0.0f, 0.0f);
+        m_Camera->GetPosition()->SetPosition(EngineSettings::STONE_X - 50.0f, 30.0f, EngineSettings::STONE_X - 50.0f);
+        m_Camera->GetPosition()->SetRotation(30.0f, 45.0f, 0.0f);
     }
 
     return true;
@@ -152,15 +151,11 @@ void World::Frame(float frameTime, bool canControlWorld)
     for (auto& actor : m_Actors)
     {
         actor->Frame(frameTime);
-        DirectX::XMFLOAT3 pos = actor->GetPosition()->GetPosition();
+        //DirectX::XMFLOAT3 pos = actor->GetPosition()->GetPosition();
 
-        // MathHelper를 통해 현재 시간(currentTime)에 맞는 구름 높이 계산
-        float cloudWorldHeight = MathHelper::GetFBMHeight(pos.x, pos.z, m_CloudOcean->GetTotalTime());
+        //float cloudWorldHeight = MathHelper::GetFBMHeight(pos.x, pos.z, m_CloudOcean->GetTotalTime());
 
-        // 액터의 이름이나 종류에 따라 개별 footingBias(offset) 적용
-        float bias = actor->GetHeightOffset();
-
-        actor->PlaceOnTerrain(cloudWorldHeight, bias);
+        //actor->PlaceOnTerrain(cloudWorldHeight, actor->GetHeightOffset());
     }
 } // Frame
 
@@ -215,4 +210,16 @@ Position* World::GetCameraPosition() const
 
 /////////////////////////////////////////////////////////////////
 
-/* public */
+
+void World::UpdateShaderMaterial(float time)
+{
+    if (terrainShaderPtr == nullptr) return;
+
+    terrainShaderPtr->UpdateMaterialTag(
+        m_DeviceContext,
+        0,
+        time,
+        DirectX::XMFLOAT4(400.0f, 0.0f, 400.0f, 0.0f),
+        DirectX::XMFLOAT4(300.0f, 0.0f, 300.0f, 0.0f)
+    );
+} // UpdateShaderMaterial

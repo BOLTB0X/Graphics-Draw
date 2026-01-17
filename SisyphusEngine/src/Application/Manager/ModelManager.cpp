@@ -12,7 +12,6 @@
 #include "Model/Texture/Material.h"
 #include "Model/Texture/Texture.h"
 #include "Model/Loader/AssimpLoader.h"
-#include "Model/Loader/TerrainLoader.h"
 // etc
 #include <filesystem>
 
@@ -22,7 +21,6 @@
 ModelManager::ModelManager()
 {
     m_AssimpLoader = std::make_unique<AssimpLoader>();
-    m_TerrainLoader = std::make_unique<TerrainLoader>();
 };
 
 ModelManager::~ModelManager()
@@ -112,9 +110,7 @@ TerrainModel* ModelManager::GetTerrainModel(
 
     auto newTerrainModel = std::make_unique<TerrainModel>();
 
-    // 상수 버퍼 초기화
     if (newTerrainModel->InitConstantBuffer(device) == false) return nullptr;
-
     newTerrainModel->InitHeightMap();
 
     Material terrainMat;
@@ -122,7 +118,7 @@ TerrainModel* ModelManager::GetTerrainModel(
     terrainMat.normal = texManager->GetTexture(device, context, EngineSettings::TERRAINNORM_PATH);
     newTerrainModel->InitMaterial(terrainMat);
 
-    if (newTerrainModel->CreateCells(device, 42) == false) // cellDimension 전달
+    if (newTerrainModel->CreateCells(device, 42) == false)
     {
         EngineHelper::DebugPrint("ModelManager::GetTerrainModel: CreateCells 실패");
         return nullptr;

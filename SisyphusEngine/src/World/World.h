@@ -45,6 +45,9 @@ public:
     Position* GetCameraPosition() const;
 
 private:
+    void UpdateShaderMaterial(float time);
+
+private:
     std::unique_ptr<Camera> m_Camera;
     std::vector<std::unique_ptr<ActorObject>> m_Actors;
     std::unique_ptr<CloudOcean> m_CloudOcean;

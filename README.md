@@ -20,29 +20,94 @@
 
 <!-- 띄우기 -->
 
+
+```
+├─ CMakeLists.txt
+├─ assets/
+├─ hlsl/
+├─ src/
+│  └─ main.cpp
+│  ├─ Common
+│  │  ├─ EngineHelper.h
+│  │  ├─ EngineSetting.h
+│  │  ├─ MathHelper.h
+│  ├─ Framework
+│  │  ├─ Actor/
+│  │  │  ├─ ActorObject.h/cpp
+│  │  │  ├─ActorRenderParams // 이거 삭제하고 수정예정
+│  │  ├─ Position/
+│  │  │  ├─ Position.h/cpp
+│  │  ├─ Shader/
+│  │  │  ├─ Shader.h/cpp
+│  │  ├─ Widget/
+│  │  │  ├─ iWidget.h/cpp
+│  ├─ Graphics
+│  │  ├─ Renderer/
+│  │  │  ├─ Renderer.h/cpp
+│  │  │  ├─ DX11Device.h/cpp
+│  │  │  ├─ DisplayInfo.h/cpp
+│  │  │  ├─ Rasterizer.h/cpp
+│  │  │  ├─ RenderTarget.h/cpp
+│  │  │  ├─ DepthStencilState.h/cpp
+│  │  │  ├─ BlendState.h/cpp
+│  │  ├─ Model/
+│  │  │  ├─ MeshModel.h/cpp
+│  │  │  ├─ TerrainModel.h/cpp
+│  │  │  ├─ TerrainModelCell.h/cpp
+│  │  │  ├─ Mesh/
+│  │  │  │  ├─ VertexBuffer.h/cpp
+│  │  │  │  ├─ IndexBuffer.h/cpp
+│  │  │  │  ├─ Mesh.h/cpp
+│  │  │  │  ├─ VertexTypes.h
+│  │  │  ├─ Texture/
+│  │  │  │  ├─ Texture.h/cpp
+│  │  │  │  ├─ TextureLoader.h/cpp
+│  │  │  │  ├─ Material.h
+│  │  ├─ Shaders/
+│  │  │  ├─ ActorsShader.h/cpp
+│  │  │  ├─ ColorShader.h/cpp
+│  │  │  ├─ ConstantBuffer.h/cpp
+│  │  ├─ Camera/
+│  │  │  ├─ Camera.h/cpp
+│  │  │  ├─ Frustum.h/cpp
+│  ├─ System
+│  │  ├─ Input/
+│  │  │  ├─Input.h/cpp
+│  │  ├─ Gui/
+│  │  │  ├─Gui.h/cpp
+│  │  ├─ System.h/cpp
+│  ├─  UserInterface // 추가할 부분
+│  │  ├─ UserInterface.h/cpp // 어플리케이션에서 하던 걸 여기로 옮기고 Widget과 UserInput을 Application, World로 연결해주는 역할
+│  │  ├─ Widget/
+│  │  │  │  ├─ControlWidget.h/cpp
+│  │  │  │  ├─InspectorWidget.h/cpp
+│  │  │  │  ├─MainSideBarWidget.h/cpp // 현재 크기를 할당해서 했는데 그건 내가 Imgui 클릭이 안되고 잘 몰라서 했는데 창 접근이 되니 그냥 나중 모든 Widget을 여기서 할당할 목적 (기존 Vstack 처럼 크기 할당 취소 예정)
+│  │  │  │  ├─StatsWidget.h/cpp
+│  │  ├─ UserInput/
+│  │  │  │  ├─ UserInput.h/cpp // System으로 내린 Input을 포인터로 받아서 유저 조작 관련 메서드들을 관리
+│  ├─ Application/
+│  │  ├─ Application.h/cpp
+│  │  │  ├─ Fps/
+│  │  │  │  ├─ Fps.h/cpp
+│  │  │  ├─ Timer/
+│  │  │  │  ├─Timer.h/cpp
+│  │  │  ├─ ModelManager/
+│  │  │  │  ├─ModelManager.h/cpp
+│  │  │  ├─ ShaderManager/
+│  │  │  │  ├─ShaderManager.h/cpp
+│  │  │  ├─ TetureManager/
+│  │  │  │  ├─TetureManager.h/cpp
+│  ├─ World
+│  │  ├─ Actors/ 
+│  │  │  ├─ Stone/ Stone.h/cpp 
+│  │  │  ├─ Mountain / Mountain .h/cpp
+│  │  ├─ World/
+│  │  │  ├─ World.h/cpp
+```
+
 </details>
 
 
-```
-// ~ ing
-src/
-├─ Common/
-├─ System/
-├─ Base/
-├─ Graphics/
-│  ├─ Camera/
-│  ├─ Model/
-│  ├─ Shader/
-├─ Application/
-│  ├─ ModelManager/
-│  ├─ TextureManager/
-│  ├─ ShaderManager/
-├─ Framework/
-│  │  ├─ IWidget.h
-│  │  ├─ WorldObject.h (모든 객체의 부모)
-├─ World/
-│  ├─ Actors/
-```
 
 #### used 라이브러리 및 툴
 
@@ -58,7 +123,13 @@ src/
 
 - [Stone 이용: sketchfab - Ground//Stone Sphere(Madee)](https://sketchfab.com/3d-models/groundstone-sphere-1c0f2b2e213348e6a760743a546dc7a6)
 
-- [Terrain 이용: sketchfab - Snow Mountain(JesterArts_)](https://sketchfab.com/3d-models/snow-mountain-e42d1a231cf54ff3a01dc691c050762c)
+- Terrain
+
+    - [goto Shader 코드 참고](https://godotshaders.com/shader/cloud-material/)
+
+    - [normalMap 이용: filterforge `Cloud_normal.jpg`](https://www.filterforge.com/filters/6395-normal.html)
+
+- [Mountain 이용: sketchfab - Cloudy Mountain(Pers Scans)](https://sketchfab.com/3d-models/cloudy-mountain-f61d84c6534d4007accdeac35f433119)
 
 
 ## 참고

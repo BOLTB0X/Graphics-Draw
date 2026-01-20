@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
-#include "Model/Mesh/VertexTypes.h"
+// Resources
+#include "VertexTypes.h"
 
 
 namespace MathHelper { // 물리 및 이동 관련 상수
@@ -123,7 +124,7 @@ namespace MathHelper { // Terrain
 
 
     inline void CalculateTangentBinormal(
-        const ModelVertex& v1, const ModelVertex& v2, const ModelVertex& v3,
+        const MeshVertex& v1, const MeshVertex& v2, const MeshVertex& v3,
         DirectX::XMFLOAT3& tangent, DirectX::XMFLOAT3& binormal)
     {
         float vector1[3], vector2[3];
@@ -188,7 +189,7 @@ namespace MathHelper { // 벡터 산술 연산
     } // Distance
 
 
-    void GetCameraVectors(const DirectX::XMMATRIX& viewMatrix, DirectX::XMFLOAT3& right, DirectX::XMFLOAT3& up) {
+    inline void GetCameraVectors(const DirectX::XMMATRIX& viewMatrix, DirectX::XMFLOAT3& right, DirectX::XMFLOAT3& up) {
         DirectX::XMMATRIX invView = DirectX::XMMatrixInverse(nullptr, viewMatrix);
 
         DirectX::XMFLOAT4X4 m;
@@ -199,3 +200,8 @@ namespace MathHelper { // 벡터 산술 연산
     } // GetCameraVectors
 
 } // 벡터 산술 연산
+
+
+namespace MathHelper {
+
+}

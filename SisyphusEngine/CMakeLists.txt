@@ -22,16 +22,33 @@ file(GLOB_RECURSE SOURCES
 # WIN32 옵션을 넣어 콘솔창 없는 윈도우 애플리케이션으로 생성
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
 
+foreach(FILE ${SOURCES})
+    if(FILE MATCHES "\\.hlsl$")
+        # 1. 항목 유형을 HLSL 셰이더로 설정
+        set_source_files_properties(${FILE} PROPERTIES VS_TOOL_OVERRIDE "FXCompile")
+        
+        # 2. 셰이더 모델 5.0 설정 (/5_0)
+        set_source_files_properties(${FILE} PROPERTIES VS_SHADER_MODEL "5.0")
+        
+        # 3. 셰이더 타입 자동 감지
+        if(FILE MATCHES "VS" OR FILE MATCHES "Vertex")
+            set_source_files_properties(${FILE} PROPERTIES VS_SHADER_TYPE "Vertex")
+        elseif(FILE MATCHES "PS" OR FILE MATCHES "Pixel")
+            set_source_files_properties(${FILE} PROPERTIES VS_SHADER_TYPE "Pixel")
+        endif()
+    endif()
+endforeach()
+
 # 3. 헤더 포함 경로
 target_include_directories(${PROJECT_NAME} PRIVATE 
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/System"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Graphics"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/World"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Application"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Resources"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Engine"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Framework"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Common"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/UserInterface"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/UI"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/HLSL"
     "${ASSIMP_ROOT}/include"
     "C:/dev"
 )

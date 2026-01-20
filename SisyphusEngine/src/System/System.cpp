@@ -1,12 +1,12 @@
 // System/System.cpp
 #include "System.h"
-#include "Input/Input.h"
-#include "Gui/Gui.h"
+#include "Input.h"
+#include "Gui.h"
 // Common
 #include "EngineSettings.h"
 #include "EngineHelper.h"
-// Application
-#include "Application.h"
+// Engine
+#include "Engine.h"
 // imgui
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -21,7 +21,7 @@ System::System()
 	m_hwnd(0),
 	m_Input(nullptr),
 	m_Gui(nullptr),
-	m_Application(nullptr)
+	m_Engine(nullptr)
 { } // System
 
 
@@ -45,29 +45,24 @@ bool System::Init()
 
 	m_Gui = std::make_shared<Gui>();
 
-	m_Application = std::make_unique<Application>();
-	if (m_Application->Init(m_hwnd, m_Input, m_Gui)
+	m_Engine = std::make_unique<Engine>();
+	if (m_Engine->Init(m_hwnd, m_Input, m_Gui)
 		== false) return false;
 
 	return true;
 } // Init
 
 
-void System::Shutdown() {	
-	if (m_Application)
-	{
-		m_Application->Shutdown();
-	}
+void System::Shutdown()
+{	
+	if (m_Engine)
+		m_Engine->Shutdown();
 
 	if (m_Gui)
-	{
 		m_Gui->Shutdown();
-	}
 
 	if (m_Input)
-	{
 		m_Input->Shutdown();
-	}
 
 	ShutdownWindows();
 } // Shutdown
@@ -108,7 +103,7 @@ bool System::Frame()
 	if (m_Input->Frame()
 		== false) return false;
 
-	if (m_Application->Frame()
+	if (m_Engine->Frame()
 		== false) return false;
 	return true;
 } // Frame

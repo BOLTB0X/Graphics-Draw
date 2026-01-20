@@ -79,7 +79,7 @@ namespace EngineSettings {
     const std::wstring TERRAIN_VS = L"Terrain/TerrainVS.hlsl";
     const std::wstring TERRAIN_PS = L"Terrain/TerrainPS.hlsl";
 
-    const std::wstring CLOUD_VS = L"Actors/ActorsVS.hlsl";
+    const std::wstring CLOUD_VS = L"Cloud/CloudVS.hlsl";
     const std::wstring CLOUD_PS = L"Cloud/CloudPS.hlsl";
 
 

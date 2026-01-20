@@ -7,7 +7,7 @@
 
 class Input;
 class Gui;
-class Application;
+class Engine;
 
 
 class System {
@@ -34,8 +34,7 @@ private:
 private:
     std::shared_ptr<Input> m_Input;
     std::shared_ptr<Gui> m_Gui;
-    std::unique_ptr<Application> m_Application;
+    std::unique_ptr<Engine> m_Engine;
 }; // System
 
-//static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 static System* ApplicationHandle = nullptr;

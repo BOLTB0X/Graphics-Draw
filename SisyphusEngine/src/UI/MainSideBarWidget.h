@@ -1,9 +1,8 @@
-// UserInterface/Widget/MainSideBarWidget.h
 #pragma once
 #include <vector>
 #include <memory>
 // Framework
-#include "Widget/IWidget.h"
+#include "IWidget.h"
 
 class World;
 
@@ -26,7 +25,6 @@ public:
         }
         return nullptr;
     }
-
 
 
 private:

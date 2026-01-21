@@ -1,8 +1,5 @@
-// UserInterface/Widget/MainSideBarWidget.h
 #include "MainSideBarWidget.h"
 #include "imgui.h"
-
-#include "World.h"
 
 /* default */
 ////////////////////////////////////////////////////////////////////

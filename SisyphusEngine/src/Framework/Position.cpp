@@ -1,11 +1,10 @@
-// Base/Position.cpp
 #include "Position.h"
+// Common
+#include "MathHelper.h"
+
 
 using namespace DirectX;
 
-
-/* defulat */
-/////////////////////////////////////////////////////////////////////
 
 Position::Position()
 	:m_position(XMFLOAT3(0.0f, 0.0f, 0.0f)),

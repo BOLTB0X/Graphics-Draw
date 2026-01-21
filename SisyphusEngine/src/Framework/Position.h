@@ -2,10 +2,8 @@
 #pragma once
 
 #include <directxmath.h>
-#include "Common/MathHelper.h"
 
-class Position
-{
+class Position {
 public:
     Position();
     Position(const Position&) = delete;

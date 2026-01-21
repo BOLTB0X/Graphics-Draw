@@ -6,7 +6,7 @@
 #include "Gui.h"
 // Graphics
 //#include "Renderer/Renderer.h"
-// Engine
+// MainEngine
 #include "Timer.h"
 #include "Fps.h"
 // Framework

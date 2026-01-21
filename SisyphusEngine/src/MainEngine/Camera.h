@@ -12,13 +12,18 @@ public:
 	Camera(const Camera&) = delete;
     ~Camera();
 
+    void InitView();
 	void InitProjection(int, int, float, float);
     void Render();
 
 public:
+    void SetPosition(float, float, float);
+    void SetRotation(float, float, float);
+
     Position* GetPosition() const { return m_Position.get(); }
     Frustum* GetFrustum() const { return m_Frustum.get(); }
 
+    DirectX::XMMATRIX GetWorldMatrix();
     DirectX::XMMATRIX GetViewMatrix() const { return m_viewMatrix; }
     DirectX::XMMATRIX GetProjectionMatrix() const { return m_projectionMatrix; }
 

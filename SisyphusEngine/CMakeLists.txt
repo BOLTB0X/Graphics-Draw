@@ -43,8 +43,8 @@ endforeach()
 target_include_directories(${PROJECT_NAME} PRIVATE 
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/System"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Resources"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Engine"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/RederingEngine"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/MainEngine"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Framework"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Common"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/UI"
@@ -79,15 +79,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}")
 
 # --- 6. 리소스 및 셰이더 복사 로직 ---
+set(HLSL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/HLSL")
+set(HLSL_OUTPUT_DIR "${CMAKE_BINARY_DIR}/HLSL")
 
-file(GLOB_RECURSE HLSL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hlsl/*.hlsl")
+file(GLOB_RECURSE HLSL_SOURCES
+    "${HLSL_SOURCE_DIR}/*.hlsl"
+    "${HLSL_SOURCE_DIR}/*.hlsli"
+)
 
 foreach(SHADER_PATH ${HLSL_SOURCES})
-    file(RELATIVE_PATH REL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/hlsl" ${SHADER_PATH})
-    set(DEST_PATH "${CMAKE_BINARY_DIR}/hlsl/${REL_PATH}")
-    get_filename_component(DEST_DIR ${DEST_PATH} DIRECTORY)
-    
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    file(RELATIVE_PATH REL_PATH "${HLSL_SOURCE_DIR}" "${SHADER_PATH}")
+    set(DEST_PATH "${HLSL_OUTPUT_DIR}/${REL_PATH}")
+    get_filename_component(DEST_DIR "${DEST_PATH}" DIRECTORY)
+
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${DEST_DIR}"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SHADER_PATH}" "${DEST_PATH}"
         COMMENT "Copying shader: ${REL_PATH}"

@@ -1,4 +1,3 @@
-// Framework/Widget/IWidget.h
 #pragma once
 #include <string>
 

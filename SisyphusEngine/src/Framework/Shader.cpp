@@ -1,13 +1,10 @@
 #include "Shader.h"
 // Common
 #include "EngineHelper.h"
-// 
+// etc
 #include <d3dcompiler.h>
 #include <fstream>
 
-
-/* default */
-////////////////////////////////////////////////
 
 Shader::Shader() { } // Shader
 

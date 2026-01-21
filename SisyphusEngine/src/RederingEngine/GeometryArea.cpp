@@ -1,16 +1,26 @@
 #include "GeometryArea.h"
+// Framework
+#include "Position.h"
 
 
 GeometryArea::GeometryArea()
     : m_vertexCount(4),
     m_indexCount(6)
-{}
+{
+    m_Position = std::make_unique<Position>();
+}
 
 GeometryArea::~GeometryArea() {}
 
 
 bool GeometryArea::Init(ID3D11Device* device)
 {
+    m_vertexCount = 4;
+    m_indexCount = 6;
+
+    m_Position->SetPosition(0.0f, 0.0f, 0.0f);
+    m_Position->SetScale(1.0f);
+
     return InitBuffers(device);
 } // Init
 
@@ -71,3 +81,27 @@ void GeometryArea::Shutdown()
     m_indexBuffer.Reset();
     m_vertexBuffer.Reset();
 } // Shutdown
+
+
+DirectX::XMMATRIX GeometryArea::GetModelMatrix()
+{
+    return m_Position->GetWorldMatrix();
+} // GetModelMatrix
+
+
+void GeometryArea::SetPosition(DirectX::XMFLOAT3 position)
+{
+    m_Position->SetPosition(position.x, position.y, position.z);
+} // SetPosition
+
+
+void GeometryArea::SetScale(float s)
+{
+    m_Position->SetScale(s);
+} // SetScale
+
+
+void GeometryArea::SetTransform(DirectX::XMFLOAT3 position)
+{
+    m_Position->SetPosition(position.x, position.y, position.z);
+} // SetTransform

@@ -7,7 +7,7 @@
 
 class Input;
 class Gui;
-class Engine;
+class MainEngine;
 
 
 class System {
@@ -34,7 +34,7 @@ private:
 private:
     std::shared_ptr<Input> m_Input;
     std::shared_ptr<Gui> m_Gui;
-    std::unique_ptr<Engine> m_Engine;
+    std::unique_ptr<MainEngine> m_Engine;
 }; // System
 
 static System* ApplicationHandle = nullptr;

@@ -10,12 +10,15 @@ class Renderer;
 class Fps;
 class UI;
 class UserInput;
+class CloudShader;
+class GeometryArea;
+class TexturesManager;
 
-class Engine {
+class MainEngine {
 public:
-    Engine();
-    Engine(const Engine& other) = delete;
-    ~Engine();
+    MainEngine();
+    MainEngine(const MainEngine& other) = delete;
+    ~MainEngine();
 
     bool Init(HWND hwnd, std::shared_ptr<Input>, std::shared_ptr<Gui>);
     void Shutdown();
@@ -38,5 +41,9 @@ private:
     // 그래픽
     std::unique_ptr<Renderer> m_Renderer;
     std::unique_ptr<Camera> m_Camera;
-
-}; // Engine
+    // 매니저
+    std::unique_ptr<TexturesManager> m_TexturesManager;
+    // TODO: RenderingEngie 으로 옮길 예정
+    std::unique_ptr<CloudShader> m_CloudShader;
+    std::unique_ptr<GeometryArea> m_CloudArea;
+}; // MainEngine

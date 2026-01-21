@@ -5,9 +5,6 @@
 #include <string>
 
 
-using namespace DirectX;
-using Microsoft::WRL::ComPtr;
-
 class Shader {
 public:
     Shader();
@@ -23,25 +20,29 @@ protected:
 
 protected:
     struct GlobalBuffer {
+        // 1
         float uTime;
-        XMFLOAT3 padding;
-        XMFLOAT2 uResolution;
-        XMFLOAT2 padding2;
+        DirectX::XMFLOAT3 padding;
+
+        // 2
+        DirectX::XMFLOAT2 uResolution;
+        float uNoiseRes;
+        float padding2;
     };
 
     struct MatrixBuffer
     {
-        XMMATRIX world;
-        XMMATRIX view;
-        XMMATRIX projection;
+        DirectX::XMMATRIX model;
+        DirectX::XMMATRIX view;
+        DirectX::XMMATRIX projection;
     };
 
 protected:
-    ComPtr<ID3D11VertexShader> m_vertexShader;
-    ComPtr<ID3D11PixelShader> m_pixelShader;
-    ComPtr<ID3D11InputLayout> m_layout;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_layout;
 
     // 상수버퍼
-    ComPtr<ID3D11Buffer> m_matrixBuffer;
-    ComPtr<ID3D11Buffer> m_globalBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> m_globalBuffer;
 }; // Shader

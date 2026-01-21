@@ -5,8 +5,8 @@
 // Common
 #include "EngineSettings.h"
 #include "EngineHelper.h"
-// Engine
-#include "Engine.h"
+// MainEngine
+#include "MainEngine.h"
 // imgui
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -45,7 +45,7 @@ bool System::Init()
 
 	m_Gui = std::make_shared<Gui>();
 
-	m_Engine = std::make_unique<Engine>();
+	m_Engine = std::make_unique<MainEngine>();
 	if (m_Engine->Init(m_hwnd, m_Input, m_Gui)
 		== false) return false;
 

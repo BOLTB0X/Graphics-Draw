@@ -52,6 +52,8 @@ bool CloudShader::Init(ID3D11Device* device, HWND hwnd,
     matrixBufferDesc.ByteWidth = sizeof(GlobalBuffer);
     device->CreateBuffer(&matrixBufferDesc, nullptr, &m_globalBuffer);
 
+    m_type = ShaderType::Cloud;
+
     return true;
 } // Init
 

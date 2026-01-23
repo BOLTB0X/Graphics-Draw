@@ -9,7 +9,9 @@ public:
 
 public:
     void SetFrameTime(float);
+    void SetPosition(DirectX::XMFLOAT3);
     void SetPosition(float, float, float);
+    void SetRotation(DirectX::XMFLOAT3);
     void SetRotation(float, float, float);
     void SetScale(float);
 
@@ -38,9 +40,7 @@ private:
     DirectX::XMMATRIX m_worldMatrix;
 
     bool m_isDirty;
-
     float m_frameTime;
-
     float m_forwardSpeed, m_backwardSpeed;
     float m_upwardSpeed, m_downwardSpeed;
     float m_leftTurnSpeed, m_rightTurnSpeed;

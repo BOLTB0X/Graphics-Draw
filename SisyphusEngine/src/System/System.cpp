@@ -12,8 +12,6 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
-/* default */
-/////////////////////////////////////////////////////////////////////
 
 System::System()
 	: m_applicationName(0),
@@ -166,13 +164,29 @@ bool System::InitWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
-		posX = (GetSystemMetrics(SM_CXSCREEN) - EngineSettings::SCREEN_WIDTH) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - EngineSettings::SCREEN_HEIGHT) / 2;
+		RECT windowRect = { 0, 0, (LONG)EngineSettings::SCREEN_WIDTH, (LONG)EngineSettings::SCREEN_HEIGHT };
+		//GetClientRect
+		// 창 스타일(WS_OVERLAPPEDWINDOW)에 맞춰 실제 필요한 창 크기를 계산
+		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+		// 확장된 크기로 너비와 높이 계산
+		int actualWidth = windowRect.right - windowRect.left;
+		int actualHeight = windowRect.bottom - windowRect.top;
+
+		// 중앙 정렬 좌표 계산
+		posX = (GetSystemMetrics(SM_CXSCREEN) - actualWidth) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - actualHeight) / 2;
 	}
 
 	m_hwnd = CreateWindowExW(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_OVERLAPPEDWINDOW,
 		posX, posY, EngineSettings::SCREEN_WIDTH, EngineSettings::SCREEN_HEIGHT, NULL, NULL, m_hinstance, NULL);
+
+	RECT clientRect;
+	GetClientRect(m_hwnd, &clientRect);
+
+	screenWidth = clientRect.right - clientRect.left;
+	screenHeight = clientRect.bottom - clientRect.top;
 
 	ShowWindow(m_hwnd, SW_SHOW);
 	SetForegroundWindow(m_hwnd);

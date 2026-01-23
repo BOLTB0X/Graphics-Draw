@@ -109,11 +109,18 @@ ID3D11DeviceContext* Renderer::GetDeviceContext() const
 } // GetDeviceContext
 
 
-void Renderer::SetWireframeMode(bool enable)
+void Renderer::SetMode(bool enable, bool back)
 {
-    // Bind 함수 인자: context, wireframe, cullNone
-    m_Rasterizer->Bind(m_DX11Device->GetDeviceContext(), enable, false);
-} // SetWireframeMode
+    if (enable)
+        m_Rasterizer->SetWireframeState(m_DX11Device->GetDeviceContext());
+    else
+    {
+        if (back)
+            m_Rasterizer->SetSolidState(m_DX11Device->GetDeviceContext());
+        else
+            m_Rasterizer->SetNoCullingState(m_DX11Device->GetDeviceContext());
+    }
+} // SetMode
 
 
 void Renderer::SetAlphaBlending(bool enable)

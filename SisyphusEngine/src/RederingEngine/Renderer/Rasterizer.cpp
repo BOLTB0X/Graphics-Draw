@@ -49,12 +49,29 @@ bool Rasterizer::Init(ID3D11Device* device)
 } // Init
 
 
-void Rasterizer::Bind(ID3D11DeviceContext* context, bool wireframe, bool cullNone)
+//void Rasterizer::Bind(ID3D11DeviceContext* context, bool wireframe, bool cullNone)
+//{
+//    if (wireframe)
+//        context->RSSetState(m_wireframeState.Get());
+//    else if (cullNone)
+//        context->RSSetState(m_noCullingState.Get());
+//    else
+//        context->RSSetState(m_solidState.Get());
+//} // Bind
+
+void Rasterizer::SetSolidState(ID3D11DeviceContext* context)
 {
-    if (wireframe)
-        context->RSSetState(m_wireframeState.Get());
-    else if (cullNone)
-        context->RSSetState(m_noCullingState.Get());
-    else
-        context->RSSetState(m_solidState.Get());
-} // Bind
+    context->RSSetState(m_solidState.Get()); // // 기본 채우기 모드 + 백페이스 컬링 적용
+} // SetSolidState
+
+
+void Rasterizer::SetWireframeState(ID3D11DeviceContext* context)
+{
+    context->RSSetState(m_wireframeState.Get());
+} // SetWireframeState
+
+
+void Rasterizer::SetNoCullingState(ID3D11DeviceContext* context)
+{
+    context->RSSetState(m_noCullingState.Get());
+} // SetNoCullingState

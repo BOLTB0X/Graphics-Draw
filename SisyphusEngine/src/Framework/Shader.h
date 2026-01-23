@@ -4,6 +4,7 @@
 #include <wrl/client.h>
 #include <string>
 
+enum class ShaderType { None, Sun, Cloud };
 
 class Shader {
 public:
@@ -14,10 +15,12 @@ public:
     // virtual
     virtual ~Shader() = default;
     virtual bool Init(ID3D11Device*, HWND, const std::wstring&, const std::wstring&) = 0;
+    virtual void SetShaders(ID3D11DeviceContext*) = 0;
 
     // common
     bool UpdateMatrixBuffer(ID3D11DeviceContext*, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX);
     bool UpdateGlobalBuffer(ID3D11DeviceContext*, float, DirectX::XMFLOAT3, float);
+    ShaderType GetShaderType() const { return m_type; }
 
 protected:
     bool Compile(ID3D11Device*, HWND , const std::wstring&, LPCSTR, LPCSTR, ID3DBlob**);
@@ -36,7 +39,7 @@ protected:
         // 3
         DirectX::XMFLOAT2 uResolution;  // 8 bytes
         float uNoiseRes;                // 4 bytes
-        float padding2;                 // 4 bytes (합쳐서 16B)
+        float padding2;                 // 4 bytes
     };
 
     struct MatrixBuffer
@@ -54,4 +57,6 @@ protected:
     // 상수버퍼
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_matrixBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_globalBuffer;
+    
+    ShaderType m_type;
 }; // Shader

@@ -11,7 +11,10 @@ public:
     ~Rasterizer();
 
     bool Init(ID3D11Device* device);
-    void Bind(ID3D11DeviceContext* context, bool wireframe = false, bool cullNone = false);
+    //void Bind(ID3D11DeviceContext* context, bool wireframe = false, bool cullNone = false);
+    void SetSolidState(ID3D11DeviceContext* context);
+    void SetWireframeState(ID3D11DeviceContext* context);
+    void SetNoCullingState(ID3D11DeviceContext* context);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_solidState;

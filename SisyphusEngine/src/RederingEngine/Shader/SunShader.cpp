@@ -35,6 +35,8 @@ bool SunShader::Init(ID3D11Device* device, HWND hwnd,
     D3D11_BUFFER_DESC lightDesc = { sizeof(LightBuffer), D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0 };
     device->CreateBuffer(&lightDesc, nullptr, &m_lightBuffer);
 
+    m_type = ShaderType::Sun;
+
     return true;
 } // Init
 

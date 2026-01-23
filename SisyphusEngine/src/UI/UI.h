@@ -10,8 +10,7 @@ class Gui;
 class Fps;
 class Timer;
 class Renderer;
-class MainSideBarWidget;
-class World;
+class Camera;
 
 
 class UI {
@@ -21,7 +20,6 @@ public:
     ~UI();
 
     bool Init(std::shared_ptr<Gui> gui);
-    void Frame();
     void Render();
 
     void Begin();
@@ -31,9 +29,8 @@ public:
 
 public:
     void AddWidget(std::unique_ptr<IWidget>);
-    void ToggleMainSideBar();
-    void CreateSideBar(std::string, Timer*, Fps*, Renderer*, World*);
-    void ApplyRenderStates(Renderer*);
+    void ToggleWidget();
+    void CreateWidget(Timer*, Fps*, Camera*, bool*, bool*, bool*);
     bool IsWorldClicked(bool mousePressed) const;
 
 public:
@@ -53,6 +50,6 @@ public:
 private:
     std::shared_ptr<Gui> m_Gui;
     std::vector<std::unique_ptr<IWidget>> m_widgets;
-    MainSideBarWidget* m_MainSideBar;
-    bool m_isCameraLocked = false;
+    //MainSideBarWidget* m_MainSideBar;
+    bool m_isCameraLocked;
 }; // UI

@@ -26,18 +26,31 @@ Position::Position()
 
 
 Position::~Position() {} // ~Position
-/////////////////////////////////////////////////////////////////////
 
 
-/* Set 관련 */
-/////////////////////////////////////////////////////////////////////
+void Position::SetFrameTime(float time)
+{
+	m_frameTime = time;
+} // SetFrameTime
 
-void Position::SetFrameTime(float time) { m_frameTime = time; } // SetFrameTime
+
+void Position::SetPosition(XMFLOAT3 pos)
+{
+	m_position = pos;
+	m_isDirty = true;
+} // SetPosition
 
 
 void Position::SetPosition(float x, float y, float z)
 {
 	m_position = XMFLOAT3(x, y, z);
+	m_isDirty = true;
+} // SetPosition
+
+
+void Position::SetRotation(XMFLOAT3 rot)
+{
+	m_rotation = rot;
 	m_isDirty = true;
 } // SetPosition
 
@@ -54,11 +67,7 @@ void Position::SetScale(float s)
 	m_scale = XMFLOAT3(s, s, s);
 	m_isDirty = true;
 } // SetScale
-/////////////////////////////////////////////////////////////////////
 
-
-/* Get 관련 */
-/////////////////////////////////////////////////////////////////////
 
 XMMATRIX Position::GetWorldMatrix()
 {
@@ -67,10 +76,9 @@ XMMATRIX Position::GetWorldMatrix()
 	
 	return m_worldMatrix;
 } // GetWorldMatrix
-/////////////////////////////////////////////////////////////////////
 
 
-/* 키를 통한 이동 관련 */
+
 void Position::MoveForward(bool keydown)
 {
 	if (keydown)
@@ -231,26 +239,20 @@ void Position::LookDownward(bool keydown)
 
 	m_isDirty = true;
 } // LookDownward
-/////////////////////////////////////////////////////////////////////
 
-
-/* private */
-/////////////////////////////////////////////////////////////////////
 
 void Position::UpdateWorldMatrix()
 {
 	XMMATRIX s = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
 
-	// ToRadians 함수를 사용해 가독성 확보
 	XMMATRIX r = XMMatrixRotationRollPitchYaw(
-		MathHelper::ToRadians(m_rotation.x),
-		MathHelper::ToRadians(m_rotation.y),
-		MathHelper::ToRadians(m_rotation.z)
+		XMConvertToRadians(m_rotation.x),
+		XMConvertToRadians(m_rotation.y),
+		XMConvertToRadians(m_rotation.z)
 	);
 
 	XMMATRIX t = XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
 
-	// SRT 순서로 곱셈
 	m_worldMatrix = s * r * t;
 	m_isDirty = false;
 } // UpdateWorldMatrix

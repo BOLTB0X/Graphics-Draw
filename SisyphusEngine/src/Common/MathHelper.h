@@ -3,30 +3,28 @@
 #include "Model/VertexTypes.h"
 
 
-namespace MathHelper { // 물리 및 이동 관련 상수
+namespace MathHelper { // 수학 상수
 
     // 수학 상수
     const float PI = 3.1415926535f;
     const float DEG_TO_RAD = PI / 180.0f;
     const float RAD_TO_DEG = 180.0f / PI;
 
-    // 물리/이동 기본 설정
     const float DEFAULT_MOVE_SPEED = 50.0f;
     const float DEFAULT_TURN_SPEED = 150.0f;
     const float DEFAULT_LOOK_SPEED = 75.0f;
     const float FRICTION_RATIO = 0.5f;
 
-    const float GRAVITY = -9.8f * 3.0f;
-
-    const float MOVE_ACCEL = 1.0f; // 이동 가속도
+    const float MOVE_ACCEL = 0.5f; // 이동 가속도
     const float MOVE_BRAKE = 0.5f; // 이동 감속도 (마찰력)
     const float VERTICAL_MOVE_SPEED = 15.0f;
 
-    const float TURN_ACCEL = 5.0f; // 회전 가속도
-    const float TURN_BRAKE = 3.5f; // 회전 감속도
-    const float LOOK_ACCEL = 7.5f; // 상하 시선 가속도
-    const float LOOK_BRAKE = 2.0f; // 상하 시선 감속도
-} // // 물리 및 이동 관련 상수
+    const float TURN_ACCEL = 1.5f; // 회전 가속도
+    const float TURN_BRAKE = 1.5f; // 회전 감속도
+    const float LOOK_ACCEL = 1.5f; // 상하 시선 가속도
+    const float LOOK_BRAKE = 1.5f; // 상하 시선 감속도
+
+} // 물리 및 이동 관련 상수
 
 
 namespace MathHelper { // 단위 변환 및 기본 수학 유틸리티 함수
@@ -54,72 +52,72 @@ namespace MathHelper { // 단위 변환 및 기본 수학 유틸리티 함수
 } // 단위 변환 및 기본 수학 유틸리티 함수
 
 
-namespace MathHelper { // 셰이더 관련 함수
+//namespace MathHelper { // 셰이더 관련 함수
+//
+//    // frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453)
+//    inline float Hash(DirectX::XMFLOAT2 p)
+//    {
+//        float dotProduct = p.x * 12.9898f + p.y * 78.233f;
+//        return Frac(sinf(dotProduct) * 43758.5453f);
+//    } // Hash
+//
+//
+//    // 2D Value Noise (HLSL의 noise 함수 이식)
+//    inline float Noise(DirectX::XMFLOAT2 p)
+//    {
+//        DirectX::XMFLOAT2 i = { floorf(p.x), floorf(p.y) };
+//        DirectX::XMFLOAT2 f = { p.x - i.x, p.y - i.y };
+//
+//        float ux = f.x * f.x * (3.0f - 2.0f * f.x);
+//        float uy = f.y * f.y * (3.0f - 2.0f * f.y);
+//
+//        float a = Hash({ i.x, i.y });
+//        float b = Hash({ i.x + 1.0f, i.y });
+//        float c = Hash({ i.x, i.y + 1.0f });
+//        float d = Hash({ i.x + 1.0f, i.y + 1.0f });
+//
+//        return Lerp(Lerp(a, b, ux), Lerp(c, d, ux), uy);
+//    } // Noise
+//
+//
+//    // CPU용 FBM 높이 계산 함수
+//    inline float GetFBMHeight(float x, float z, float time)
+//    {
+//        float height = 0.0f;
+//        float amplitude = 0.5f;
+//        float frequency = 0.05f;
+//
+//        for (int i = 0; i < 6; i++)
+//        {
+//            height += Noise({ x * frequency + time * 0.2f,  z * frequency + time * 0.2f }) * amplitude;
+//            amplitude *= 0.45f;
+//            frequency *= 2.0f;
+//        }
+//
+//        return height * 15.0f;
+//    } // MathHelper
+//
+//} // 셰이더 관련 함수
 
-    // frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453)
-    inline float Hash(DirectX::XMFLOAT2 p)
-    {
-        float dotProduct = p.x * 12.9898f + p.y * 78.233f;
-        return Frac(sinf(dotProduct) * 43758.5453f);
-    } // Hash
 
+namespace MathHelper { // Graph
 
-    // 2D Value Noise (HLSL의 noise 함수 이식)
-    inline float Noise(DirectX::XMFLOAT2 p)
-    {
-        DirectX::XMFLOAT2 i = { floorf(p.x), floorf(p.y) };
-        DirectX::XMFLOAT2 f = { p.x - i.x, p.y - i.y };
+    //inline DirectX::XMFLOAT3 GetTerrainNormal(float x, float z, float time)
+    //{
+    //    float d = 0.1f; // 샘플링 간격
+    //    float h = GetFBMHeight(x, z, time);
+    //    float hX = GetFBMHeight(x + d, z, time);
+    //    float hZ = GetFBMHeight(x, z + d, time);
 
-        float ux = f.x * f.x * (3.0f - 2.0f * f.x);
-        float uy = f.y * f.y * (3.0f - 2.0f * f.y);
+    //    // 두 개의 접선 벡터를 외적하여 법선 계산
+    //    DirectX::XMVECTOR v1 = DirectX::XMVectorSet(d, hX - h, 0.0f, 0.0f);
+    //    DirectX::XMVECTOR v2 = DirectX::XMVectorSet(0.0f, hZ - h, d, 0.0f);
+    //    DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(v2, v1));
 
-        float a = Hash({ i.x, i.y });
-        float b = Hash({ i.x + 1.0f, i.y });
-        float c = Hash({ i.x, i.y + 1.0f });
-        float d = Hash({ i.x + 1.0f, i.y + 1.0f });
-
-        return Lerp(Lerp(a, b, ux), Lerp(c, d, ux), uy);
-    } // Noise
-
-
-    // CPU용 FBM 높이 계산 함수
-    inline float GetFBMHeight(float x, float z, float time)
-    {
-        float height = 0.0f;
-        float amplitude = 0.5f;
-        float frequency = 0.05f;
-
-        for (int i = 0; i < 6; i++)
-        {
-            height += Noise({ x * frequency + time * 0.2f,  z * frequency + time * 0.2f }) * amplitude;
-            amplitude *= 0.45f;
-            frequency *= 2.0f;
-        }
-
-        return height * 15.0f;
-    } // MathHelper
-
-} // 셰이더 관련 함수
-
-
-namespace MathHelper { // Terrain
-
-    inline DirectX::XMFLOAT3 GetTerrainNormal(float x, float z, float time)
-    {
-        float d = 0.1f; // 샘플링 간격
-        float h = GetFBMHeight(x, z, time);
-        float hX = GetFBMHeight(x + d, z, time);
-        float hZ = GetFBMHeight(x, z + d, time);
-
-        // 두 개의 접선 벡터를 외적하여 법선 계산
-        DirectX::XMVECTOR v1 = DirectX::XMVectorSet(d, hX - h, 0.0f, 0.0f);
-        DirectX::XMVECTOR v2 = DirectX::XMVectorSet(0.0f, hZ - h, d, 0.0f);
-        DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(v2, v1));
-
-        DirectX::XMFLOAT3 normal;
-        DirectX::XMStoreFloat3(&normal, n);
-        return normal;
-    } // GetTerrainNormal
+    //    DirectX::XMFLOAT3 normal;
+    //    DirectX::XMStoreFloat3(&normal, n);
+    //    return normal;
+    //} // GetTerrainNormal
 
 
     inline void CalculateTangentBinormal(
@@ -168,7 +166,7 @@ namespace MathHelper { // Terrain
 } // Terrain
 
 
-namespace MathHelper { // 벡터 산술 연산
+namespace MathHelper { // 벡터 연산
 
     inline DirectX::XMFLOAT3 Add(const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b)
     {
@@ -188,17 +186,49 @@ namespace MathHelper { // 벡터 산술 연산
     } // Distance
 
 
-    inline void GetCameraVectors(const DirectX::XMMATRIX& viewMatrix, DirectX::XMFLOAT3& right, DirectX::XMFLOAT3& up) {
-        DirectX::XMMATRIX invView = DirectX::XMMatrixInverse(nullptr, viewMatrix);
+    inline float RotationWrap(float value)
+    {
+        value = fmod(value, 360.0);
 
-        DirectX::XMFLOAT4X4 m;
-        DirectX::XMStoreFloat4x4(&m, invView);
+        if (value < -180.0)
+            value += 360.0;
+        else if (value > 180.0)
+            value -= 360.0;
 
-        right = { m._11, m._12, m._13 }; // 1행은 Right 벡터
-        up = { m._21, m._22, m._23 }; // 2행은 Up 벡터
-    } // GetCameraVectors
+        return value;
+    } // RotationWrap
 
-} // 벡터 산술 연산
+
+    inline DirectX::XMVECTOR RotationToVector(DirectX::XMFLOAT3 rot)
+    {
+        using namespace DirectX;
+
+        // rotation값으로 회전 행렬을 만들고
+        // 기본 forward 벡터와 곱해서 회전된 벡터를 계산
+        float pitch = XMConvertToRadians(rot.x);
+        float yaw = XMConvertToRadians(rot.y);
+        float roll = XMConvertToRadians(rot.z);
+
+        XMMATRIX rotationMat = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+        XMVECTOR direction = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f); // +Z forward
+        direction = XMVector3Transform(direction, rotationMat);
+        return direction;
+    } // RotationToVector
+
+
+    inline DirectX::XMFLOAT3 VectorToRotation(DirectX::XMFLOAT3 vec)
+    {
+        using namespace DirectX;
+
+        float pitch = -asinf(clamp<float>(vec.y, -1.0f, 1.0f));
+        float yaw = atan2f(vec.x, vec.z);
+
+        return XMFLOAT3(XMConvertToDegrees(pitch), XMConvertToDegrees(yaw), 0.0f);
+    } // VectorToRotation
+
+    
+} // 벡터 연산
 
 
 namespace MathHelper {

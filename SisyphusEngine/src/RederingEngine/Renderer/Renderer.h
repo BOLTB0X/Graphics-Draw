@@ -25,7 +25,7 @@ public:
     void EndScene();
 
 public:
-    void SetWireframeMode(bool);
+    void SetMode(bool, bool);
     void SetAlphaBlending(bool);
     void SetDepthBuffer(bool);
     void SetBackBufferRenderTarget();

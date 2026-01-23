@@ -9,7 +9,10 @@
 using namespace DirectX;
 
 
-Shader::Shader() { } // Shader
+Shader::Shader()
+{
+    m_type = ShaderType::None;
+} // Shader
 
 
 bool Shader::Compile(ID3D11Device* device,

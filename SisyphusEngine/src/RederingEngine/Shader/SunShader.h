@@ -10,16 +10,16 @@ public:
     SunShader(const SunShader& other) = delete;
     virtual ~SunShader() override = default;
 
-    virtual bool Init(ID3D11Device* device, HWND hwnd,
-        const std::wstring& vsPath, const std::wstring& psPath) override;
+    virtual bool Init(ID3D11Device*, HWND,
+        const std::wstring&, const std::wstring&) override;
+    virtual void SetShaders(ID3D11DeviceContext*) override;
 
 public:
-    void SetShaders(ID3D11DeviceContext* context);
-    void SetConstantBuffers(ID3D11DeviceContext* context);
+    void SetConstantBuffers(ID3D11DeviceContext*);
 
     ID3D11Buffer* GetLightBuffer() { return m_lightBuffer.Get(); }
 
-    bool UpdateLightBuffer(ID3D11DeviceContext* context, Light* light);
+    bool UpdateLightBuffer(ID3D11DeviceContext*, Light*);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> m_lightBuffer;

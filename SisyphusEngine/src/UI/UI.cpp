@@ -1,14 +1,15 @@
 // UI/UI.cpp
 #include "UI.h"
-
+#include "StatsWidget.h"
+#include "CameraWidget.h"
+#include "RenderStateWidget.h"
 // System
 #include "Input.h"
 #include "Gui.h"
-// Graphics
-//#include "Renderer/Renderer.h"
 // MainEngine
 #include "Timer.h"
 #include "Fps.h"
+#include "Camera.h"
 // Framework
 #include "IWidget.h"
 // imgui
@@ -21,7 +22,8 @@
 
 UI::UI()
     : m_Gui(nullptr),
-    m_MainSideBar(nullptr) {}
+    m_isCameraLocked(false)
+{}
 
 
 UI::~UI() 
@@ -37,17 +39,6 @@ bool UI::Init(std::shared_ptr<Gui> gui)
     m_Gui = gui; // 참조 cnt + 1
     return true;
 } // Init
-
-
-void UI::Frame()
-{
-    //for (auto& widget : m_widgets)
-    //{
-    //    widget->Frame(); // 필요 시
-    //}
-
-    return;
-} // Frame
 
 
 void UI::Render()
@@ -67,11 +58,6 @@ void UI::Render()
     m_Gui->End();
     return;
 } // Render
-
-//////////////////////////////////////////////////////////////////
-
-/* public */
-/////////////////////////////////////////////////////////////////
 
 
 void UI::Begin()
@@ -94,30 +80,27 @@ bool UI::CanControlWorld() const
 
 void UI::AddWidget(std::unique_ptr<IWidget> widget)
 {
-    //if (widget->GetName().find("MainSideBar") != std::string::npos)
-    //    m_MainSideBar = static_cast<MainSideBarWidget*>(widget.get());
     m_widgets.push_back(std::move(widget));
     return;
 } // AddWidget
 
 
-void UI::ToggleMainSideBar()
+void UI::CreateWidget(Timer* timer, Fps* fps, Camera* camera, bool* wire, bool* back, bool* depth)
 {
-    /*if (m_MainSideBar) m_MainSideBar->SetVisible(!m_MainSideBar->IsVisible());*/
-} // ToggleMainSideBar
+    AddWidget(std::make_unique<StatsWidget>("Engine Stats", timer, fps));
+    AddWidget(std::make_unique<CameraWidget>("Camera Controller", camera));
+    AddWidget(std::make_unique<RenderStateWidget>("Render Settings", wire, back, depth));
+}
+ // CreateWidget
 
-
-void UI::CreateSideBar(std::string name, Timer* timer, Fps* fps, Renderer* renderer, World* world)
+void UI::ToggleWidget()
 {
-    return;
-} // CreateSideBar
+    for (auto& widget : m_widgets)
+    {
+        widget->SetVisible(!widget->IsVisible());
+    }
+} // ToggleWidget
 
-
-void UI::ApplyRenderStates(Renderer* renderer)
-{
-   
-    return;
-} // ApplyRenderStates
 
 bool UI::IsWorldClicked(bool mousePressed) const
 {

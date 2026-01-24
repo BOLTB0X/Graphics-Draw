@@ -5,7 +5,6 @@
 #include "RenderStateWidget.h"
 // System
 #include "Input.h"
-#include "Gui.h"
 // MainEngine
 #include "Timer.h"
 #include "Fps.h"
@@ -17,28 +16,31 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
-/* default */
-//////////////////////////////////////////////////////////
 
 UI::UI()
-    : m_Gui(nullptr),
-    m_isCameraLocked(false)
-{}
+    : m_isCameraLocked(false)
+{
+    m_Gui = std::make_unique<IImGUI>();
+} // UI
 
 
 UI::~UI() 
 {
-    m_widgets.clear();
+    //Shutdown();
 } // ~UI
 
 
-bool UI::Init(std::shared_ptr<Gui> gui)
+bool UI::Init(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-    if (gui == nullptr) return false;
-
-    m_Gui = gui; // 참조 cnt + 1
-    return true;
+    return m_Gui->Init(hwnd, device, deviceContext);
 } // Init
+
+
+void UI::Shutdown()
+{
+    m_widgets.clear();
+    if (m_Gui) m_Gui->Shutdown();
+} // Shutdown
 
 
 void UI::Render()
@@ -73,6 +75,7 @@ void UI::End()
 
 bool UI::CanControlWorld() const
 {
+    if (m_Gui == nullptr) { return false; }
     ImGuiIO& io = ImGui::GetIO();
     return !(io.WantCaptureMouse || io.WantCaptureKeyboard);
 } // CanControlWorld
@@ -95,6 +98,7 @@ void UI::CreateWidget(Timer* timer, Fps* fps, Camera* camera, bool* wire, bool* 
 
 void UI::ToggleWidget()
 {
+
     for (auto& widget : m_widgets)
     {
         widget->SetVisible(!widget->IsVisible());
@@ -104,5 +108,6 @@ void UI::ToggleWidget()
 
 bool UI::IsWorldClicked(bool mousePressed) const
 {
+    if (m_Gui == nullptr) return false;
     return mousePressed && !ImGui::GetIO().WantCaptureMouse;
 } // IsWorldClicked

@@ -4,10 +4,9 @@
 #include "Camera.h"
 // System
 #include "Input.h"
-#include "Gui.h"
+#include "InputManager.h"
 // UI
 #include "UI.h"
-#include "InputManager.h"
 // Common
 #include "EngineSettings.h"
 #include "EngineHelper.h"
@@ -31,19 +30,21 @@ MainEngine::MainEngine()
     m_ShaderManager = std::make_unique<ShaderManager>();
     m_SunModel = std::make_unique<DefaultModel>();
     m_CloudArea = std::make_unique<DefaultModel>();
-    m_InputManager = std::make_unique<InputManager>();
     m_UI = std::make_unique<UI>();
     m_Light = std::make_unique<Light>();
 } // MainEngine
 
 
-MainEngine::~MainEngine() {}
-
-
-bool MainEngine::Init(HWND hwnd, std::shared_ptr<Input> input, std::shared_ptr<Gui> gui)
+MainEngine::~MainEngine()
 {
-    m_Input = input;
-    m_Gui = gui;
+
+} // ~MainEngine
+
+
+bool MainEngine::Init(HWND hwnd, std::shared_ptr<InputManager> inputManager)
+{
+    m_InputManager = inputManager;
+
 
     if (m_Timer->Init() == false) return false;
     m_Fps->Init();
@@ -69,15 +70,12 @@ bool MainEngine::Init(HWND hwnd, std::shared_ptr<Input> input, std::shared_ptr<G
     m_Light->Init({ 5.0f, 5.0f, 5.0f }, { 1.0f, 0.9f, 0.7f, 1.0f }, 2.5f);
     if (m_SunModel->Init(m_Renderer->GetDevice(), DefaultModelType::Sphere)
         == false) return false;
-    m_SunModel->SetPosition(m_Light->GetPosition()); // Light의 위치와 동기화
+    m_SunModel->SetPosition(m_Light->GetPosition());
 
-    if (gui->Init(hwnd,
+    if (m_UI->Init(hwnd,
         m_Renderer->GetDevice(),
         m_Renderer->GetDeviceContext())
         == false) return false;
-
-    if (m_InputManager->Init(input) == false) return false;
-    if (m_UI->Init(gui) == false) return false;
     
     m_UI->CreateWidget(
         m_Timer.get(),
@@ -92,8 +90,23 @@ bool MainEngine::Init(HWND hwnd, std::shared_ptr<Input> input, std::shared_ptr<G
 
 void MainEngine::Shutdown()
 {
+    if (m_UI)
+    {
+        m_UI->Shutdown();
+        m_UI.reset();
+    }
 
-    if (m_Renderer) m_Renderer->Shutdown();
+    if (m_ShaderManager)
+        m_ShaderManager.reset();
+
+    if (m_TexturesManager)
+        m_TexturesManager.reset();
+
+    if (m_Renderer)
+    {
+        m_Renderer->Shutdown();
+        m_Renderer.reset();
+    }
 } // Shutdown
 
 
@@ -102,14 +115,14 @@ bool MainEngine::Frame()
     m_Timer->Frame();
     m_Fps->Frame();
 
+    UpdateUI();
+
     if (m_InputManager->Frame(
         m_Timer->GetFrameTime(),
         m_Camera.get(),
         m_UI->IsCameraLocked())
         == false) return false;;
 
-    UpdateUI();
-    //m_InputManager->Frame(deltaTime, m_Camera.get(), m_UI->IsCameraLocked());
     UpdateRenderStates();
 
     Render();

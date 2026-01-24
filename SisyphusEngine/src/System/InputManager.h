@@ -1,10 +1,9 @@
 #pragma once
 #include<memory>
+#include "Input.h"
 
 class Position;
 class Camera;
-class Input;
-
 
 class InputManager {
 public:
@@ -12,8 +11,12 @@ public:
     InputManager(const InputManager& other) = delete;
     ~InputManager();
 
+    bool Init(HINSTANCE, HWND);
     bool Init(std::shared_ptr<Input> input);
-    bool Frame(float, Camera*, bool);
+    void Shutdown();
+    
+    bool Frame(); // 로우 레벨 입력 및 PeekMessage 상태 갱신
+    bool Frame(float, Camera*, bool); // 카메라 및 게임 로직 업데이트
 
 public:
     bool IsMouseLPressed();
@@ -37,7 +40,7 @@ private:
     bool IsXPressed() const;
 
 private:
-    std::shared_ptr<Input> m_Input; 
+    std::unique_ptr<Input> m_Input;
     float m_deltaX, m_deltaY;
     const float m_sensitivity;
 }; // InputManager

@@ -1,12 +1,10 @@
-// UI/UI.h
 #pragma once
 #include <memory>
 #include <vector>
 #include <string>
-
+#include "IImGUI.h"
 
 class IWidget;
-class Gui;
 class Fps;
 class Timer;
 class Renderer;
@@ -19,13 +17,14 @@ public:
     UI(const UI& other) = delete;
     ~UI();
 
-    bool Init(std::shared_ptr<Gui> gui);
+    bool Init(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+    void Shutdown();
+
     void Render();
 
     void Begin();
     void End();
     bool CanControlWorld() const;
-
 
 public:
     void AddWidget(std::unique_ptr<IWidget>);
@@ -48,8 +47,7 @@ public:
     void SetCameraLocked(bool lock) { m_isCameraLocked = lock; }
 
 private:
-    std::shared_ptr<Gui> m_Gui;
+    std::unique_ptr<IImGUI> m_Gui;
     std::vector<std::unique_ptr<IWidget>> m_widgets;
-    //MainSideBarWidget* m_MainSideBar;
     bool m_isCameraLocked;
 }; // UI

@@ -1,7 +1,7 @@
 // System/System.cpp
 #include "System.h"
-#include "Input.h"
-#include "Gui.h"
+#include "InputManager.h"
+#include "Window.h"
 // Common
 #include "EngineSettings.h"
 #include "EngineHelper.h"
@@ -14,38 +14,46 @@
 
 
 System::System()
-	: m_applicationName(0),
-	m_hinstance(0),
-	m_hwnd(0),
-	m_Input(nullptr),
-	m_Gui(nullptr),
-	m_Engine(nullptr)
-{ } // System
+{
+	m_Window = std::make_unique<Window>();
+	m_InputManager = std::make_shared<InputManager>();
+	m_Engine = std::make_unique<MainEngine>();
+} // System
 
 
-System::~System() { } // ~Syste
+System::~System()
+{
+} // ~System
 
 
 bool System::Init()
 {
-	int screenWidth = 0, screenHeight = 0;
+	ApplicationHandle = this;
 
-	if (InitWindows(screenWidth, screenHeight) == false) {
-		return false;
-	}
-
-	m_Input = std::make_shared<Input>();
-	if (m_Input->Init(m_hinstance, m_hwnd) == false)
+	if (m_Window->Init(WndProc, L"Sisyphus Engine") == false)
 	{
-		EngineHelper::ErrorBox(m_hwnd, L"m_Input->Init 실패");
+		EngineHelper::ErrorBox(m_Window->GetHwnd(), L"m_Window->Init 실패");
 		return false;
 	}
 
-	m_Gui = std::make_shared<Gui>();
+	if (m_InputManager->Init(
+		m_Window->GetHinstance(),
+		m_Window->GetHwnd())
+		== false)
+	{
+		EngineHelper::ErrorBox(m_Window->GetHwnd(), L"m_InputManager->Init 실패");
+		return false;
+	}
 
-	m_Engine = std::make_unique<MainEngine>();
-	if (m_Engine->Init(m_hwnd, m_Input, m_Gui)
-		== false) return false;
+
+	if (m_Engine->Init(
+		m_Window->GetHwnd(), 
+		m_InputManager) == false)
+	{
+		EngineHelper::ErrorBox(m_Window->GetHwnd(), L"m_Engine->Init 실패");
+		return false;
+	}
+
 
 	return true;
 } // Init
@@ -54,15 +62,17 @@ bool System::Init()
 void System::Shutdown()
 {	
 	if (m_Engine)
+	{
 		m_Engine->Shutdown();
+		m_Engine.reset();
+	}
 
-	if (m_Gui)
-		m_Gui->Shutdown();
+	if (m_InputManager)
+		m_InputManager->Shutdown();
 
-	if (m_Input)
-		m_Input->Shutdown();
+	if (m_Window) m_Window->Shutdown();
 
-	ShutdownWindows();
+	ApplicationHandle = nullptr;
 } // Shutdown
 
 
@@ -98,7 +108,7 @@ void System::Run()
 
 bool System::Frame()
 {
-	if (m_Input->Frame()
+	if (m_InputManager->Frame()
 		== false) return false;
 
 	if (m_Engine->Frame()
@@ -111,111 +121,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 {
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 } // MessageHandler
-/////////////////////////////////////////////////////////////////////
 
-
-/* private */
-/////////////////////////////////////////////////////////////////////
-
-bool System::InitWindows(int& screenWidth, int& screenHeight)
-{
-	WNDCLASSEXW wc;
-	DEVMODE dmScreenSettings;
-	int posX, posY;
-
-	m_applicationName = L"Sisyphus Engine";
-	ApplicationHandle = this;
-	m_hinstance = GetModuleHandle(NULL);
-
-	// 셋팅
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = m_applicationName;
-	wc.cbSize = sizeof(WNDCLASSEX);
-
-	// Register window class.
-	RegisterClassExW(&wc);
-
-	//  GetSystemMetrics 함수는 지정된 시스템 매개변수 또는 시스템 구성 요소의 크기 및 위치를 반환
-	screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	// 셋업
-	if (EngineSettings::FULL_SCREEN)
-	{
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-
-		posX = posY = 0;
-	}
-	else
-	{
-		RECT windowRect = { 0, 0, (LONG)EngineSettings::SCREEN_WIDTH, (LONG)EngineSettings::SCREEN_HEIGHT };
-		//GetClientRect
-		// 창 스타일(WS_OVERLAPPEDWINDOW)에 맞춰 실제 필요한 창 크기를 계산
-		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
-
-		// 확장된 크기로 너비와 높이 계산
-		int actualWidth = windowRect.right - windowRect.left;
-		int actualHeight = windowRect.bottom - windowRect.top;
-
-		// 중앙 정렬 좌표 계산
-		posX = (GetSystemMetrics(SM_CXSCREEN) - actualWidth) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - actualHeight) / 2;
-	}
-
-	m_hwnd = CreateWindowExW(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_OVERLAPPEDWINDOW,
-		posX, posY, EngineSettings::SCREEN_WIDTH, EngineSettings::SCREEN_HEIGHT, NULL, NULL, m_hinstance, NULL);
-
-	RECT clientRect;
-	GetClientRect(m_hwnd, &clientRect);
-
-	screenWidth = clientRect.right - clientRect.left;
-	screenHeight = clientRect.bottom - clientRect.top;
-
-	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
-
-	ShowCursor(true);
-
-	return true;
-} // InitWindows
-
-
-void System::ShutdownWindows()
-{
-	ShowCursor(true);
-
-	if (EngineSettings::FULL_SCREEN)
-		ChangeDisplaySettings(NULL, 0);
-
-	DestroyWindow(m_hwnd);
-	m_hwnd = NULL;
-
-	UnregisterClassW(m_applicationName, m_hinstance);
-	m_hinstance = NULL;
-
-	ApplicationHandle = NULL;
-
-	return;
-} // ShutdownWindows
-/////////////////////////////////////////////////////////////////////
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 

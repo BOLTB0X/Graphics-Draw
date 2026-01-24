@@ -83,7 +83,7 @@ void Position::MoveForward(bool keydown)
 {
 	if (keydown)
 	{
-		m_forwardSpeed += m_frameTime * MathHelper::MOVE_ACCEL;
+		m_forwardSpeed += m_frameTime;
 		if (m_forwardSpeed > (m_frameTime * MathHelper::DEFAULT_MOVE_SPEED))
 			m_forwardSpeed = m_frameTime * MathHelper::DEFAULT_MOVE_SPEED;
 	}
@@ -94,8 +94,8 @@ void Position::MoveForward(bool keydown)
 	}
 
 	float radians = MathHelper::ToRadians(m_rotation.y);
-	m_position.x += sinf(radians) * m_forwardSpeed;
-	m_position.z += cosf(radians) * m_forwardSpeed;
+	m_position.x += sinf(radians) * m_forwardSpeed * 0.1f;
+	m_position.z += cosf(radians) * m_forwardSpeed * 0.1f;
 	m_isDirty = true;
 } // MoveForward
 
@@ -103,7 +103,7 @@ void Position::MoveBackward(bool keydown)
 {
 	if (keydown)
 	{
-		m_backwardSpeed += m_frameTime * MathHelper::MOVE_ACCEL;
+		m_backwardSpeed += m_frameTime;
 		if (m_backwardSpeed > (m_frameTime * MathHelper::DEFAULT_MOVE_SPEED))
 			m_backwardSpeed = m_frameTime * MathHelper::DEFAULT_MOVE_SPEED;
 	}
@@ -114,8 +114,8 @@ void Position::MoveBackward(bool keydown)
 	}
 
 	float radians = MathHelper::ToRadians(m_rotation.y);
-	m_position.x -= sinf(radians) * m_backwardSpeed;
-	m_position.z -= cosf(radians) * m_backwardSpeed;
+	m_position.x -= sinf(radians) * m_backwardSpeed * 0.1f;
+	m_position.z -= cosf(radians) * m_backwardSpeed * 0.1f;
 	m_isDirty = true;
 } // MoveBackward
 
@@ -123,7 +123,7 @@ void Position::MoveUpward(bool keydown)
 {
 	if (keydown)
 	{
-		m_upwardSpeed += m_frameTime * MathHelper::MOVE_ACCEL;
+		m_upwardSpeed += m_frameTime;
 		if (m_upwardSpeed > (m_frameTime * MathHelper::VERTICAL_MOVE_SPEED))
 			m_upwardSpeed = m_frameTime * MathHelper::VERTICAL_MOVE_SPEED;
 	}
@@ -142,7 +142,7 @@ void Position::MoveDownward(bool keydown)
 {
 	if (keydown)
 	{
-		m_downwardSpeed += m_frameTime * MathHelper::MOVE_ACCEL;
+		m_downwardSpeed += m_frameTime;
 		if (m_downwardSpeed > (m_frameTime * MathHelper::VERTICAL_MOVE_SPEED))
 			m_downwardSpeed = m_frameTime * MathHelper::VERTICAL_MOVE_SPEED;
 	}
@@ -161,7 +161,7 @@ void Position::TurnLeft(bool keydown)
 {
 	if (keydown)
 	{
-		m_leftTurnSpeed += m_frameTime * MathHelper::TURN_ACCEL;
+		m_leftTurnSpeed += m_frameTime;
 		if (m_leftTurnSpeed > (m_frameTime * MathHelper::DEFAULT_TURN_SPEED))
 			m_leftTurnSpeed = m_frameTime * MathHelper::DEFAULT_TURN_SPEED;
 	}

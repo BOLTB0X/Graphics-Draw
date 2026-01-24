@@ -1,29 +1,28 @@
-#include "Gui.h"
+#include "IImGUI.h"
 // imgui
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
-// Framework
-#include "IWidget.h"
 // Common
 #include "EngineHelper.h"
 
-/* default */
-/////////////////////////////////////////////////////////////////////
 
-Gui::Gui() {}
-
-
-Gui::~Gui()
+IImGUI::IImGUI()
+: m_isInitialized(false)
 {
-    Shutdown();
-} // ~Gui
+} // ImGui
 
 
-bool Gui::Init(HWND hwnd,
+IImGUI::~IImGUI()
+{
+} // ~ImGui
+
+
+bool IImGUI::Init(HWND hwnd,
     ID3D11Device* device,
     ID3D11DeviceContext* deviceContext)
 {
+    if (m_isInitialized) return true;
 
     // ImGui 컨텍스트 생성 확인
     IMGUI_CHECKVERSION();
@@ -43,19 +42,23 @@ bool Gui::Init(HWND hwnd,
 
     ImGui::StyleColorsDark();
 
+    m_isInitialized = true;
     return true;
 } // Init
 
 
-void Gui::Shutdown()
+void IImGUI::Shutdown()
 {
+    if (m_isInitialized == false) return;
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+
+    m_isInitialized = false;
 } // Shutdown
 
 
-void Gui::Begin()
+void IImGUI::Begin()
 {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -63,26 +66,8 @@ void Gui::Begin()
 } // Begin
 
 
-void Gui::End()
+void IImGUI::End()
 {
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 } // End
-
-
-/* public */
-/////////////////////////////////////////////////////////////////////
-
-//void Gui::AddWidget(std::unique_ptr<IWidget> widget)
-//{
-//    m_widgets.push_back(std::move(widget));
-//} // AddWidget
-//
-//
-//void Gui::RenderWidgets()
-//{
-//    for (auto& widget : m_widgets)
-//    {
-//        widget->Frame();
-//    }
-//} // RenderWidgets

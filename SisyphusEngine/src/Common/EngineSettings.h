@@ -8,8 +8,8 @@ namespace EngineSettings {
     const bool FULL_SCREEN = false;
     const bool VSYNC_ENABLED = true;
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 600;
+    inline int SCREEN_WIDTH = 800;
+    inline int SCREEN_HEIGHT = 600;
 
     // 클리핑 평면
     const float SCREEN_DEPTH = 1000.0f;

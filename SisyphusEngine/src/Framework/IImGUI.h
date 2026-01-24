@@ -4,15 +4,18 @@
 #include <vector>
 #include <memory>
 
-class Gui {
+class IImGUI {
 public:
-    Gui();
-	Gui(const Gui&) = delete;
-    ~Gui();
+    IImGUI();
+    IImGUI(const IImGUI&) = delete;
+    ~IImGUI();
 
     bool Init(HWND, ID3D11Device*, ID3D11DeviceContext*);
     void Shutdown();
 
     void Begin();
     void End();
-}; // Gui
+
+private:
+    bool m_isInitialized;
+}; // ImGUI

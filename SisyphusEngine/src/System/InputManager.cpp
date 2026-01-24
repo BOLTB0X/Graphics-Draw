@@ -1,6 +1,4 @@
 #include "InputManager.h"
-//
-#include <Input.h>
 // Framework
 #include "Position.h"
 // Enbgine
@@ -17,20 +15,31 @@ InputManager::InputManager()
 	m_deltaY(0.0f),
     m_sensitivity(0.05f)
 {
+    m_Input = std::make_unique<Input>();
 } // InputManager
 
 
 InputManager::~InputManager()
 {
+    Shutdown();
 } // ~InputManager
 
-
-bool InputManager::Init(std::shared_ptr<Input> input)
+bool InputManager::Init(HINSTANCE hinstance, HWND hwnd)
 {
-    if (input == nullptr) return false;
-    m_Input = input; // 참조
-	return true;
+    return m_Input->Init(hinstance, hwnd);
 } // Init
+
+
+void InputManager::Shutdown()
+{
+    m_Input->Shutdown();
+} // Shutdown
+
+
+bool InputManager::Frame()
+{
+    return m_Input->Frame();
+} // Frame
 
 
 bool InputManager::Frame(float deltaTime, Camera* camera, bool isCameraLocked)
@@ -51,6 +60,7 @@ bool InputManager::Frame(float deltaTime, Camera* camera, bool isCameraLocked)
 
     return true;
 } // Frame
+
 
 void InputManager::UpdateMouseDelta()
 {
@@ -78,12 +88,6 @@ void InputManager::HandleMovement(float deltaTime, Camera* camera)
 {
     Position* camPos = camera->GetPositionPtr();
     camPos->SetFrameTime(deltaTime);
-
-    //if (IsMouseLPressed())
-    //{
-    //    XMFLOAT3 rot = camPos->GetRotation();
-    //    camPos->SetRotation(rot.x + m_deltaY, rot.y + m_deltaX, rot.z);
-    //}
 
     // 키보드 이동
     camPos->MoveForward(IsWPressed());

@@ -3,7 +3,6 @@
 #include <windows.h>
 
 class Input;
-class Gui;
 class Timer;
 class Camera;
 class Renderer;
@@ -21,7 +20,7 @@ public:
     MainEngine(const MainEngine& other) = delete;
     ~MainEngine();
 
-    bool Init(HWND hwnd, std::shared_ptr<Input>, std::shared_ptr<Gui>);
+    bool Init(HWND hwnd, std::shared_ptr<InputManager>);
     void Shutdown();
     bool Frame(); // 프레임 루프
 
@@ -32,13 +31,12 @@ private:
 
 private:
     // 공유
-    std::shared_ptr<Input> m_Input;
-    std::shared_ptr<Gui> m_Gui;
+    std::shared_ptr<InputManager> m_InputManager;
     // 유틸
     std::unique_ptr<Timer> m_Timer;
     std::unique_ptr<Fps> m_Fps;
     // 인터페이스
-    std::unique_ptr<InputManager> m_InputManager;
+    //std::unique_ptr<InputManager> m_InputManager;
     std::unique_ptr<UI> m_UI;
     // 그래픽
     std::unique_ptr<Renderer> m_Renderer;

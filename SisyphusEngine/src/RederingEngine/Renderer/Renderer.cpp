@@ -94,7 +94,13 @@ void Renderer::EndScene()
 
 void Renderer::Shutdown()
 {
-    
+    if (m_SamplerState) m_SamplerState.reset();
+    if (m_BlendState) m_BlendState.reset();
+    if (m_DepthStencilState) m_DepthStencilState.reset();
+    if (m_Rasterizer) m_Rasterizer.reset();
+    if (m_RenderTarget) m_RenderTarget.reset();
+    if (m_DX11Device) m_DX11Device.reset();
+    if (m_DisplayInfo) m_DisplayInfo.reset();
 } // Shutdown
 
 

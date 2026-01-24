@@ -29,7 +29,7 @@ void StatsWidget::Frame()
     if (m_Timer == nullptr || m_Fps == nullptr)
         return;
        
-    Text("Total Time: %.2f s", m_Timer->GetFrameTime());
+    Text("Total Time: %.2f s", m_Timer->GetTotalTime());
     Text("FPS: % d", m_Fps->GetFps());
 
     End();

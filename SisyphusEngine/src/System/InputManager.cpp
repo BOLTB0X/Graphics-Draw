@@ -9,6 +9,7 @@
 
 
 using namespace DirectX;
+using namespace PropertyHelper;
 
 
 InputManager::InputManager()
@@ -43,22 +44,20 @@ bool InputManager::Frame()
 } // Frame
 
 
-bool InputManager::Frame(float deltaTime, Camera* camera, bool isCameraLocked)
+bool InputManager::Frame(float deltaTime, Position* camPos, Property<float> fovAddProp, bool isCameraLocked)
 {
-    if (m_Input == nullptr || camera == nullptr)
-        return false;
+    if (m_Input == nullptr || camPos == nullptr) return false;
 
     if (IsEscapePressed()) return false;
 
-    UpdateMouseDelta(); 
+    UpdateMouseDelta();
 
     if (isCameraLocked) return true;
 
     if (IsMouseLPressed())
-        HandleRotation(camera->GetPositionPtr());
+        HandleRotation(camPos);
 
-    HandleMovement(deltaTime, camera);
-
+    HandleMovement(deltaTime, camPos, fovAddProp);
     return true;
 } // Frame
 
@@ -85,12 +84,11 @@ void InputManager::HandleRotation(Position* camPos)
 } // HandleRotation
 
 
-void InputManager::HandleMovement(float deltaTime, Camera* camera)
+void InputManager::HandleMovement(float deltaTime, Position* camPos, Property<float> fovAddProp)
 {
-    Position* camPos = camera->GetPositionPtr();
     camPos->SetFrameTime(deltaTime);
 
-    // 키보드 이동
+    // 키보드 이동 로직 호출
     camPos->MoveForward(IsWPressed());
     camPos->MoveBackward(IsSPressed());
     camPos->TurnLeft(IsAPressed());
@@ -98,12 +96,11 @@ void InputManager::HandleMovement(float deltaTime, Camera* camera)
     camPos->MoveUpward(IsZPressed());
     camPos->MoveDownward(IsXPressed());
 
-    // 마우스 휠
     float wheelDelta = static_cast<float>(m_Input->GetMouseWheelDelta());
     if (wheelDelta != 0.0f)
     {
-        float fovDelta = wheelDelta * 0.05f;
-        camera->AddFOV(fovDelta);
+        float newFov = wheelDelta * 0.05f;
+        fovAddProp.Set(newFov);
     }
 } // HandleMovement
 

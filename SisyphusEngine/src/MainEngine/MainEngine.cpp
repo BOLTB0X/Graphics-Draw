@@ -13,11 +13,7 @@
 #include "DebugHelper.h"
 #include "PropertyHelper.h"
 // Rendering
-#include "Renderer/Renderer.h"
-#include "Model/DefaultModel.h"
-#include "Model/Light.h"
-#include "Model/TexturesManager.h"
-#include "Shader/ShaderManager.h"
+#include "RenderingEngine.h"
 
 
 using namespace PropertyHelper;
@@ -25,20 +21,12 @@ using namespace DirectX;
 
 
 MainEngine::MainEngine()
-    : m_isWireframe(false),
-    m_backCullEnable(false),
-    m_depthEnable(true)
 {
     m_Timer = std::make_unique<Timer>();
     m_Fps = std::make_unique<Fps>();
-    m_Renderer = std::make_unique<Renderer>();
     m_Camera = std::make_unique<Camera>();
-    m_TexturesManager = std::make_unique<TexturesManager>();
-    m_ShaderManager = std::make_unique<ShaderManager>();
-    m_SunModel = std::make_unique<DefaultModel>();
-    m_CloudArea = std::make_unique<DefaultModel>();
+    m_RenderingEngine = std::make_unique<RenderingEngine>();
     m_UI = std::make_unique<UI>();
-    m_Light = std::make_unique<Light>();
 } // MainEngine
 
 
@@ -55,32 +43,13 @@ bool MainEngine::Init(HWND hwnd, std::shared_ptr<InputManager> inputManager)
     if (m_Timer->Init() == false) return false;
     m_Fps->Init();
 
-    if (m_Renderer->Init(hwnd, true) == false) return false;
-
     m_Camera->SetPosition(0.0f, 0.0f, -6.0f);
 
-    if (m_TexturesManager->Init(
-        m_Renderer->GetDevice(),
-        m_Renderer->GetDeviceContext())
-    == false) return false;
-
-    if (m_ShaderManager->Init(
-        m_Renderer->GetDevice(),
-        hwnd) == false) return false;
-
-
-    if (m_CloudArea->Init(m_Renderer->GetDevice(), DefaultModelType::Sphere) == false)
-        return false;
-    m_CloudArea->SetScale(10.0f);
-
-    m_Light->Init({ 5.0f, 5.0f, 5.0f }, { 1.0f, 0.9f, 0.7f, 1.0f }, 2.5f);
-    if (m_SunModel->Init(m_Renderer->GetDevice(), DefaultModelType::Sphere)
-        == false) return false;
-    m_SunModel->SetPosition(m_Light->GetPosition());
+    if (m_RenderingEngine->Init(hwnd) == false) return false;
 
     if (m_UI->Init(hwnd,
-        m_Renderer->GetDevice(),
-        m_Renderer->GetDeviceContext())
+        m_RenderingEngine->GetDevice(),
+        m_RenderingEngine->GetDeviceContext())
         == false) return false;
 
     CreateWidget();
@@ -96,16 +65,10 @@ void MainEngine::Shutdown()
         m_UI.reset();
     }
 
-    if (m_ShaderManager)
-        m_ShaderManager.reset();
-
-    if (m_TexturesManager)
-        m_TexturesManager.reset();
-
-    if (m_Renderer)
+    if (m_RenderingEngine)
     {
-        m_Renderer->Shutdown();
-        m_Renderer.reset();
+        m_RenderingEngine->Shutdown();
+        m_RenderingEngine.reset();
     }
 } // Shutdown
 
@@ -115,15 +78,10 @@ bool MainEngine::Frame()
     m_Timer->Frame();
     m_Fps->Frame();
 
-    UpdateUI();
+    if (UpdateUserInput() == false)
+        return false;
 
-    if (m_InputManager->Frame(
-        m_Timer->GetFrameTime(),
-        m_Camera.get(),
-        m_UI->IsCameraLocked())
-        == false) return false;;
-
-    UpdateRenderStates();
+    UpdateRenderStatesWidget();
 
     Render();
 
@@ -133,52 +91,20 @@ bool MainEngine::Frame()
 
 void MainEngine::Render()
 {
-    m_Renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+    m_RenderingEngine->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    ID3D11DeviceContext* context = m_Renderer->GetDeviceContext();
-
-    m_Renderer->SetAlphaBlending(true);
-
-    m_ShaderManager->UpdateGlobalBuffer(ShaderKeys::Sun,
-        context, m_Timer->GetTotalTime(),
-        m_Camera->GetPosition(),
-        0.0f);
-    m_ShaderManager->UpdateMatrixBuffer(ShaderKeys::Sun,
-        context, m_SunModel->GetModelMatrix(),
-        m_Camera->GetViewMatrix(),
-        m_Camera->GetProjectionMatrix());
-    m_ShaderManager->UpdateLightBuffer(ShaderKeys::Sun,
-        context, m_Light.get());
-    m_ShaderManager->SetShaders(ShaderKeys::Sun, context);
-    m_ShaderManager->SetConstantBuffers(ShaderKeys::Sun, context);
-    m_SunModel->Render(context);
-
-    m_Renderer->SetSampler(0);
-    m_TexturesManager->PSSetShaderResources(context, ConstantHelper::NOISE_PATH, 0);
-
-    m_ShaderManager->UpdateGlobalBuffer(ShaderKeys::Cloud,
-        context, m_Timer->GetTotalTime(),
-        m_Camera->GetPosition(),
-        256.0f);
-    m_ShaderManager->UpdateMatrixBuffer(ShaderKeys::Cloud,
-        context,
-        m_CloudArea->GetModelMatrix(),
-        m_Camera->GetViewMatrix(),
-        m_Camera->GetProjectionMatrix());
-    m_ShaderManager->UpdateLightBuffer(ShaderKeys::Cloud,
-        context, m_Light.get());
-    m_ShaderManager->SetShaders(ShaderKeys::Cloud, context);
-    m_ShaderManager->SetConstantBuffers(ShaderKeys::Cloud, context);
-    m_CloudArea->Render(context);
-
-    m_Renderer->SetAlphaBlending(false);
+    m_RenderingEngine->Draw(m_Timer->GetTotalTime(),
+        Property<XMMATRIX>([this]() { return m_Camera->GetViewMatrix(); }, nullptr),
+        Property<XMMATRIX>([this]() { return m_Camera->GetProjectionMatrix(); }, nullptr),
+        Property<XMFLOAT3>([this]() { return m_Camera->GetPosition(); }, nullptr));
 
     m_UI->Render();
-    m_Renderer->EndScene();
+
+    m_RenderingEngine->EndScene();
 } // Render
 
 
-void MainEngine::UpdateUI()
+bool MainEngine::UpdateUserInput()
 {
     if (m_InputManager->IsF1Toggled())
     {
@@ -193,13 +119,24 @@ void MainEngine::UpdateUI()
         m_UI->SetCameraLocked(true);
     }
 
-} // UpdateUI
+    auto fovAddProp = PropertyHelper::Property<float>(
+        nullptr,
+        [this](const float& delta) {
+            m_Camera->AddFOV(delta);
+        }
+    );
+
+    return m_InputManager->Frame(m_Timer->GetFrameTime(),
+        m_Camera->GetPositionPtr(),
+        fovAddProp, m_UI->IsCameraLocked());
+} // UpdateUserInput
 
 
-void MainEngine::UpdateRenderStates()
+void MainEngine::UpdateRenderStatesWidget()
 {
-    m_Renderer->SetMode(m_isWireframe, m_backCullEnable);
-    m_Renderer->SetDepthBuffer(m_depthEnable);
+    m_RenderingEngine->SetMode(
+        m_RenderingEngine->GetWireframeEnable(), m_RenderingEngine->GetBackCullEnable());
+    m_RenderingEngine->SetDepthBuffer(m_RenderingEngine->GetDepthEnable());
 } // UpdateRenderStates
 
 
@@ -223,16 +160,16 @@ void MainEngine::CreateWidget()
     );
 
     auto wireProp = Property<bool>(
-        [this]() { return m_isWireframe; },
-        [this](const bool& v) { m_isWireframe = v; }
+        [this]() { return m_RenderingEngine->GetWireframeEnable(); },
+        [this](const bool& v) {m_RenderingEngine->SetWireframeEnable(v); }
     );
     auto backProp = Property<bool>(
-        [this]() { return m_backCullEnable; },
-        [this](const bool& v) { m_backCullEnable = v; }
+        [this]() { return m_RenderingEngine->GetBackCullEnable(); },
+        [this](const bool& v) { m_RenderingEngine->SetBackCullEnable(v); }
     );
     auto depthProp = Property<bool>(
-        [this]() { return m_depthEnable; },
-        [this](const bool& v) { m_depthEnable = v; }
+        [this]() { return m_RenderingEngine->GetDepthEnable(); },
+        [this](const bool& v) { m_RenderingEngine->SetDepthEnable(v); }
     );
 
     m_UI->CreateWidget(

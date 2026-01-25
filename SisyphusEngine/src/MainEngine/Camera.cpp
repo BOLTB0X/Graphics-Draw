@@ -13,7 +13,7 @@ using namespace DirectX;
 
 Camera::Camera()
     : m_up(XMFLOAT3(0.f, 1.f, 0.f)),
-    m_fov(45.0f),
+    m_fov(60.0f),
     m_near(ConstantHelper::SCREEN_NEAR),
     m_far(ConstantHelper::SCREEN_DEPTH),
     m_maxPitch(179.9f),
@@ -33,7 +33,6 @@ void Camera::BuildFrustum()
 {
     if (m_Frustum)
         m_Frustum->BuildFrustum(GetViewMatrix(), GetProjectionMatrix());
-    
     return;
 } // Render
 
@@ -179,6 +178,5 @@ void Camera::AddFOV(float deltaDegree)
 {
     m_fov -= deltaDegree;
     if (m_fov < 5.0f) m_fov = 5.0f;  // 최대 확대
-    if (m_fov > 90.0f) m_fov = 90.0f;  // 최대 축소
-
+    if (m_fov > 170.0f) m_fov = 170.0f;  // 최대 축소
 } // AddFOV

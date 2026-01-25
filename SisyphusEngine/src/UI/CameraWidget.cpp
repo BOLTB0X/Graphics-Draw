@@ -4,6 +4,7 @@
 // Imgui
 #include "imgui.h"
 
+
 using namespace PropertyHelper;
 using namespace DirectX;
 using namespace ImGui;
@@ -35,7 +36,7 @@ void CameraWidget::Frame()
     bool isChanged = false;
     if (DragFloat3("Pos", &pos.x, 0.1f)) isChanged = true;
     if (DragFloat3("Rot", &rot.x, 0.1f)) isChanged = true;
-    if (DragFloat("FOV", &fov, 0.5f, 10.0f, 170.0f))
+    if (DragFloat("FOV", &fov, 0.5f, 5.0f, 170.0f))
         isChanged = true;
 
     if (isChanged)

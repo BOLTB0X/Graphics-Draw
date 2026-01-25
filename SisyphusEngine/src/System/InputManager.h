@@ -1,6 +1,8 @@
 #pragma once
 #include<memory>
 #include "Input.h"
+// Common
+#include "PropertyHelper.h"
 
 class Position;
 class Camera;
@@ -16,7 +18,7 @@ public:
     void Shutdown();
     
     bool Frame(); // 로우 레벨 입력 및 PeekMessage 상태 갱신
-    bool Frame(float, Camera*, bool); // 카메라 및 게임 로직 업데이트
+    bool Frame(float, Position*, PropertyHelper::Property<float>, bool); // 카메라 및 게임 로직 업데이트
 
 public:
     bool IsMouseLPressed();
@@ -25,7 +27,7 @@ public:
 private:
     void UpdateMouseDelta();
     void HandleRotation(Position*);
-    void HandleMovement(float, Camera*);
+    void HandleMovement(float, Position*, PropertyHelper::Property<float>);
 
     void GetMouseDelta(float&, float&);
     float GetZoom() const;

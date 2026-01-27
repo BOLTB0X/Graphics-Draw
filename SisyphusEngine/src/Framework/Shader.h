@@ -4,7 +4,7 @@
 #include <wrl/client.h>
 #include <string>
 
-enum class ShaderType { None, Sun, Cloud };
+enum class ShaderType { None, Sun, Cloud, Bicubic, Sky };
 
 class Shader {
 public:
@@ -19,7 +19,7 @@ public:
 
     // common
     bool UpdateMatrixBuffer(ID3D11DeviceContext*, DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX);
-    bool UpdateGlobalBuffer(ID3D11DeviceContext*, float, DirectX::XMFLOAT3, float);
+    bool UpdateGlobalBuffer(ID3D11DeviceContext*, float, float, DirectX::XMFLOAT3, float);
     ShaderType GetShaderType() const { return m_type; }
 
 protected:
@@ -29,16 +29,17 @@ protected:
 protected:
     struct GlobalBuffer {
         // 1
-        float uTime;                    // 4 bytes
-        DirectX::XMFLOAT3 padding;      // 12 bytes
+        float iTime;                    // 4 bytes
+        float iFrame;                   // 4 bytes
+        DirectX::XMFLOAT2 padding;      // 8 bytes
 
         // 2
-        DirectX::XMFLOAT3 uCameraPos;   // 12 bytes
+        DirectX::XMFLOAT3 iCameraPos;   // 12 bytes
         float padding1;                 // 4 bytes
 
         // 3
-        DirectX::XMFLOAT2 uResolution;  // 8 bytes
-        float uNoiseRes;                // 4 bytes
+        DirectX::XMFLOAT2 iResolution;  // 8 bytes
+        float iNoiseRes;                // 4 bytes
         float padding2;                 // 4 bytes
     };
 

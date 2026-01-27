@@ -5,7 +5,6 @@
 #include <memory>
 
 class Texture;
-
 class TexturesManager {
 public:
     TexturesManager();

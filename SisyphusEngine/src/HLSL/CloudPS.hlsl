@@ -2,39 +2,10 @@
 #define MARCH_SIZE 0.08
 #include "Common.hlsli"
 
-Texture2D uNoise : register(t0); // 노이즈 텍스처
-SamplerState uSampler : register(s0); // 샘플러 상태
 
-cbuffer GlobalBuffer : register(b1)
-{
-    // 1
-    float uTime;
-    float3 padding;
-
-    // 2
-    float3 uCameraPos;
-    float padding1;
-
-    // 3
-    float2 uResolution;
-    float uNoiseRes;
-    float padding2;
-}; // GlobalBuffer
-
-
-cbuffer LightBuffer : register(b2)
-{
-    float3 uLightPos;
-    float uIntensity;
-    float4 uLightColor;
-}; // LightBuffer
-
-struct PixelInput
-{
-    float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
-    float3 worldPos : POSITION;
-}; // PixelInput
+Texture2D iNoise : register(t0); // 노이즈 텍스처
+Texture2D iBlueNoise : register(t1); // 블루 노이즈
+SamplerState iSampler : register(s0); // 샘플러 상태
 
 
 // FBM (Fractal BrownianMotion)
@@ -50,7 +21,7 @@ float fbm(float3 p, float time)
 
     for (int i = 0; i < 6; i++)
     {
-        f += scale * GetNoise(q, uNoise, uSampler, 256.0f);
+        f += scale * GetNoise(q, iNoise, iSampler, 256.0f);
         q *= factor;
         factor += 0.21f;
         scale *= 0.5f;
@@ -64,87 +35,84 @@ float fbm(float3 p, float time)
 float scene(float3 p)
 {
     float distance = sdSphere(p, 2.5f);
-    float f = fbm(p, uTime); // 노이즈 추가
+    float f = fbm(p, iTime); // 노이즈 추가
     
     return -distance + f;
 } // scene
 
 
-// Shadow Marching
-// 현재 지점에서 태양빛이 얼마나 도달하는지 계산
-//float GetLightEnergy(float3 p)
-//{
-//    float3 lightDir = normalize(uLightPos - p);
-//    float totalDensity = 0.0f;
-//    float shadowStepSize = 0.15f;
+float randomScene(float3 p)
+{
+    float3 p1 = p;
     
-//    for (int i = 0; i < 6; i++) // // 태양 방향으로 6단계 탐사
-//    {
-//        float3 shadowPos = p + lightDir * shadowStepSize * (float) i;
-//        totalDensity += scene(shadowPos);
-//    }
-    
-//    // uIntensity를 사용하여 빛의 투과율 결정
-//    return exp(-totalDensity * uIntensity);
-//} // GetLightEnergy
+    // 회전
+    p1.xz = mul(p1.xz, rotate2D(-PI * 0.1f));
+    p1.yz = mul(p1.yz, rotate2D(PI * 0.3f));
+
+    // 각 SDF 계산
+    float s1 = sdTorus(p1, float2(1.3f, 0.9f));
+    float s2 = sdCross(p1 * 2.0f, 0.6f) / 2.0f; // 스케일링 보정
+    float s3 = sdSphere(p, 1.5f);
+    float s4 = sdCapsule(p, float3(-2.0f, -1.5f, 0.0f), float3(2.0f, 1.5f, 0.0f), 1.0f);
+
+    // 시간 기반 모핑 상태 계산
+    float stepValue = nextStep(iTime, 3.0f, 1.2f);
+    float t = stepValue % 4.0f;
+
+    // lerp(mix)를 이용한 부드러운 도형 전환
+    float d = lerp(s1, s2, clamp(t, 0.0f, 1.0f));
+    d = lerp(d, s3, clamp(t - 1.0f, 0.0f, 1.0f));
+    d = lerp(d, s4, clamp(t - 2.0f, 0.0f, 1.0f));
+    d = lerp(d, s1, clamp(t - 3.0f, 0.0f, 1.0f));
+
+    // fbm 합성
+    float f = fbm(p, iTime);
+
+    return -d + f;
+} // randomScene
 
 
-//float4 raymarch(float3 rayOrigin, float3 rayDirection)
-//{
-//    float4 res = float4(0, 0, 0, 0);
-//    float transmittance = 1.0f;
-//    float depth = 0.0f;
-
-//    for (int i = 0; i < MAX_STEPS; i++)
-//    {
-//        float3 p = rayOrigin + depth * rayDirection;
-//        float density = scene(p);
-
-//        if (density > 0.0f)
-//        {
-//            // 해당 지점의 태양빛 에너지 계산 (Shadow)
-//            float lightEnergy = GetLightEnergy(p);
-            
-//            // 색상 결정 (밀도와 빛 에너지를 곱함)
-//            float3 ambient = float3(0.2, 0.25, 0.3); // 구름의 어두운 부분 기본 색
-//            float3 cloudColor = lerp(ambient, uLightColor.rgb, lightEnergy);
-            
-//            float4 color = float4(cloudColor, density);
-            
-//            // 알파 블렌딩 (Front-to-Back)
-//            color.rgb *= color.a;
-//            res += color * transmittance;
-//            transmittance *= (1.0f - color.a);
-            
-//            if (transmittance < 0.01f)
-//                break;
-//        }
-
-//        depth += MARCH_SIZE;
-//    }
-
-//    return float4(res.rgb, 1.0f - transmittance);
-//} // raymarch
-
-float4 raymarch(float3 rayOrigin, float3 rayDirection)
+float4 raymarch(float3 rayOrigin, float3 rayDirection, float2 uv)
 {
     float4 res = float4(0, 0, 0, 0);
-    float depth = 0.0f;
+    
+    float blueNoise = iBlueNoise.Sample(iSampler, uv * (iResolution / 1024.0f)).r;
+    float offset = frac(blueNoise + float(iFrame % 32) / sqrt(0.5));
+    
+    float depth = MARCH_SIZE * offset;
     float3 p = rayOrigin + depth * rayDirection;
+
+    float3 sunDirection = normalize(iLightPos);
 
     for (int i = 0; i < MAX_STEPS; i++)
     {
+        //float density = randomScene(p);
         float density = scene(p);
 
         // 밀도가 0보다 클 경우에만 밀도를 draw
         if (density > 0.0f)
         {
+            float shadowDist = 0.3f;
+            //float densityNearSun = randomScene(p + shadowDist * sunDirection);
+            float densityNearSun = scene(p + shadowDist * sunDirection);
+            float diffuse = clamp((density - densityNearSun) / shadowDist, 0.0f, 1.0f);
 
-            float3 baseColor = lerp(float3(1, 1, 1), float3(0, 0, 0), density);
-            float4 color = float4(baseColor, density);
+            // 구름의 기본 색상 (밀도에 따른 보간)
+            float3 baseColor = lerp(float3(1.0f, 1.0f, 1.0f), float3(0.5f, 0.5f, 0.5f), density);
 
+            // 조명 색상 조합
+            float3 ambient = float3(0.6f, 0.6f, 0.75f) * 1.1f;
+            float3 lightEffect = iLightColor.rgb * iIntensity * diffuse;
+            float3 finalColor = baseColor * (ambient + lightEffect);
+
+            float4 color = float4(finalColor, density);
+
+            // 알파 블렌딩 (Front-to-Back)
             color.rgb *= color.a;
             res += color * (1.0f - res.a);
+            
+            if (res.a > 0.95f)
+                break;
         }
 
         depth += MARCH_SIZE;
@@ -158,19 +126,11 @@ float4 raymarch(float3 rayOrigin, float3 rayDirection)
 
 float4 main(PixelInput input) : SV_TARGET
 {
-    // 화면 좌표 정규화
-    //float2 uv = input.position.xy / uResolution.xy;
-    //uv -= 0.5f;
-    //uv.y *= -1.0f; // DX 좌표계 보정
-    //uv.x *= (uResolution.x / uResolution.y);
-
-    float3 ro = uCameraPos;
-    float3 rd = normalize(input.worldPos - uCameraPos);
-    
     // Ray Origin 및 Ray Direction
-    //float3 ro = float3(uCameraPos.x, uCameraPos.y, -uCameraPos.z);
-    //float3 rd = normalize(float3(uv, -1.0f));
-
-    float4 res = raymarch(ro, rd);
-    return float4(res.rgb, 1.0f);
+    float3 ro = iCameraPos;
+    float3 rd = normalize(input.worldPos - iCameraPos);
+    float4 res = raymarch(ro, rd, input.tex);
+    
+    return res;
+    //return float4(res.rgb, 1.0f);
 } // main

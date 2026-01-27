@@ -19,6 +19,7 @@ public:
     struct VertexType {
         DirectX::XMFLOAT3 position;
         DirectX::XMFLOAT2 texture;
+        DirectX::XMFLOAT3 normal;
     };
 
 public:
@@ -38,7 +39,7 @@ public:
 private:
     bool InitBuffers(ID3D11Device* device, std::vector<VertexType>, std::vector<unsigned long>);
 
-    void CreateQuad(std::vector<VertexType>&, std::vector<unsigned long>&, float width = 3.0f, float height = 3.0f);
+    void CreateQuad(std::vector<VertexType>&, std::vector<unsigned long>&, float width = 2.0f, float height = 2.0f);
     void CreateCube(std::vector<VertexType>&, std::vector<unsigned long>&, float width = 2.0f, float height = 2.0f, float depth = 2.0f);
     void CreateSphere(std::vector<VertexType>&, std::vector<unsigned long>&, float radius = 2.0f, int sliceCount = 20, int stackCount = 20);
 

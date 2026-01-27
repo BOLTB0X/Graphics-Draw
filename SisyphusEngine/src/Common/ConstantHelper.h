@@ -20,11 +20,17 @@ namespace ConstantHelper {
 namespace ConstantHelper { // 모델 및 텍스처
     const std::string ASSET_PATH = "assets/";
     const std::string NOISE_PATH = ASSET_PATH + "Cloud/noise.png";
+    const std::string BLUE_NOISE_PATH = ASSET_PATH + "Cloud/blue-noise.png";
 }
 
 
 namespace ConstantHelper { // HLSL
     const std::wstring DEFAULT_VS = L"HLSL/DefaultVS.hlsl";
+    const std::wstring QUAD_VS = L"HLSL/QuadVS.hlsl";
+    const std::wstring CUBE_VS = L"HLSL/CubeVS.hlsl";
+
     const std::wstring CLOUD_PS = L"HLSL/CloudPS.hlsl";
     const std::wstring SUN_PS = L"HLSL/SunPS.hlsl";
+    const std::wstring BICUBIC_PS = L"HLSL/BicubicPS.hlsl";
+    const std::wstring SKY_PS = L"HLSL/SkyPS.hlsl";
 };

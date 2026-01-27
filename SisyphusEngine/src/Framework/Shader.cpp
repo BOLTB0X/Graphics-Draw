@@ -8,6 +8,7 @@
 #include <fstream>
 
 using namespace DirectX;
+using namespace ConstantHelper;
 
 
 Shader::Shader()
@@ -85,16 +86,17 @@ bool Shader::UpdateMatrixBuffer(ID3D11DeviceContext* context,
 } // UpdateMatrixBuffer
 
 
-bool Shader::UpdateGlobalBuffer(ID3D11DeviceContext* context, float time, DirectX::XMFLOAT3 cameraPos, float uNoiseRes)
+bool Shader::UpdateGlobalBuffer(ID3D11DeviceContext* context, float time, float frame, XMFLOAT3 cameraPos, float iNoiseRes)
 {
     D3D11_MAPPED_SUBRESOURCE mapped;
     if (FAILED(context->Map(m_globalBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped))) return false;
 
     GlobalBuffer* data = (GlobalBuffer*)mapped.pData;
-    data->uTime = time;
-    data->uCameraPos = cameraPos;
-    data->uResolution = DirectX::XMFLOAT2(ConstantHelper::SCREEN_WIDTH, ConstantHelper::SCREEN_HEIGHT);
-    data->uNoiseRes = uNoiseRes;
+    data->iTime = time;
+    data->iFrame = frame;
+    data->iCameraPos = cameraPos;
+    data->iResolution = XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT);
+    data->iNoiseRes = iNoiseRes;
 
     context->Unmap(m_globalBuffer.Get(), 0);
     return true;

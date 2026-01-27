@@ -13,7 +13,7 @@ Texture::~Texture() {};
 bool Texture::Init(ID3D11Device* device, ID3D11DeviceContext* context, const std::string& path)
 {
 	return TextureLoader::CreateTextureFromFile(device, context, path, m_srv.GetAddressOf());
-} // Init
+} // Init(로드용)
 
 
 void Texture::PSSetShaderResources(ID3D11DeviceContext* context, UINT slot)
@@ -25,4 +25,4 @@ void Texture::PSSetShaderResources(ID3D11DeviceContext* context, UINT slot)
 	}
 
 	context->PSSetShaderResources(slot, 1, m_srv.GetAddressOf());
-} // Bind
+} // PSSetShaderResources

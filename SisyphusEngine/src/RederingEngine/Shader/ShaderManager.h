@@ -13,6 +13,8 @@ class Light;
 namespace ShaderKeys {
     const std::string Sun = "Sun";
     const std::string Cloud = "Cloud";
+    const std::string Bicubic = "Bicubic";
+    const std::string Sky = "Sky";
 } // ShaderKeys
 
 
@@ -55,7 +57,7 @@ public:
     void UpdateMatrixBuffer(const std::string, ID3D11DeviceContext*,
         DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX);
     void UpdateGlobalBuffer(const std::string, ID3D11DeviceContext*,
-        float, DirectX::XMFLOAT3, float);
+        float, float, DirectX::XMFLOAT3, float);
     void UpdateLightBuffer(const std::string, ID3D11DeviceContext*,
         Light*);
 

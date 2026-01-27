@@ -50,9 +50,12 @@ private:
 	std::unique_ptr<ShaderManager> m_ShaderManager;
 	std::unique_ptr<DefaultModel> m_SunModel;
 	std::unique_ptr<DefaultModel> m_CloudArea;
+	std::unique_ptr<DefaultModel> m_BicubicMesh;
+	std::unique_ptr<DefaultModel> m_Sky;
 	std::unique_ptr<Light> m_Light;
 
 	bool m_isWireframe;
 	bool m_backCullEnable;
 	bool m_depthEnable;
+	uint32_t m_frameCount;
 }; // RenderingEngine

@@ -5,21 +5,33 @@
 #include "DebugHelper.h"
 #include "ConstantHelper.h"
 
-TexturesManager::TexturesManager() {}
+
+using namespace ConstantHelper;
+using namespace DebugHelper;
+
+
+TexturesManager::TexturesManager()
+{
+    m_Textures = std::unordered_map<std::string, std::shared_ptr<Texture>>();
+} // TexturesManager
 
 
 TexturesManager::~TexturesManager()
 {
     Shutdown();
-}
+} // ~TexturesManager
 
 
 bool TexturesManager::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    m_Textures = std::unordered_map<std::string, std::shared_ptr<Texture>>();
-    if (GetTexture(device, context, ConstantHelper::NOISE_PATH) == nullptr)
+    if (GetTexture(device, context, NOISE_PATH) == nullptr)
     {
-        DebugHelper::DebugPrint("TexturesManager::Init 실패: " + ConstantHelper::NOISE_PATH);
+        DebugPrint("TexturesManager::Init 실패: " + NOISE_PATH);
+        return false;
+    }
+    if (GetTexture(device, context, BLUE_NOISE_PATH) == nullptr)
+    {
+        DebugPrint("TexturesManager::Init 실패: " + BLUE_NOISE_PATH);
         return false;
     }
     return true;
@@ -58,6 +70,6 @@ void TexturesManager::PSSetShaderResources(ID3D11DeviceContext* context, const s
     if (it != m_Textures.end() && it->second != nullptr)
         it->second->PSSetShaderResources(context, slot);
     else
-        DebugHelper::DebugPrint("TexturesManager::PSSetShaderResources 실패: " + filename + " 이 로드 X");
+        DebugPrint("TexturesManager::PSSetShaderResources 실패: " + filename + " 이 로드 X");
     
 } // PSSetShaderResources

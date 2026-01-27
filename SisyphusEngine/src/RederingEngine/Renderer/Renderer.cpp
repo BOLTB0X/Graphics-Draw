@@ -11,18 +11,22 @@
 #include "ConstantHelper.h"
 
 
+using namespace ConstantHelper;
+
+
 Renderer::Renderer()
     : m_vsync_enabled(false)
 {
     m_DisplayInfo = std::make_unique<DisplayInfo>();
     m_DX11Device = std::make_unique<DX11Device>();
-    m_RenderTarget = std::make_unique<RenderTarget>();
-
+    m_MainRenderTarget = std::make_unique<RenderTarget>();
+    m_LowResRenderTarget = std::make_unique<RenderTarget>();
     m_Rasterizer = std::make_unique<Rasterizer>();
     m_DepthStencilState = std::make_unique<DepthStencilState>();
     m_BlendState = std::make_unique<BlendState>();
     m_SamplerState = std::make_unique<SamplerState>();
 } // Renderer
+
 
 Renderer::~Renderer() {}
 
@@ -33,26 +37,28 @@ bool Renderer::Init(HWND hwnd, bool vsync)
 
     // 장치 생성
     if (m_DisplayInfo->Init(
-        ConstantHelper::SCREEN_WIDTH,
-        ConstantHelper::SCREEN_HEIGHT) == false) return false;
+        SCREEN_WIDTH, SCREEN_HEIGHT) == false) return false;
 
     // DisplayInfo의 정보 주입 및 스왑체인 생성
-    if (m_DX11Device->Init(hwnd,
-        ConstantHelper::SCREEN_WIDTH,
-        ConstantHelper::SCREEN_HEIGHT,
-        ConstantHelper::FULL_SCREEN,
-        vsync,
+    if (m_DX11Device->Init(hwnd, SCREEN_WIDTH,
+        SCREEN_HEIGHT, FULL_SCREEN, vsync,
         m_DisplayInfo->GetNumerator(),
         m_DisplayInfo->GetDenominator())
         == false)
         return false;
 
     // 렌더 타겟뷰 생성 
-    if (m_RenderTarget->Init(
+    if (m_MainRenderTarget->Init(
         m_DX11Device->GetDevice(),
         m_DX11Device->GetSwapChain(),
-        ConstantHelper::SCREEN_WIDTH,
-        ConstantHelper::SCREEN_HEIGHT)
+        SCREEN_WIDTH, SCREEN_HEIGHT)
+        == false)
+        return false;
+
+    if (m_LowResRenderTarget->Init(
+        m_DX11Device->GetDevice(),
+        m_DX11Device->GetSwapChain(),
+        SCREEN_WIDTH, SCREEN_HEIGHT)
         == false)
         return false;
 
@@ -74,7 +80,7 @@ void Renderer::BeginScene(float r, float g, float b, float a)
 {
     ID3D11DeviceContext* context = m_DX11Device->GetDeviceContext();
 
-    m_RenderTarget->Clear(context, r, g, b, a);
+    m_MainRenderTarget->Clear(context, r, g, b, a);
 
 } // BeginScene
 
@@ -99,21 +105,10 @@ void Renderer::Shutdown()
     if (m_BlendState) m_BlendState.reset();
     if (m_DepthStencilState) m_DepthStencilState.reset();
     if (m_Rasterizer) m_Rasterizer.reset();
-    if (m_RenderTarget) m_RenderTarget.reset();
+    if (m_MainRenderTarget) m_MainRenderTarget.reset();
     if (m_DX11Device) m_DX11Device.reset();
     if (m_DisplayInfo) m_DisplayInfo.reset();
 } // Shutdown
-
-
-ID3D11Device* Renderer::GetDevice() const
-{
-    return m_DX11Device->GetDevice();
-} // GetDevice
-
-ID3D11DeviceContext* Renderer::GetDeviceContext() const
-{
-    return m_DX11Device->GetDeviceContext();
-} // GetDeviceContext
 
 
 void Renderer::SetMode(bool enable, bool back)
@@ -145,11 +140,11 @@ void Renderer::SetDepthBuffer(bool enable)
 void Renderer::SetBackBufferRenderTarget()
 {
     ID3D11DeviceContext* context = m_DX11Device->GetDeviceContext();
-    ID3D11RenderTargetView* rtv = m_RenderTarget->GetRenderTargetView();
-    ID3D11DepthStencilView* dsv = m_RenderTarget->GetDepthStencilView();
+    ID3D11RenderTargetView* rtv = m_MainRenderTarget->GetRenderTargetView();
+    ID3D11DepthStencilView* dsv = m_MainRenderTarget->GetDepthStencilView();
 
     context->OMSetRenderTargets(1, &rtv, dsv);
-
+    context->RSSetViewports(1, &m_MainRenderTarget->GetViewport());
 } // SetBackBufferRenderTarget
 
 
@@ -158,3 +153,29 @@ void Renderer::SetSampler(UINT slot)
     m_SamplerState->VSSetSamplers(m_DX11Device->GetDeviceContext(), slot);
     m_SamplerState->PSSetSamplers(m_DX11Device->GetDeviceContext(), slot);
 } // SetSampler
+
+
+void Renderer::SetLowResolutionRenderTarget()
+{
+    m_LowResRenderTarget->Clear(m_DX11Device->GetDeviceContext(), 0, 0, 0, 1);
+} // SetLowResolutionRenderTarget
+
+
+void Renderer::SetLowResolutionShaderResources(UINT slot)
+{
+    ID3D11DeviceContext* context = m_DX11Device->GetDeviceContext();
+    auto lowResSRV  = m_LowResRenderTarget->GetSRV();
+    context->PSSetShaderResources(slot, 1, &lowResSRV);
+} // SetLowResolutionShaderResources
+
+
+ID3D11Device* Renderer::GetDevice() const
+{
+    return m_DX11Device->GetDevice();
+} // GetDevice
+
+
+ID3D11DeviceContext* Renderer::GetDeviceContext() const
+{
+    return m_DX11Device->GetDeviceContext();
+} // GetDeviceContext

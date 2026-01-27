@@ -30,13 +30,13 @@ bool CloudShader::Init(ID3D11Device* device, HWND hwnd,
     device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &m_pixelShader);
 
     // 입력 레이아웃 생성
-    // GeometryArea의 VertexType 에 맞쳐야함
     D3D11_INPUT_ELEMENT_DESC layoutDesc[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    device->CreateInputLayout(layoutDesc, 2, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &m_layout);
+    device->CreateInputLayout(layoutDesc, sizeof(layoutDesc) / sizeof(layoutDesc[0]), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &m_layout);
 
     vsBlob->Release();
     psBlob->Release();
@@ -72,6 +72,7 @@ void CloudShader::SetConstantBuffers(ID3D11DeviceContext* context, ID3D11Buffer*
     context->VSSetConstantBuffers(0, 1, m_matrixBuffer.GetAddressOf()); // 행렬(b0)
     context->PSSetConstantBuffers(1, 1, m_globalBuffer.GetAddressOf()); // 레이마칭(b1)
     
-    context->PSSetConstantBuffers(2, 1, &lightBuffer);
+    ID3D11Buffer* buffers[] = { lightBuffer };
+    context->PSSetConstantBuffers(2, 1, buffers);
 } // SetConstantBuffers
 

@@ -2,6 +2,9 @@
 #include "DefaultModelBuffer.h"
 
 
+using namespace DirectX;
+
+
 DefaultModelBuffer::DefaultModelBuffer()
     : m_vertexCount(4),
     m_indexCount(6)
@@ -85,11 +88,13 @@ void DefaultModelBuffer::CreateQuad(std::vector<VertexType>& vertices, std::vect
     float w2 = width / 2.0f;
     float h2 = height / 2.0f;
 
+    XMFLOAT3 normal = { 0.0f, 0.0f, -1.0f };
+
     vertices = {
-        { {-w2,  h2, 0.0f}, {0.0f, 0.0f} }, // 좌상
-        { { w2,  h2, 0.0f}, {1.0f, 0.0f} }, // 우상
-        { {-w2, -h2, 0.0f}, {0.0f, 1.0f} }, // 좌하
-        { { w2, -h2, 0.0f}, {1.0f, 1.0f} }  // 우하
+        { {-w2,  h2, 0.0f}, {0.0f, 0.0f}, normal }, // 좌상
+        { { w2,  h2, 0.0f}, {1.0f, 0.0f}, normal }, // 우상
+        { {-w2, -h2, 0.0f}, {0.0f, 1.0f}, normal }, // 좌하
+        { { w2, -h2, 0.0f}, {1.0f, 1.0f}, normal }  // 우하
     };
     indices = { 0, 1, 2, 2, 1, 3 };
 } // CreateQuad
@@ -101,24 +106,25 @@ void DefaultModelBuffer::CreateCube(std::vector<VertexType>& vertices, std::vect
     float h2 = height / 2.0f;
     float d2 = depth / 2.0f;
 
-    DirectX::XMFLOAT3 p[8] = {
-        {-w2,  h2, -d2}, { w2,  h2, -d2}, {-w2, -h2, -d2}, { w2, -h2, -d2}, // 앞면 4개
-        {-w2,  h2,  d2}, { w2,  h2,  d2}, {-w2, -h2,  d2}, { w2, -h2,  d2}  // 뒷면 4개
+    XMFLOAT3 p[8] = {
+        {-w2,  h2, -d2}, { w2,  h2, -d2}, {-w2, -h2, -d2}, { w2, -h2, -d2}, // Front 4
+        {-w2,  h2,  d2}, { w2,  h2,  d2}, {-w2, -h2,  d2}, { w2, -h2,  d2}  // Back 4
     };
 
-    // 6개 면 정의 (각 면당 정점 4개씩 분리하여 텍스처 좌표 할당)
+    // 각 면의 법선 정의
+    XMFLOAT3 nFront = { 0,0,-1 }, nBack = { 0,0,1 }, nTop = { 0,1,0 },
+        nBottom = { 0,-1,0 }, nLeft = { -1,0,0 }, nRight = { 1,0,0 };
+
     vertices = {
-        { p[0], {0,0} }, { p[1], {1,0} }, { p[2], {0,1} }, { p[3], {1,1} }, // Front
-        { p[5], {0,0} }, { p[4], {1,0} }, { p[7], {0,1} }, { p[6], {1,1} }, // Back
-        { p[4], {0,0} }, { p[5], {1,0} }, { p[0], {0,1} }, { p[1], {1,1} }, // Top
-        { p[2], {0,0} }, { p[3], {1,0} }, { p[6], {0,1} }, { p[7], {1,1} }, // Bottom
-        { p[4], {0,0} }, { p[0], {1,0} }, { p[6], {0,1} }, { p[2], {1,1} }, // Left
-        { p[1], {0,0} }, { p[5], {1,0} }, { p[3], {0,1} }, { p[7], {1,1} } // Right
+        { p[0], {0,0}, nFront }, { p[1], {1,0}, nFront }, { p[2], {0,1}, nFront }, { p[3], {1,1}, nFront },
+        { p[5], {0,0}, nBack }, { p[4], {1,0}, nBack }, { p[7], {0,1}, nBack }, { p[6], {1,1}, nBack },
+        { p[4], {0,0}, nTop }, { p[5], {1,0}, nTop }, { p[0], {0,1}, nTop }, { p[1], {1,1}, nTop },
+        { p[2], {0,0}, nBottom }, { p[3], {1,0}, nBottom }, { p[6], {0,1}, nBottom }, { p[7], {1,1}, nBottom },
+        { p[4], {0,0}, nLeft }, { p[0], {1,0}, nLeft }, { p[6], {0,1}, nLeft }, { p[2], {1,1}, nLeft },
+        { p[1], {0,0}, nRight }, { p[5], {1,0}, nRight }, { p[3], {0,1}, nRight }, { p[7], {1,1}, nRight }
     };
 
-    // 인덱스 생성 (6개 면 * 면당 삼각형 2개)
-    for (int i = 0; i < 6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         int offset = i * 4;
         indices.push_back(offset + 0); indices.push_back(offset + 1); indices.push_back(offset + 2);
         indices.push_back(offset + 2); indices.push_back(offset + 1); indices.push_back(offset + 3);
@@ -143,6 +149,10 @@ void DefaultModelBuffer::CreateSphere(std::vector<VertexType>& vertices, std::ve
 
             v.texture.x = (float)j / sliceCount;
             v.texture.y = (float)i / stackCount;
+
+            XMVECTOR posVec = XMLoadFloat3(&v.position);
+            XMVECTOR normalVec = XMVector3Normalize(posVec);
+            XMStoreFloat3(&v.normal, normalVec);
 
             vertices.push_back(v);
         } // for (int j = 0; j <= sliceCount; ++j)

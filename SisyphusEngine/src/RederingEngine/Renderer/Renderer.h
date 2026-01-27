@@ -30,6 +30,8 @@ public:
     void SetDepthBuffer(bool);
     void SetBackBufferRenderTarget();
     void SetSampler(UINT slot);
+    void SetLowResolutionRenderTarget();
+    void SetLowResolutionShaderResources(UINT);
 
     ID3D11Device* GetDevice() const;
     ID3D11DeviceContext* GetDeviceContext() const;
@@ -40,7 +42,8 @@ private:
     // 하드웨어 및 기본 리소스
     std::unique_ptr<DisplayInfo> m_DisplayInfo;
     std::unique_ptr<DX11Device>  m_DX11Device;
-    std::unique_ptr<RenderTarget> m_RenderTarget;
+    std::unique_ptr<RenderTarget> m_MainRenderTarget;
+    std::unique_ptr<RenderTarget> m_LowResRenderTarget;
 
     // 파이프라인 규칙(States)
     std::unique_ptr<Rasterizer> m_Rasterizer;

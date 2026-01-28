@@ -86,7 +86,8 @@ bool Shader::UpdateMatrixBuffer(ID3D11DeviceContext* context,
 } // UpdateMatrixBuffer
 
 
-bool Shader::UpdateGlobalBuffer(ID3D11DeviceContext* context, float time, float frame, XMFLOAT3 cameraPos, float iNoiseRes)
+bool Shader::UpdateGlobalBuffer(ID3D11DeviceContext* context,
+    float time, float frame, XMFLOAT3 cameraPos, float iNoiseRes)
 {
     D3D11_MAPPED_SUBRESOURCE mapped;
     if (FAILED(context->Map(m_globalBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped))) return false;
@@ -97,6 +98,7 @@ bool Shader::UpdateGlobalBuffer(ID3D11DeviceContext* context, float time, float 
     data->iCameraPos = cameraPos;
     data->iResolution = XMFLOAT2(SCREEN_WIDTH, SCREEN_HEIGHT);
     data->iNoiseRes = iNoiseRes;
+    data->iCloudType = (float)ConstantHelper::cloudType;
 
     context->Unmap(m_globalBuffer.Get(), 0);
     return true;

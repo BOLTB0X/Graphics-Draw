@@ -4,6 +4,7 @@ Texture2D iLowResTexture : register(t0);
 SamplerState iSampler : register(s0);
 
 // 2차 가중 함수
+
 float w0(float a)
 {
     return (1.0f / 6.0f) * (a * (a * (-a + 3.0f) - 3.0f) + 1.0f);

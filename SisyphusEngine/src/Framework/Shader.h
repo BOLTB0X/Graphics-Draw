@@ -28,19 +28,18 @@ protected:
 
 protected:
     struct GlobalBuffer {
-        // 1
-        float iTime;                    // 4 bytes
-        float iFrame;                   // 4 bytes
-        DirectX::XMFLOAT2 padding;      // 8 bytes
+        // Row 1: Time(4) + Frame(4) + Resolution(8) = 16 bytes
+        float iTime;
+        float iFrame;
+        DirectX::XMFLOAT2 iResolution;
 
-        // 2
-        DirectX::XMFLOAT3 iCameraPos;   // 12 bytes
-        float padding1;                 // 4 bytes
+        // Row 2: CameraPos(12) + iNoiseRes(4) = 16 bytes
+        DirectX::XMFLOAT3 iCameraPos;
+        float iNoiseRes;
 
-        // 3
-        DirectX::XMFLOAT2 iResolution;  // 8 bytes
-        float iNoiseRes;                // 4 bytes
-        float padding2;                 // 4 bytes
+        // Row 3: iCloudType(4) + Padding(12) = 16 bytes
+        float iCloudType;
+        DirectX::XMFLOAT3 padding;
     };
 
     struct MatrixBuffer

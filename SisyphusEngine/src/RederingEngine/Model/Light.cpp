@@ -13,18 +13,13 @@ Light::Light()
 
 Light::~Light() {}
 
+
 void Light::Init(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT4 color, float intensity)
 {
     SetPosition(pos);
 
     SetColor(color.x, color.y, color.z, color.w);
     SetIntensity(intensity);
-
-    //m_Position->SetPosition(0.0f, 5.0f, 10.0f); // 기본 태양 위치
-    //m_Position->SetScale(1.0f);
-
-    //m_color = { 1.0f, 0.9f, 0.7f, 1.0f }; // 따뜻한 햇살 색상
-    //m_intensity = 2.0f;                  // 강한 광선 효과를 위해 1.0 이상 권장
 
     return;
 } // Init

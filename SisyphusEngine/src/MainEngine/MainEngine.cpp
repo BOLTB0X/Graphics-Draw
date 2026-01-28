@@ -43,7 +43,10 @@ bool MainEngine::Init(HWND hwnd, std::shared_ptr<InputManager> inputManager)
     if (m_Timer->Init() == false) return false;
     m_Fps->Init();
 
-    m_Camera->SetPosition(0.0f, 0.0f, -6.0f);
+    ConstantHelper::cloudType = ConstantHelper::CloudType::Default;
+    auto setup = ConstantHelper::GetCloudCameraSetup();
+     m_Camera->SetPosition(setup.position);
+     m_Camera->SetRotation(setup.rotation);
 
     if (m_RenderingEngine->Init(hwnd) == false) return false;
 
@@ -172,14 +175,7 @@ void MainEngine::CreateWidget()
         [this](const bool& v) { m_RenderingEngine->SetDepthEnable(v); }
     );
 
-    m_UI->CreateWidget(
-        timeProp,
-        fpsProp,
-        camPosProp,
-        camRotProp,
-        camFovProp,
-        wireProp,
-        backProp,
-        depthProp
-    );
+    m_UI->CreateWidget(timeProp, fpsProp,
+        camPosProp, camRotProp, camFovProp,
+        wireProp, backProp, depthProp);
 } // CreateWidget

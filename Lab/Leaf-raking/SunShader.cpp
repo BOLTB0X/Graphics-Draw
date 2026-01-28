@@ -56,7 +56,7 @@ void SunShader::SetConstantBuffers(ID3D11DeviceContext* context)
 {
     context->VSSetConstantBuffers(0, 1, m_matrixBuffer.GetAddressOf()); // 행렬(b0)
     context->PSSetConstantBuffers(1, 1, m_globalBuffer.GetAddressOf()); // 레이마칭(b1)
-    context->PSSetConstantBuffers(2, 1, m_lightBuffer.GetAddressOf()); // 레이마칭(b1)
+    context->PSSetConstantBuffers(2, 1, m_lightBuffer.GetAddressOf()); //
 } // SetConstantBuffers
 
 
